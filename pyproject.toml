@@ -1,4 +1,12 @@
 [tool.pdm]
+[tool.pdm.dev-dependencies]
+dev = [
+    "ruff>=0.0.261",
+    "black>=23.3.0",
+    "refurb>=1.15.0",
+    "deptry>=0.8.0",
+    "mypy>=1.2.0",
+]
 
 [project]
 name = "starlette-async-jinja"
@@ -16,6 +24,37 @@ dependencies = [
 requires-python = ">=3.11"
 readme = "README.md"
 license = { text = "BSD-3-Clause" }
+
+[project.urls]
+Homepage = "https://github.com/lesleslie/acb"
+Documentation = "https://github.com/lesleslie/acb"
+Repository = "https://github.com/lesleslie/acb"
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+
+[tool.ruff.isort]
+split-on-trailing-comma = true
+force-wrap-aliases = true
+combine-as-imports = true
+force-sort-within-sections = true
+
+[tool.ruff.mccabe]
+max-complexity = 10  # default
+
+[tool.ruff.pydocstyle]
+convention = "google"
+
+[tool.black]
+target-version = ["py311"]
+
+[tool.mypy]
+strict = true
+
+[tool.deptry]
+
+[tool.refurb]
 
 [build-system]
 requires = ["pdm-backend"]
