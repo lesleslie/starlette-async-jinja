@@ -6,6 +6,7 @@ dev = [
     "refurb>=1.15.0",
     "deptry>=0.8.0",
     "mypy>=1.2.0",
+    "-e file:///${PROJECT_ROOT}/../acb#egg=acb",
 ]
 
 [project]
@@ -19,16 +20,15 @@ dependencies = [
     "starlette>=0.26.1",
     "jinja2>=3.1.2",
     "aiopath>=0.6.11",
-    "redis>=4.5.4",
 ]
 requires-python = ">=3.11"
 readme = "README.md"
 license = { text = "BSD-3-Clause" }
 
 [project.urls]
-Homepage = "https://github.com/lesleslie/acb"
-Documentation = "https://github.com/lesleslie/acb"
-Repository = "https://github.com/lesleslie/acb"
+Homepage = "https://github.com/lesleslie/starlette-async-jinja"
+Documentation = "https://github.com/lesleslie/starlette-async-jinja"
+Repository = "https://github.com/lesleslie/starlette-async-jinja"
 
 [tool.ruff]
 line-length = 88

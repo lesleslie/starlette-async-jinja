@@ -1,26 +1,34 @@
-import typing as t
 import os
+import typing as t
+
+from environment import AsyncEnvironment
 
 from jinja2.environment import Template
+from msgspec import json
 from starlette.background import BackgroundTask
 from starlette.requests import Request
 from starlette.responses import HTMLResponse
+from starlette.responses import JSONResponse
 from starlette.templating import Jinja2Templates
 from starlette.templating import pass_context
 from starlette.types import Receive
 from starlette.types import Scope
 from starlette.types import Send
-from environment import AsyncEnvironment
+
+
+class JsonResponse(JSONResponse):
+    async def render(self, content: t.Any) -> bytes:
+        return json.encode(content)
 
 
 class _TemplateResponse(HTMLResponse):
     def __init__(
-        self,
-        template: t.Any,
-        context: dict,
-        content: str,
-        status_code: int = 200,
-        headers: t.Optional[t.Mapping[str, str]] = None,
+            self,
+            template: t.Any,
+            context: dict,
+            content: str,
+            status_code: int = 200,
+            headers: t.Optional[t.Mapping[str, str]] = None,
         media_type: t.Optional[str] = None,
         background: t.Optional[BackgroundTask] = None,
     ):
