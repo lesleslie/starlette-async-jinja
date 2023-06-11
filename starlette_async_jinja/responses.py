@@ -1,7 +1,7 @@
-import os
 import typing as t
 from functools import partial
 
+from aiopath import AsyncPath
 from jinja2.environment import Template
 from jinja2_async_environment import AsyncEnvironment
 from jinja2_async_environment import FileSystemLoader
@@ -66,7 +66,7 @@ class _AsyncTemplateResponse(HTMLResponse):
 class AsyncJinja2Templates(Jinja2Templates):
     def __init__(
         self,
-        directory: str | os.PathLike,
+        directory: AsyncPath,
         context_processors: t.Optional[
             t.List[t.Callable[[Request], t.Dict[str, t.Any]]]
         ] = None,
@@ -78,7 +78,7 @@ class AsyncJinja2Templates(Jinja2Templates):
         self.env = self._create_env(directory, **env_options)
 
     def _create_env(
-        self, directory: str | os.PathLike, **env_options: dict[str, str] | bool
+        self, directory: AsyncPath, **env_options: dict[str, str] | bool
     ) -> "AsyncEnvironment":
         @pass_context
         def url_for(
@@ -96,8 +96,8 @@ class AsyncJinja2Templates(Jinja2Templates):
         return env
 
     # Partials - https://github.com/mikeckennedy/jinja_partials
+    @staticmethod
     async def render_partial(
-        self,
         template_name: str,
         renderer: t.Optional[t.Callable[..., t.Any]] = None,
         **data: t.Any,
