@@ -51,7 +51,7 @@ class _AsyncTemplateResponse(HTMLResponse):
         super().__init__(content, status_code, headers, media_type, background)
 
     async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
-        request: str | dict = self.context.get("request", {})
+        request: dict = self.context.get("request", {})
         extensions: dict[str, str] = request.get("extensions", {})
         if "http.response.debug" in extensions:
             await send(
@@ -96,8 +96,8 @@ class AsyncJinja2Templates(Jinja2Templates):
         return env
 
     # Partials - https://github.com/mikeckennedy/jinja_partials
-    @staticmethod
     async def render_partial(
+        self,
         template_name: str,
         renderer: t.Optional[t.Callable[..., t.Any]] = None,
         **data: t.Any,
