@@ -7,17 +7,18 @@
 ## About
 
 - Provides AsyncJinja2Templates class which enables use of the is_async Jinja environment flag with
-Startlette and Starlette based applications like FastAPI.
+Startlette and Starlette based applications like FastAPI
 - Integrated [Jinja Partials](https://github.com/mikeckennedy/jinja_partials)
   and [Jinja Fragments](https://github.com/sponsfreixes/jinja2-fragments)
 - Supports asynchonous template loaders (examples [here](https://github.com/lesleslie/jinja2-async-environment/blob/main/jinja2_async_environment/loaders.py))
+  (not yet tested but should work)
 
 ## Issues
 
 - Only [asynchronous template loaders](https://github.com/lesleslie/jinja2-async-environment/blob/main/jinja2_async_environment/loaders.py)
-are currently supported.
+  (not yet tested but should work) are currently supported
 
-- The Jinja bytecodecache requires an asynchronous Redis backend.
+- The Jinja bytecodecache requires an asynchronous Redis backend
 
 
 ## Usage
