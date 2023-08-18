@@ -10,7 +10,7 @@
 Startlette and Starlette based applications like FastAPI
 - Integrated [Jinja Partials](https://github.com/mikeckennedy/jinja_partials)
   and [Jinja Fragments](https://github.com/sponsfreixes/jinja2-fragments)
-- Supports asynchonous template loaders (examples [here](https://github.com/lesleslie/jinja2-async-environment/blob/main/jinja2_async_environment/loaders.py))
+- Supports asynchronous template loaders (examples [here](https://github.com/lesleslie/jinja2-async-environment/blob/main/jinja2_async_environment/loaders.py))
   (not yet tested but should work)
 
 ## Issues

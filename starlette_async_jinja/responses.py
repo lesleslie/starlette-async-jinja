@@ -51,7 +51,7 @@ class _AsyncTemplateResponse(HTMLResponse):
         super().__init__(content, status_code, headers, media_type, background)
 
     async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
-        request: dict = self.context.get("request", {})
+        request: str | dict = self.context.get("request", {})
         extensions: dict[str, str] = request.get("extensions", {})
         if "http.response.debug" in extensions:
             await send(
@@ -99,7 +99,7 @@ class AsyncJinja2Templates(Jinja2Templates):
     async def render_partial(
         self,
         template_name: str,
-        renderer: t.Optional[t.Callable[..., t.Any]] = None,
+        renderer: t.Optional[t.Callable[..., t.Any]],
         **data: t.Any,
     ) -> Markup:
         return Markup(await renderer(template_name, **data))
@@ -146,7 +146,7 @@ class AsyncJinja2Templates(Jinja2Templates):
         background: t.Optional[BackgroundTask] = None,
         *,
         block_name: t.Optional[str] = None,
-    ) -> "_AsyncTemplateResponse" | str:
+    ) -> _AsyncTemplateResponse | str:
         if "request" not in context:
             raise ValueError('context must include a "request" key')
         request = t.cast(Request, context["request"])
