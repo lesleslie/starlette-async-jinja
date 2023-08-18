@@ -43,7 +43,7 @@ pythonVersion = "3.11"
 
 [project]
 name = "starlette-async-jinja"
-version = "1.2.3"
+version = "1.2.4"
 description = ""
 dependencies = [
     "starlette>=0.31.0",
