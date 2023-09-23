@@ -1,3 +1,9 @@
+[tool.pdm.options]
+config = [
+    "python.use_venv",
+    "true",
+]
+
 [tool.pdm.dev-dependencies]
 dev = [
     "pre-commit>=3.4.0",
@@ -28,22 +34,20 @@ target-version = [
 [tool.refurb]
 enable_all = true
 
-[tool.pyanalyze]
-paths = [
-    "starlette_async_jinja",
-]
-
 [tool.pyright]
 include = [
     "starlette_async_jinja",
 ]
 reportMissingImports = true
 reportMissingTypeStubs = false
+reportOptionalMemberAccess = false
+reportOptionalCall = false
+reportGeneralTypeIssues = "warning"
 pythonVersion = "3.11"
 
 [project]
 name = "starlette-async-jinja"
-version = "1.2.5"
+version = "1.2.6"
 description = ""
 dependencies = [
     "starlette>=0.31.1",
