@@ -19,7 +19,7 @@ from starlette.types import Send
 
 
 class JsonResponse(JSONResponse):
-    async def render(self, content: str) -> bytes:
+    async def render(self, content: str) -> t.Any:  # type: ignore
         return json.encode(content)
 
 
@@ -39,7 +39,7 @@ class _AsyncTemplateResponse(HTMLResponse):
     def __init__(
         self,
         template: Template,
-        context: dict[str, str],
+        context: dict[str, t.Any],
         content: str,
         status_code: int = 200,
         headers: t.Optional[t.Mapping[str, str]] = None,
@@ -50,9 +50,9 @@ class _AsyncTemplateResponse(HTMLResponse):
         self.context = context
         super().__init__(content, status_code, headers, media_type, background)
 
-    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
-        request: str | dict = self.context.get("request", {})
-        extensions: dict[str, str] = request.get("extensions", {})
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> t.Any:
+        request = self.context.get("request", {})
+        extensions = request.get("extensions", {})
         if "http.response.debug" in extensions:
             await send(
                 {
@@ -67,9 +67,7 @@ class AsyncJinja2Templates(Jinja2Templates):
     def __init__(
         self,
         directory: AsyncPath,
-        context_processors: t.Optional[
-            t.List[t.Callable[[Request], t.Dict[str, t.Any]]]
-        ] = None,
+        context_processors: t.Any = None,
         **env_options: t.Any,
     ) -> None:
         super().__init__(directory, **env_options)
@@ -77,13 +75,11 @@ class AsyncJinja2Templates(Jinja2Templates):
         self.context_processors = context_processors or []
         self.env = self._create_env(directory, **env_options)
 
-    def _create_env(
-        self, directory: AsyncPath, **env_options: dict[str, str] | bool
+    def _create_env(  # type: ignore
+        self, directory: AsyncPath, **env_options: t.Any
     ) -> "AsyncEnvironment":
-        @pass_context
-        def url_for(
-            context: dict[str, t.Any], name: str, **path_params: dict[str, str | bool]
-        ) -> str:
+        @pass_context  # type: ignore
+        def url_for(context: t.Any, name: str, /, **path_params: t.Any) -> str:
             request = context["request"]
             return request.url_for(name, **path_params)
 
@@ -92,39 +88,37 @@ class AsyncJinja2Templates(Jinja2Templates):
         env_options.setdefault("autoescape", True)
         env = AsyncEnvironment(**env_options)
         env.globals["render_partial"] = self.generate_render_partial(self.renderer)
-        env.globals["url_for"] = url_for
+        env.globals["url_for"] = url_for  # type: ignore
         return env
 
     # Partials - https://github.com/mikeckennedy/jinja_partials
+
+    @staticmethod
     async def render_partial(
-        self,
         template_name: str,
-        renderer: t.Optional[t.Callable[..., t.Any]],
+        renderer: t.Any,
         **data: t.Any,
     ) -> Markup:
         return Markup(await renderer(template_name, **data))
 
-    def generate_render_partial(
-        self, renderer: t.Callable[..., t.Any]
-    ) -> t.Callable[..., Markup]:
+    def generate_render_partial(self, renderer: t.Any) -> t.Any:
         return partial(self.render_partial, renderer=renderer)
 
-    async def renderer(self, template_name: str, **data: t.Any) -> str:
+    async def renderer(self, template_name: str, **data: t.Any) -> t.Any:
         return await (await self.get_template(template_name)).render_async(**data)
 
     # Fragments - https://github.com/sponsfreixes/jinja2-fragments
     async def render_block(
         self,
-        template: "Template",
+        template: Template,
         block_name: str,
         *args: t.Any,
         **kwargs: t.Any,
-    ) -> str:
+    ) -> t.Any:
         try:
             block_render_func = template.blocks[block_name]
         except KeyError:
-            raise BlockNotFoundError(block_name, template.name)
-
+            raise BlockNotFoundError(block_name, template.name)  # type: ignore
         ctx = template.new_context(dict(*args, **kwargs))
         try:
             return self.env.concat(  # type: ignore
@@ -133,20 +127,20 @@ class AsyncJinja2Templates(Jinja2Templates):
         except Exception:
             return self.env.handle_exception()
 
-    async def get_template(self, name: str) -> "Template":
+    async def get_template(self, name: str) -> t.Any:
         return await self.env.get_template(name)
 
     async def AsyncTemplateResponse(
         self,
         name: str,
-        context: dict[str, str],
+        context: dict[str, t.Any],
         status_code: int = 200,
         headers: t.Optional[t.Mapping[str, str]] = None,
         media_type: t.Optional[str] = None,
         background: t.Optional[BackgroundTask] = None,
         *,
         block_name: t.Optional[str] = None,
-    ) -> _AsyncTemplateResponse | str:
+    ) -> t.Any:
         if "request" not in context:
             raise ValueError('context must include a "request" key')
         request = t.cast(Request, context["request"])
