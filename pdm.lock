@@ -10,13 +10,12 @@ content_hash = "sha256:cc479ce0a73877fca2b7501e7fa312f048697a79a98ba9f5e50332ac9
 
 [[package]]
 name = "acb"
-version = "0.2.9"
+version = "0.2.13"
 requires_python = ">=3.11"
 summary = "Asynchronous Code Base"
 dependencies = [
     "aiopath>=0.6.11",
     "arrow>=1.3.0",
-    "async-lru>=2.0.4",
     "asyncio-atexit>=1.0.1",
     "bevy>=2.0.1",
     "blake3>=0.3.3",
@@ -27,15 +26,14 @@ dependencies = [
     "loguru>=0.7.2",
     "msgspec[toml]>=0.18.3",
     "nest-asyncio>=1.5.8",
-    "pluginbase>=1.0.1",
     "pydantic-settings>=2.0.3",
     "pydantic>=2.4.0",
     "python-ulid>=2.2.0",
     "sqlalchemy>=2.0.11",
 ]
 files = [
-    {file = "acb-0.2.9-py3-none-any.whl", hash = "sha256:03b6652230448f9a3b995a54ebf5ca81fd6fbdd9bf53dfa117d71792c158e0ba"},
-    {file = "acb-0.2.9.tar.gz", hash = "sha256:662bf725da32528a8fdb86b82f51659e9c0078f827544c874795e2e27a9a37e0"},
+    {file = "acb-0.2.13-py3-none-any.whl", hash = "sha256:d6c37f4212ac8d5e3fc936716219664402423e2f72e3cdbbdde390446cae385d"},
+    {file = "acb-0.2.13.tar.gz", hash = "sha256:bf71a7f58452e76dad5184bb7a98f281f4091421b4dd7a0ae8c91d388b02114f"},
 ]
 
 [[package]]
@@ -123,16 +121,6 @@ dependencies = [
 files = [
     {file = "asttokens-2.2.1-py2.py3-none-any.whl", hash = "sha256:6b0ac9e93fb0335014d382b8fa9b3afa7df546984258005da0b9e7095b3deb1c"},
     {file = "asttokens-2.2.1.tar.gz", hash = "sha256:4622110b2a6f30b77e1473affaa97e711bc2f07d3f10848420ff1898edbe94f3"},
-]
-
-[[package]]
-name = "async-lru"
-version = "2.0.4"
-requires_python = ">=3.8"
-summary = "Simple LRU cache for asyncio"
-files = [
-    {file = "async-lru-2.0.4.tar.gz", hash = "sha256:b8a59a5df60805ff63220b2a0c5b5393da5521b113cd5465a44eb037d81a5627"},
-    {file = "async_lru-2.0.4-py3-none-any.whl", hash = "sha256:ff02944ce3c288c5be660c42dbcca0742b32c3b279d6dceda655190240b99224"},
 ]
 
 [[package]]
@@ -313,11 +301,11 @@ files = [
 
 [[package]]
 name = "crackerjack"
-version = "0.6.14"
+version = "0.6.18"
 requires_python = ">=3.11"
 summary = "Crackerjack code style"
 dependencies = [
-    "acb>=0.2.7",
+    "acb>=0.2.11",
     "aioconsole>=0.6.2",
     "aiopath>=0.6.11",
     "autotyping>=23.3.0",
@@ -329,8 +317,8 @@ dependencies = [
     "pytest>=7.4.2",
 ]
 files = [
-    {file = "crackerjack-0.6.14-py3-none-any.whl", hash = "sha256:5a34dca3d4c2cd23cdefeb513ccd0dfc17419257730c9f3c903a1a1c6cc0a7ea"},
-    {file = "crackerjack-0.6.14.tar.gz", hash = "sha256:d3f18ffaff1301d82f093d608f08ba154a5fee31731100a0f857439763a24a05"},
+    {file = "crackerjack-0.6.18-py3-none-any.whl", hash = "sha256:49619ca730a0bd17711bd76774328661649021747af989596bd3b80f62d7b525"},
+    {file = "crackerjack-0.6.18.tar.gz", hash = "sha256:635b690daf8e8c4d3819a45c3eb5cfd0017a19a93298d1b6f2cecd0c934d7f1d"},
 ]
 
 [[package]]
@@ -800,14 +788,6 @@ summary = "plugin and hook calling mechanisms for python"
 files = [
     {file = "pluggy-1.3.0-py3-none-any.whl", hash = "sha256:d89c696a773f8bd377d18e5ecda92b7a3793cbe66c87060a6fb58c7b6e1061f7"},
     {file = "pluggy-1.3.0.tar.gz", hash = "sha256:cf61ae8f126ac6f7c451172cf30e3e43d3ca77615509771b3a984a0730651e12"},
-]
-
-[[package]]
-name = "pluginbase"
-version = "1.0.1"
-summary = "PluginBase is a module for Python that enables the development of flexible plugin systems in Python."
-files = [
-    {file = "pluginbase-1.0.1.tar.gz", hash = "sha256:ff6c33a98fce232e9c73841d787a643de574937069f0d18147028d70d7dee287"},
 ]
 
 [[package]]
