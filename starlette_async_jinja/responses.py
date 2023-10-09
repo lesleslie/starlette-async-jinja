@@ -86,6 +86,7 @@ class AsyncJinja2Templates(Jinja2Templates):
         loader = FileSystemLoader(directory)
         env_options.setdefault("loader", loader)  # type: ignore
         env_options.setdefault("autoescape", True)
+        env_options.setdefault("enable_async", True)
         env = AsyncEnvironment(**env_options)
         env.globals["render_partial"] = self.generate_render_partial(self.renderer)
         env.globals["url_for"] = url_for  # type: ignore
