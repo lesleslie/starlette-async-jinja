@@ -36,11 +36,11 @@ paths = [
 ]
 deps-file = "pyproject.toml"
 exclude-deps = [
-    "autotyping",
     "pre-commit",
-    "python-ulid",
+    "autotyping",
     "pytest",
     "pdm-bump",
+    "python-ulid",
 ]
 
 [tool.refurb]
@@ -51,15 +51,19 @@ target = [
     "starlette_async_jinja",
 ]
 skips = [
+    "B113",
     "B603",
     "B403",
     "B404",
-    "B113",
 ]
 
 [tool.pyright]
+verboseOutput = true
 include = [
     "starlette_async_jinja",
+]
+extraPaths = [
+    "__pypackages__/3.12/lib/",
 ]
 typeCheckingMode = "strict"
 reportMissingTypeStubs = false
@@ -70,10 +74,11 @@ reportUnknownVariableType = false
 reportUnknownArgumentType = false
 reportPrivateUsage = "warning"
 pythonVersion = "3.12"
+pythonPlatform = "Darwin"
 
 [project]
 name = "starlette-async-jinja"
-version = "1.4.0"
+version = "1.4.1"
 description = ""
 dependencies = [
     "starlette>=0.31.1",
