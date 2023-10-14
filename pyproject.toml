@@ -6,12 +6,12 @@ config = [
 
 [tool.pdm.dev-dependencies]
 dev = [
-    "crackerjack>=0.6.14",
+    "crackerjack>=0.7.4",
 ]
 
 [tool.ruff]
 line-length = 88
-target-version = "py311"
+target-version = "py312"
 fix = true
 show-fixes = true
 show-source = true
@@ -27,7 +27,7 @@ convention = "google"
 
 [tool.black]
 target-version = [
-    "py311",
+    "py312",
 ]
 
 [tool.creosote]
@@ -36,11 +36,11 @@ paths = [
 ]
 deps-file = "pyproject.toml"
 exclude-deps = [
-    "pdm-bump",
     "autotyping",
-    "python-ulid",
     "pre-commit",
+    "python-ulid",
     "pytest",
+    "pdm-bump",
 ]
 
 [tool.refurb]
@@ -51,10 +51,10 @@ target = [
     "starlette_async_jinja",
 ]
 skips = [
-    "B113",
+    "B603",
     "B403",
     "B404",
-    "B603",
+    "B113",
 ]
 
 [tool.pyright]
@@ -69,21 +69,32 @@ reportUnknownMemberType = false
 reportUnknownVariableType = false
 reportUnknownArgumentType = false
 reportPrivateUsage = "warning"
-pythonVersion = "3.11"
+pythonVersion = "3.12"
 
 [project]
 name = "starlette-async-jinja"
-version = "1.3.5"
+version = "1.4.0"
 description = ""
 dependencies = [
     "starlette>=0.31.1",
     "jinja2>=3.1.2",
-    "jinja2-async-environment>=0.2.1",
+    "jinja2-async-environment>=0.2.5",
 ]
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 readme = "README.md"
 authors = [
     { name = "lesleslie", email = "les@wedgwoodwebworks.com" },
+]
+classifiers = [
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+    "Operating System :: OS Independent",
+    "Framework :: FastAPI",
+    "Framework :: AsyncIO",
+    "Typing :: Typed",
+    "License :: OSI Approved :: BSD License",
+    "Development Status :: 4 - Beta",
 ]
 
 [project.license]
