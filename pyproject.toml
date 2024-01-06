@@ -6,7 +6,7 @@ config = [
 
 [tool.pdm.dev-dependencies]
 dev = [
-    "crackerjack>=0.7.4",
+    "crackerjack>=0.7.19",
 ]
 
 [tool.ruff]
@@ -36,10 +36,11 @@ paths = [
 ]
 deps-file = "pyproject.toml"
 exclude-deps = [
-    "pre-commit",
-    "autotyping",
     "pytest",
+    "pre-commit",
     "pdm-bump",
+    "pdm",
+    "autotyping",
     "python-ulid",
 ]
 
@@ -52,9 +53,9 @@ target = [
 ]
 skips = [
     "B113",
-    "B603",
     "B403",
     "B404",
+    "B603",
 ]
 
 [tool.pyright]
@@ -76,14 +77,19 @@ reportPrivateUsage = "warning"
 pythonVersion = "3.12"
 pythonPlatform = "Darwin"
 
+[tool.codespell]
+skip = "*/data/*"
+quiet-level = 3
+ignore-words-list = "crate,uptodate"
+
 [project]
 name = "starlette-async-jinja"
-version = "1.4.1"
+version = "1.4.2"
 description = ""
 dependencies = [
-    "starlette>=0.31.1",
+    "starlette>=0.34.0",
     "jinja2>=3.1.2",
-    "jinja2-async-environment>=0.2.5",
+    "jinja2-async-environment>=0.4.2",
 ]
 requires-python = ">=3.12"
 readme = "README.md"

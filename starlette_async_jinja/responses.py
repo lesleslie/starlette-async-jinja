@@ -51,8 +51,7 @@ class _AsyncTemplateResponse(HTMLResponse):
         super().__init__(content, status_code, headers, media_type, background)
 
     async def __call__(self, scope: Scope, receive: Receive, send: Send) -> t.Any:
-        request = self.context.get("request", {})
-        extensions = request.get("extensions", {})
+        extensions = self.context.get("request", {}).get("extensions", {})
         if "http.response.debug" in extensions:
             await send(
                 {
@@ -80,8 +79,7 @@ class AsyncJinja2Templates(Jinja2Templates):
     ) -> "AsyncEnvironment":
         @pass_context  # type: ignore
         def url_for(context: t.Any, name: str, /, **path_params: t.Any) -> str:
-            request = context["request"]
-            return request.url_for(name, **path_params)
+            return context["request"].url_for(name, **path_params)
 
         loader = FileSystemLoader(directory)
         env_options.setdefault("loader", loader)  # type: ignore
