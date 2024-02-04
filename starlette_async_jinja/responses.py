@@ -63,6 +63,7 @@ class _AsyncTemplateResponse(HTMLResponse):
 
 
 class AsyncJinja2Templates(Jinja2Templates):
+    @t.override
     def __init__(
         self,
         directory: AsyncPath,
@@ -74,6 +75,7 @@ class AsyncJinja2Templates(Jinja2Templates):
         self.context_processors = context_processors or []
         self.env = self._create_env(directory, **env_options)
 
+    @t.override
     def _create_env(  # type: ignore
         self, directory: AsyncPath, **env_options: t.Any
     ) -> "AsyncEnvironment":
