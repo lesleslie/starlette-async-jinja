@@ -1,4 +1,5 @@
 import typing as t
+import warnings
 from functools import partial
 
 from aiopath import AsyncPath
@@ -8,7 +9,6 @@ from jinja2_async_environment import FileSystemLoader
 from markupsafe import Markup
 from msgspec import json
 from starlette.background import BackgroundTask
-from starlette.requests import Request
 from starlette.responses import HTMLResponse
 from starlette.responses import JSONResponse
 from starlette.templating import Jinja2Templates
@@ -94,12 +94,13 @@ class AsyncJinja2Templates(Jinja2Templates):
 
     # Partials - https://github.com/mikeckennedy/jinja_partials
 
-    @staticmethod
     async def render_partial(
+        self,
         template_name: str,
-        renderer: t.Any,
+        renderer: t.Optional[t.Callable[..., t.Any]] = None,
         **data: t.Any,
     ) -> Markup:
+        renderer = renderer or self.renderer
         return Markup(await renderer(template_name, **data))
 
     def generate_render_partial(self, renderer: t.Any) -> t.Any:
@@ -111,15 +112,17 @@ class AsyncJinja2Templates(Jinja2Templates):
     # Fragments - https://github.com/sponsfreixes/jinja2-fragments
     async def render_block(
         self,
-        template: Template,
+        template_name: str,
         block_name: str,
         *args: t.Any,
         **kwargs: t.Any,
     ) -> t.Any:
+        template = await self.get_template(template_name)
         try:
             block_render_func = template.blocks[block_name]
         except KeyError:
-            raise BlockNotFoundError(block_name, template.name)  # type: ignore
+            raise BlockNotFoundError(block_name, template_name)
+
         ctx = template.new_context(dict(*args, **kwargs))
         try:
             return self.env.concat(  # type: ignore
@@ -131,30 +134,65 @@ class AsyncJinja2Templates(Jinja2Templates):
     async def get_template(self, name: str) -> t.Any:
         return await self.env.get_template(name)
 
-    async def AsyncTemplateResponse(
-        self,
-        name: str,
-        context: dict[str, t.Any],
-        status_code: int = 200,
-        headers: t.Optional[t.Mapping[str, str]] = None,
-        media_type: t.Optional[str] = None,
-        background: t.Optional[BackgroundTask] = None,
-        *,
-        block_name: t.Optional[str] = None,
-    ) -> t.Any:
-        if "request" not in context:
-            raise ValueError('context must include a "request" key')
-        request = t.cast(Request, context["request"])
+    async def AsyncTemplateResponse(self, *args: t.Any, **kwargs: t.Any) -> t.Any:
+        if args:
+            if isinstance(
+                args[0], str
+            ):  # the first argument is template name (old style)
+                warnings.warn(
+                    "The `name` is not the first parameter anymore. "
+                    "The first parameter should be the `Request` instance.\n"
+                    'Replace `TemplateResponse(name, {"request": request})` by `TemplateResponse(request, name)`.',
+                    # noqa: E501
+                    DeprecationWarning,
+                )
+
+                name = args[0]
+                context = args[1] if len(args) > 1 else kwargs.get("context", {})
+                status_code = (
+                    args[2] if len(args) > 2 else kwargs.get("status_code", 200)
+                )
+                headers = args[2] if len(args) > 2 else kwargs.get("headers")
+                media_type = args[3] if len(args) > 3 else kwargs.get("media_type")
+                background = args[4] if len(args) > 4 else kwargs.get("background")
+
+                if "request" not in context:
+                    raise ValueError('context must include a "request" key')
+                request = context["request"]
+            else:  # the first argument is a request instance (new style)
+                request = args[0]
+                name = args[1] if len(args) > 1 else kwargs["name"]
+                context = args[2] if len(args) > 2 else kwargs.get("context", {})
+                status_code = (
+                    args[3] if len(args) > 3 else kwargs.get("status_code", 200)
+                )
+                headers = args[4] if len(args) > 4 else kwargs.get("headers")
+                media_type = args[5] if len(args) > 5 else kwargs.get("media_type")
+                background = args[6] if len(args) > 6 else kwargs.get("background")
+        else:  # all arguments are kwargs
+            if "request" not in kwargs:
+                warnings.warn(
+                    "The `TemplateResponse` now requires the `request` argument.\n"
+                    'Replace `TemplateResponse(name, {"context": context})` by `TemplateResponse(request, name)`.',
+                    # noqa: E501
+                    DeprecationWarning,
+                )
+                if "request" not in kwargs.get("context", {}):
+                    raise ValueError('context must include a "request" key')
+
+            context = kwargs.get("context", {})
+            request = kwargs.get("request", context.get("request"))
+            name = t.cast(str, kwargs["name"])
+            status_code = kwargs.get("status_code", 200)
+            headers = kwargs.get("headers")
+            media_type = kwargs.get("media_type")
+            background = kwargs.get("background")
+
+        context.setdefault("request", request)
         for context_processor in self.context_processors:
             context.update(context_processor(request))
-        template = await self.get_template(name)
 
-        if block_name:
-            return await self.render_block(
-                template,
-                block_name,
-                context,
-            )
+        template = await self.get_template(name)
 
         content = await template.render_async(context)
         return _AsyncTemplateResponse(

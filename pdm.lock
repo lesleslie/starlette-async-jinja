@@ -324,7 +324,7 @@ files = [
 
 [[package]]
 name = "crackerjack"
-version = "0.7.22"
+version = "0.7.23"
 requires_python = ">=3.12"
 summary = "Crackerjack code style"
 dependencies = [
@@ -335,14 +335,14 @@ dependencies = [
     "click>=8.1.7",
     "inflection>=0.5.1",
     "pdm-bump>=0.7.3",
-    "pdm>=2.11.1",
+    "pdm>=2.12.3",
     "pre-commit>=3.6.0",
     "pydantic>=2.5.3",
     "pytest>=7.4.3",
 ]
 files = [
-    {file = "crackerjack-0.7.22-py3-none-any.whl", hash = "sha256:6dca9483daa62bb2542ff78cda7bab5a824a954813918a473cc24003a7a902d8"},
-    {file = "crackerjack-0.7.22.tar.gz", hash = "sha256:441c0ab899d4b218a3865c334c0af529be9ca7e5dcedd302bb4a3b08d2dc7b9d"},
+    {file = "crackerjack-0.7.23-py3-none-any.whl", hash = "sha256:b9dd3de47f3ae611b7d3a8b1ac06c49344d7a3947582e1809e8354c159d6d455"},
+    {file = "crackerjack-0.7.23.tar.gz", hash = "sha256:aeba773500c7d4513fc3ea44df1cfb7835be889e92e01a76758a037b8e21615e"},
 ]
 
 [[package]]
@@ -531,7 +531,7 @@ files = [
 
 [[package]]
 name = "jinja2-async-environment"
-version = "0.4.4"
+version = "0.4.5"
 requires_python = ">=3.12"
 summary = ""
 dependencies = [
@@ -539,8 +539,8 @@ dependencies = [
     "redis!=5.0.1,>=5.0.0",
 ]
 files = [
-    {file = "jinja2_async_environment-0.4.4-py3-none-any.whl", hash = "sha256:d12f16409820fa3f92c3fef814013d8d1609f048c588e492a034d4a59f729c17"},
-    {file = "jinja2_async_environment-0.4.4.tar.gz", hash = "sha256:8d17643c5a5d807cd894eaa1a364e26f70b06d23742a3eb630d0af760a1a2437"},
+    {file = "jinja2_async_environment-0.4.5-py3-none-any.whl", hash = "sha256:a6f1beee910c543383e8aef2420d542c959cad00ceec7c1cdb955b723f373d0a"},
+    {file = "jinja2_async_environment-0.4.5.tar.gz", hash = "sha256:29ee23aaa14c7d8422efe23f74da7d9d42363fd49ac9150a9aa365d3e48e9391"},
 ]
 
 [[package]]
@@ -721,7 +721,7 @@ files = [
 
 [[package]]
 name = "pdm"
-version = "2.11.2"
+version = "2.12.3"
 requires_python = ">=3.8"
 summary = "A modern Python package and dependency manager supporting the latest PEP standards"
 dependencies = [
@@ -745,8 +745,8 @@ dependencies = [
     "virtualenv>=20",
 ]
 files = [
-    {file = "pdm-2.11.2-py3-none-any.whl", hash = "sha256:54d70b985f545ef6bab633ea78a2dfe1f967b94c02296097c0d8482aa4e7f819"},
-    {file = "pdm-2.11.2.tar.gz", hash = "sha256:5b31255c48d4aca596c73fb872a82848cbe8ff92f008712a9a264455247063ee"},
+    {file = "pdm-2.12.3-py3-none-any.whl", hash = "sha256:27eddf71434906e39db3f448d35ea5ee1f4d0f557de39fc932205f7dfc82f902"},
+    {file = "pdm-2.12.3.tar.gz", hash = "sha256:53cdab727c1469fdc196efd8d7ff8404a3ca91ee43c0a5714736f2020d0a5ddf"},
 ]
 
 [[package]]
