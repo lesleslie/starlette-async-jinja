@@ -1,5 +1,4 @@
 import typing as t
-import warnings
 from functools import partial
 
 from aiopath import AsyncPath
@@ -136,50 +135,14 @@ class AsyncJinja2Templates(Jinja2Templates):
 
     async def AsyncTemplateResponse(self, *args: t.Any, **kwargs: t.Any) -> t.Any:
         if args:
-            if isinstance(
-                args[0], str
-            ):  # the first argument is template name (old style)
-                warnings.warn(
-                    "The `name` is not the first parameter anymore. "
-                    "The first parameter should be the `Request` instance.\n"
-                    'Replace `TemplateResponse(name, {"request": request})` by `TemplateResponse(request, name)`.',
-                    # noqa: E501
-                    DeprecationWarning,
-                )
-
-                name = args[0]
-                context = args[1] if len(args) > 1 else kwargs.get("context", {})
-                status_code = (
-                    args[2] if len(args) > 2 else kwargs.get("status_code", 200)
-                )
-                headers = args[2] if len(args) > 2 else kwargs.get("headers")
-                media_type = args[3] if len(args) > 3 else kwargs.get("media_type")
-                background = args[4] if len(args) > 4 else kwargs.get("background")
-
-                if "request" not in context:
-                    raise ValueError('context must include a "request" key')
-                request = context["request"]
-            else:  # the first argument is a request instance (new style)
-                request = args[0]
-                name = args[1] if len(args) > 1 else kwargs["name"]
-                context = args[2] if len(args) > 2 else kwargs.get("context", {})
-                status_code = (
-                    args[3] if len(args) > 3 else kwargs.get("status_code", 200)
-                )
-                headers = args[4] if len(args) > 4 else kwargs.get("headers")
-                media_type = args[5] if len(args) > 5 else kwargs.get("media_type")
-                background = args[6] if len(args) > 6 else kwargs.get("background")
+            request = args[0]
+            name = args[1] if len(args) > 1 else kwargs["name"]
+            context = args[2] if len(args) > 2 else kwargs.get("context", {})
+            status_code = args[3] if len(args) > 3 else kwargs.get("status_code", 200)
+            headers = args[4] if len(args) > 4 else kwargs.get("headers")
+            media_type = args[5] if len(args) > 5 else kwargs.get("media_type")
+            background = args[6] if len(args) > 6 else kwargs.get("background")
         else:  # all arguments are kwargs
-            if "request" not in kwargs:
-                warnings.warn(
-                    "The `TemplateResponse` now requires the `request` argument.\n"
-                    'Replace `TemplateResponse(name, {"context": context})` by `TemplateResponse(request, name)`.',
-                    # noqa: E501
-                    DeprecationWarning,
-                )
-                if "request" not in kwargs.get("context", {}):
-                    raise ValueError('context must include a "request" key')
-
             context = kwargs.get("context", {})
             request = kwargs.get("request", context.get("request"))
             name = t.cast(str, kwargs["name"])
