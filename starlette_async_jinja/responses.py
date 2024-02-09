@@ -8,9 +8,9 @@ from jinja2_async_environment import FileSystemLoader
 from markupsafe import Markup
 from msgspec import json
 from starlette.background import BackgroundTask
+from starlette.datastructures import URL
 from starlette.responses import HTMLResponse
 from starlette.responses import JSONResponse
-from starlette.templating import Jinja2Templates
 from starlette.templating import pass_context
 from starlette.types import Receive
 from starlette.types import Scope
@@ -34,7 +34,8 @@ class BlockNotFoundError(Exception):
         )
 
 
-class _AsyncTemplateResponse(HTMLResponse):
+class _TemplateResponse(HTMLResponse):
+    @t.override
     def __init__(
         self,
         template: Template,
@@ -49,19 +50,22 @@ class _AsyncTemplateResponse(HTMLResponse):
         self.context = context
         super().__init__(content, status_code, headers, media_type, background)
 
-    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> t.Any:
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
         extensions = self.context.get("request", {}).get("extensions", {})
         if "http.response.debug" in extensions:
             await send(
                 {
                     "type": "http.response.debug",
-                    "info": {"template": self.template, "context": self.context},
+                    "info": {
+                        "template": self.template,
+                        "context": self.context,
+                    },
                 }
             )
         await super().__call__(scope, receive, send)
 
 
-class AsyncJinja2Templates(Jinja2Templates):
+class AsyncJinja2Templates:
     @t.override
     def __init__(
         self,
@@ -69,17 +73,15 @@ class AsyncJinja2Templates(Jinja2Templates):
         context_processors: t.Any = None,
         **env_options: t.Any,
     ) -> None:
-        super().__init__(directory, **env_options)
         self.env_options = env_options
         self.context_processors = context_processors or []
         self.env = self._create_env(directory, **env_options)
 
-    @t.override
     def _create_env(  # type: ignore
         self, directory: AsyncPath, **env_options: t.Any
     ) -> "AsyncEnvironment":
         @pass_context  # type: ignore
-        def url_for(context: t.Any, name: str, /, **path_params: t.Any) -> str:
+        def url_for(context: dict[str, t.Any], name: str, **path_params: t.Any) -> URL:
             return context["request"].url_for(name, **path_params)
 
         loader = FileSystemLoader(directory)
@@ -133,7 +135,9 @@ class AsyncJinja2Templates(Jinja2Templates):
     async def get_template(self, name: str) -> t.Any:
         return await self.env.get_template(name)
 
-    async def AsyncTemplateResponse(self, *args: t.Any, **kwargs: t.Any) -> t.Any:
+    async def TemplateResponse(
+        self, *args: t.Any, **kwargs: t.Any
+    ) -> _TemplateResponse:
         if args:
             request = args[0]
             name = args[1] if len(args) > 1 else kwargs["name"]
@@ -158,7 +162,7 @@ class AsyncJinja2Templates(Jinja2Templates):
         template = await self.get_template(name)
 
         content = await template.render_async(context)
-        return _AsyncTemplateResponse(
+        return _TemplateResponse(
             template,
             context,
             content,
@@ -168,4 +172,4 @@ class AsyncJinja2Templates(Jinja2Templates):
             background=background,
         )
 
-    render_template = AsyncTemplateResponse
+    render_template = TemplateResponse
