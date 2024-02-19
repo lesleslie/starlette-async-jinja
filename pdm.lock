@@ -324,7 +324,7 @@ files = [
 
 [[package]]
 name = "crackerjack"
-version = "0.7.24"
+version = "0.7.25"
 requires_python = ">=3.12"
 summary = "Crackerjack code style"
 dependencies = [
@@ -341,8 +341,8 @@ dependencies = [
     "pytest>=7.4.3",
 ]
 files = [
-    {file = "crackerjack-0.7.24-py3-none-any.whl", hash = "sha256:f6c67fb0910a00ae53f48d9d9e8ee59eb40cfd69fa5212f48a6d59322d601721"},
-    {file = "crackerjack-0.7.24.tar.gz", hash = "sha256:9584ed41ddeab3bf3f8c7becf1ddcea615a222ed11608e3133a402f3b8f1b729"},
+    {file = "crackerjack-0.7.25-py3-none-any.whl", hash = "sha256:b5fcb79a29a01f6507754fea00b16a64c3d7dc2fff27b240a7c9fd279c888445"},
+    {file = "crackerjack-0.7.25.tar.gz", hash = "sha256:5b9da08558f7b8910c4d34fa4af600abb357808784019c9f22ca040a790040c6"},
 ]
 
 [[package]]
@@ -1088,15 +1088,15 @@ files = [
 
 [[package]]
 name = "starlette"
-version = "0.37.0"
+version = "0.37.1"
 requires_python = ">=3.8"
 summary = "The little ASGI library that shines."
 dependencies = [
     "anyio<5,>=3.4.0",
 ]
 files = [
-    {file = "starlette-0.37.0-py3-none-any.whl", hash = "sha256:53a95037cf6a563fca942ea16ba0260edce10258c213cbd554adc263fad22dfc"},
-    {file = "starlette-0.37.0.tar.gz", hash = "sha256:d1ec71a84fd1f691b800361a6a64ecb0e9c17ab308507ccc7f911727888293c7"},
+    {file = "starlette-0.37.1-py3-none-any.whl", hash = "sha256:92a816002d4e8c552477b089520e3085bb632e854eb32cef99acb6f6f7830b69"},
+    {file = "starlette-0.37.1.tar.gz", hash = "sha256:345cfd562236b557e76a045715ac66fdc355a1e7e617b087834a76a87dcc6533"},
 ]
 
 [[package]]
