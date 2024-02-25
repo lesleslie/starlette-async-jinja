@@ -531,7 +531,7 @@ files = [
 
 [[package]]
 name = "jinja2-async-environment"
-version = "0.5.0"
+version = "0.6.0"
 requires_python = ">=3.12"
 summary = ""
 dependencies = [
@@ -539,8 +539,8 @@ dependencies = [
     "redis!=5.0.1,>=5.0.0",
 ]
 files = [
-    {file = "jinja2_async_environment-0.5.0-py3-none-any.whl", hash = "sha256:a60f463034e87103fa12c1cc4f939e50793d96bab95b462254320ab202ce4bc6"},
-    {file = "jinja2_async_environment-0.5.0.tar.gz", hash = "sha256:7ca0094dfa0f982ac21ccc8674b3ebcb474a7bea2b8722bdfed7b8cd8e61d0fd"},
+    {file = "jinja2_async_environment-0.6.0-py3-none-any.whl", hash = "sha256:1a31329829d7e52d0aca746fe368cace35bb4b3f50119efdd21cc6e2ebcde25a"},
+    {file = "jinja2_async_environment-0.6.0.tar.gz", hash = "sha256:2e0af9d6ad3b54c9b3bb8f1b591a83708a95234fdd0f6e7b34f9216e9f6789e6"},
 ]
 
 [[package]]

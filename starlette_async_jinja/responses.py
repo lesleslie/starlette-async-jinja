@@ -89,13 +89,13 @@ class AsyncJinja2Templates:
         env_options.setdefault("autoescape", True)
         env_options.setdefault("enable_async", True)
         env = AsyncEnvironment(**env_options)
-        env.globals["render_partial"] = self.generate_render_partial(self.renderer)
+        env.globals["render_block"] = self.generate_render_partial(self.renderer)
         env.globals["url_for"] = url_for  # type: ignore
         return env
 
     # Partials - https://github.com/mikeckennedy/jinja_partials
 
-    async def render_partial(
+    async def render_block(
         self,
         template_name: str,
         renderer: t.Optional[t.Callable[..., t.Any]] = None,
@@ -105,13 +105,14 @@ class AsyncJinja2Templates:
         return Markup(await renderer(template_name, **data))
 
     def generate_render_partial(self, renderer: t.Any) -> t.Any:
-        return partial(self.render_partial, renderer=renderer)
+        return partial(self.render_block, renderer=renderer)
 
     async def renderer(self, template_name: str, **data: t.Any) -> t.Any:
         return await (await self.get_template(template_name)).render_async(**data)
 
     # Fragments - https://github.com/sponsfreixes/jinja2-fragments
-    async def render_block(
+
+    async def render_fragment(
         self,
         template_name: str,
         block_name: str,
