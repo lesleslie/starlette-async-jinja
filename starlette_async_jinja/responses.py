@@ -161,8 +161,8 @@ class AsyncJinja2Templates:
             context.update(context_processor(request))
 
         template = await self.get_template(name)
-
         content = await template.render_async(context)
+
         return _TemplateResponse(
             template,
             context,

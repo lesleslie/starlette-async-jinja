@@ -37,7 +37,7 @@ async def homepage(request: Request):
     return await templates.TemplateResponse(request, 'index.html')
 ```
 
-Even simpler (and more Flask like):
+or:
 ```python
 async def homepage(request: Request):
     return await templates.render_template(request, 'index.html')
