@@ -16,6 +16,11 @@ fix = true
 show-fixes = true
 output-format = "full"
 
+[tool.ruff.lint]
+ignore = [
+    "F821",
+]
+
 [tool.ruff.lint.isort]
 force-single-line = true
 
@@ -36,12 +41,12 @@ paths = [
 ]
 deps-file = "pyproject.toml"
 exclude-deps = [
+    "python-ulid",
+    "autotyping",
     "pytest",
     "pdm",
-    "autotyping",
-    "python-ulid",
-    "pdm-bump",
     "pre-commit",
+    "pdm-bump",
 ]
 
 [tool.refurb]
@@ -52,10 +57,10 @@ target = [
     "starlette_async_jinja",
 ]
 skips = [
-    "B113",
-    "B603",
-    "B404",
     "B403",
+    "B603",
+    "B113",
+    "B404",
 ]
 
 [tool.pyright]
@@ -84,7 +89,7 @@ ignore-words-list = "crate,uptodate"
 
 [project]
 name = "starlette-async-jinja"
-version = "1.7.1"
+version = "1.7.2"
 description = ""
 dependencies = [
     "starlette>=0.34.0",

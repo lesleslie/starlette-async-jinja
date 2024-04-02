@@ -108,7 +108,8 @@ class AsyncJinja2Templates:
         return partial(self.render_block, renderer=renderer)
 
     async def renderer(self, template_name: str, **data: t.Any) -> t.Any:
-        return await (await self.get_template(template_name)).render_async(**data)
+        template = await self.get_template(template_name)
+        return await template.render_async(**data)
 
     # Fragments - https://github.com/sponsfreixes/jinja2-fragments
 

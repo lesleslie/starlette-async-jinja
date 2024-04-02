@@ -324,7 +324,7 @@ files = [
 
 [[package]]
 name = "crackerjack"
-version = "0.7.27"
+version = "0.7.29"
 requires_python = ">=3.12"
 summary = "Crackerjack code style"
 dependencies = [
@@ -341,8 +341,8 @@ dependencies = [
     "pytest>=7.4.3",
 ]
 files = [
-    {file = "crackerjack-0.7.27-py3-none-any.whl", hash = "sha256:ef987103289594e6ad674d4892c58afab97360781bc32192c8c5af1997fa2cdd"},
-    {file = "crackerjack-0.7.27.tar.gz", hash = "sha256:b3d6914999c15c99c5c6df13dd3119f21fde694c09e8be77cae8c6cdff9e501e"},
+    {file = "crackerjack-0.7.29-py3-none-any.whl", hash = "sha256:76d249bcda4843ad064a0c8a13aa47c04f6c6d478bdfe1aaa24272730ae87ee2"},
+    {file = "crackerjack-0.7.29.tar.gz", hash = "sha256:bbcf2fd1116db9275e56197cbc2d35d96ccc9ae2808a5975093f4ea0ff6b2354"},
 ]
 
 [[package]]
@@ -531,7 +531,7 @@ files = [
 
 [[package]]
 name = "jinja2-async-environment"
-version = "0.7.0"
+version = "0.7.1"
 requires_python = ">=3.12"
 summary = ""
 dependencies = [
@@ -539,8 +539,8 @@ dependencies = [
     "redis!=5.0.1,>=5.0.0",
 ]
 files = [
-    {file = "jinja2_async_environment-0.7.0-py3-none-any.whl", hash = "sha256:a3ecc0f477dda0054f8249224cf2bc14a0dfa51ad084bec1b5f411f4dfc42ab9"},
-    {file = "jinja2_async_environment-0.7.0.tar.gz", hash = "sha256:992f16b6b1b2bd1299c844fbfa89a86a4c484b94ac4a5e2118dec75cf589dd3e"},
+    {file = "jinja2_async_environment-0.7.1-py3-none-any.whl", hash = "sha256:3bfb62d22116de18e4e9a44913e3ae9176132b701992e49a6b44b3ba9c32e74d"},
+    {file = "jinja2_async_environment-0.7.1.tar.gz", hash = "sha256:216f3d166b37959afd253b39c47ba30529e16e9dd5d7e302bab34de154c0fcdb"},
 ]
 
 [[package]]
@@ -1088,15 +1088,15 @@ files = [
 
 [[package]]
 name = "starlette"
-version = "0.37.1"
+version = "0.37.2"
 requires_python = ">=3.8"
 summary = "The little ASGI library that shines."
 dependencies = [
     "anyio<5,>=3.4.0",
 ]
 files = [
-    {file = "starlette-0.37.1-py3-none-any.whl", hash = "sha256:92a816002d4e8c552477b089520e3085bb632e854eb32cef99acb6f6f7830b69"},
-    {file = "starlette-0.37.1.tar.gz", hash = "sha256:345cfd562236b557e76a045715ac66fdc355a1e7e617b087834a76a87dcc6533"},
+    {file = "starlette-0.37.2-py3-none-any.whl", hash = "sha256:6fe59f29268538e5d0d182f2791a479a0c64638e6935d1c6989e63fb2699c6ee"},
+    {file = "starlette-0.37.2.tar.gz", hash = "sha256:9af890290133b79fc3db55474ade20f6220a364a0402e0b556e7cd5e1e093823"},
 ]
 
 [[package]]
