@@ -11,4 +11,4 @@
 /tmp/
 /__pycache__/
 /*.pyc
-/.starlette_async_jinja.yaml
+/.crackerjack.yaml

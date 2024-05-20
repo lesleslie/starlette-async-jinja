@@ -292,7 +292,7 @@ files = [
 
 [[package]]
 name = "crackerjack"
-version = "0.7.34"
+version = "0.7.35"
 requires_python = ">=3.12"
 summary = "Crackerjack code style"
 dependencies = [
@@ -309,8 +309,8 @@ dependencies = [
     "pytest>=8.2.1",
 ]
 files = [
-    {file = "crackerjack-0.7.34-py3-none-any.whl", hash = "sha256:7713a94cbc79df52fdfa24368bac987838b39094ba871253041b250692ecf7e4"},
-    {file = "crackerjack-0.7.34.tar.gz", hash = "sha256:e919b4f80472d3272e1ea55691bba75fd82bc1fde80929db18dbc18d91b0e47c"},
+    {file = "crackerjack-0.7.35-py3-none-any.whl", hash = "sha256:50c1a9527ae4c732aab1db8e3c240420274616f1ebcd0630aba0a4eaa0153edd"},
+    {file = "crackerjack-0.7.35.tar.gz", hash = "sha256:86bc29c675e1ef5f661fb4e62627f262927f75e5a97dddaf1dbdd8bb7b16e987"},
 ]
 
 [[package]]
@@ -608,16 +608,16 @@ files = [
 
 [[package]]
 name = "jinja2-async-environment"
-version = "0.7.4"
+version = "0.7.5"
 requires_python = ">=3.12"
 summary = ""
 dependencies = [
-    "jinja2>=3.1.2",
-    "redis!=5.0.1,>=5.0.0",
+    "jinja2>=3.1.4",
+    "redis>=5.0.4",
 ]
 files = [
-    {file = "jinja2_async_environment-0.7.4-py3-none-any.whl", hash = "sha256:5b651aec61244587e253ea0334fea3e1a1d4aa9fb94cdd7fa2c26bc5a2619107"},
-    {file = "jinja2_async_environment-0.7.4.tar.gz", hash = "sha256:2fdcab8415efe85f6eec93923784f5eec70da4176405b4c72a9b4c59136faace"},
+    {file = "jinja2_async_environment-0.7.5-py3-none-any.whl", hash = "sha256:3a06d736ef6cda75e28eb1f3887d422b664caba1ed8e01873b40237a1cb57c7f"},
+    {file = "jinja2_async_environment-0.7.5.tar.gz", hash = "sha256:3a2ed39dc89d2e88aed11214ac4e0494d9b215f934f26420cf9a9b202cde9aa7"},
 ]
 
 [[package]]
@@ -1116,12 +1116,12 @@ files = [
 
 [[package]]
 name = "redis"
-version = "5.0.0"
+version = "5.0.4"
 requires_python = ">=3.7"
 summary = "Python client for Redis database and key-value store"
 files = [
-    {file = "redis-5.0.0-py3-none-any.whl", hash = "sha256:06570d0b2d84d46c21defc550afbaada381af82f5b83e5b3777600e05d8e2ed0"},
-    {file = "redis-5.0.0.tar.gz", hash = "sha256:5cea6c0d335c9a7332a460ed8729ceabb4d0c489c7285b0a86dbbf8a017bd120"},
+    {file = "redis-5.0.4-py3-none-any.whl", hash = "sha256:7adc2835c7a9b5033b7ad8f8918d09b7344188228809c98df07af226d39dec91"},
+    {file = "redis-5.0.4.tar.gz", hash = "sha256:ec31f2ed9675cc54c21ba854cfe0462e6faf1d83c8ce5944709db8a4700b9c61"},
 ]
 
 [[package]]
