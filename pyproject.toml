@@ -6,7 +6,7 @@ config = [
 
 [tool.pdm.dev-dependencies]
 dev = [
-    "crackerjack>=0.7.19",
+    "crackerjack>=0.7.34",
 ]
 
 [tool.ruff]
@@ -41,12 +41,12 @@ paths = [
 ]
 deps-file = "pyproject.toml"
 exclude-deps = [
-    "pre-commit",
     "pdm",
-    "pdm-bump",
-    "pytest",
+    "pre-commit",
     "python-ulid",
     "autotyping",
+    "pytest",
+    "pdm-bump",
 ]
 
 [tool.refurb]
@@ -92,9 +92,9 @@ name = "starlette-async-jinja"
 version = "1.7.5"
 description = ""
 dependencies = [
-    "starlette>=0.34.0",
-    "jinja2>=3.1.2",
-    "jinja2-async-environment>=0.4.2",
+    "starlette>=0.37.2",
+    "jinja2>=3.1.4",
+    "jinja2-async-environment>=0.7.4",
 ]
 requires-python = ">=3.12"
 readme = "README.md"
