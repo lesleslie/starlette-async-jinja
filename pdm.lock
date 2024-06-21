@@ -270,7 +270,7 @@ files = [
 
 [[package]]
 name = "crackerjack"
-version = "0.8.3"
+version = "0.8.5"
 requires_python = ">=3.12"
 summary = "Crackerjack code style"
 dependencies = [
@@ -287,8 +287,7 @@ dependencies = [
     "pytest>=8.2.1",
 ]
 files = [
-    {file = "crackerjack-0.8.3-py3-none-any.whl", hash = "sha256:65fd235d86c0d97c5738d4c6996ec912390ab9c1ff223bdcfbdf815ced8e7be1"},
-    {file = "crackerjack-0.8.3.tar.gz", hash = "sha256:5f1103b2914fcd4c0c399088e250d097cbe02afd0c65cd4e911725edc4915acd"},
+    {file = "crackerjack-0.8.5-py3-none-any.whl", hash = "sha256:cdc327efd81d98d062781d1d4898324049414b97fadb25901174a3eeeb05ab7e"},
 ]
 
 [[package]]
@@ -586,7 +585,7 @@ files = [
 
 [[package]]
 name = "jinja2-async-environment"
-version = "0.7.6"
+version = "0.7.7"
 requires_python = ">=3.12"
 summary = ""
 dependencies = [
@@ -594,8 +593,8 @@ dependencies = [
     "redis>=5.0.4",
 ]
 files = [
-    {file = "jinja2_async_environment-0.7.6-py3-none-any.whl", hash = "sha256:16dab0c30b2d966e9b4de3ad4684763180b77dd8633b897e4db36b8c4fab51cb"},
-    {file = "jinja2_async_environment-0.7.6.tar.gz", hash = "sha256:a9e1190bc36e1997e9679a3bc2bd8f4349fbbb574a027aaf92414bf1e068753d"},
+    {file = "jinja2_async_environment-0.7.7-py3-none-any.whl", hash = "sha256:df214a2dcbd1bbd313e8508efdbe959eb7e95d2df3f6acced1bf2f36ddbf08a9"},
+    {file = "jinja2_async_environment-0.7.7.tar.gz", hash = "sha256:395d39c6f3292409dbb6ef827dfb1a0282b9df6622d24c43a9418be72d06e753"},
 ]
 
 [[package]]
