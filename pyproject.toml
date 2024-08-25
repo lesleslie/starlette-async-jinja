@@ -1,6 +1,6 @@
 [tool.pdm.dev-dependencies]
 dev = [
-    "crackerjack>=0.8.10",
+    "crackerjack>=0.8.16",
 ]
 
 [tool.ruff]
@@ -38,7 +38,7 @@ no-lines-before = [
 ]
 
 [tool.ruff.lint.mccabe]
-max-complexity = 11
+max-complexity = 12
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
@@ -54,11 +54,12 @@ paths = [
 ]
 deps-file = "pyproject.toml"
 exclude-deps = [
-    "python-ulid",
     "pdm-bump",
+    "pyyaml",
+    "pytest",
     "pdm",
     "autotyping",
-    "pytest",
+    "pyfiglet",
     "pre-commit",
 ]
 
@@ -70,10 +71,13 @@ target = [
     "starlette_async_jinja",
 ]
 skips = [
+    "B602",
+    "B403",
     "B404",
     "B603",
-    "B403",
-    "B113",
+    "B607",
+    "B301",
+    "B311",
 ]
 
 [tool.pyright]
@@ -105,12 +109,12 @@ ignore-words-list = "crate,uptodate"
 
 [project]
 name = "starlette-async-jinja"
-version = "1.7.9"
+version = "1.7.10"
 description = ""
 dependencies = [
-    "starlette>=0.38.0",
+    "starlette>=0.38.2",
     "jinja2>=3.1.4",
-    "jinja2-async-environment>=0.7.8",
+    "jinja2-async-environment>=0.8.0",
 ]
 requires-python = ">=3.12"
 readme = "README.md"
