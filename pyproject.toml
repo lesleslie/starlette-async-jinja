@@ -1,11 +1,11 @@
-[tool.pdm.dev-dependencies]
+[dependency-groups]
 dev = [
-    "crackerjack>=0.8.20",
+    "crackerjack>=0.10.4",
 ]
 
 [tool.ruff]
 line-length = 88
-target-version = "py312"
+target-version = "py313"
 fix = true
 show-fixes = true
 output-format = "full"
@@ -43,24 +43,21 @@ max-complexity = 12
 [tool.ruff.lint.pydocstyle]
 convention = "google"
 
-[tool.black]
-target-version = [
-    "py312",
-]
-
 [tool.creosote]
 paths = [
     "starlette_async_jinja",
 ]
 deps-file = "pyproject.toml"
 exclude-deps = [
-    "pre-commit",
     "pdm",
-    "pyyaml",
-    "autotyping",
-    "pytest",
-    "pyfiglet",
     "pdm-bump",
+    "uv",
+    "pytest",
+    "pre-commit",
+    "tomli-w",
+    "autotyping",
+    "pyfiglet",
+    "pyyaml",
 ]
 
 [tool.refurb]
@@ -71,13 +68,13 @@ target = [
     "starlette_async_jinja",
 ]
 skips = [
-    "B607",
     "B403",
+    "B311",
     "B603",
     "B301",
-    "B311",
     "B602",
     "B404",
+    "B607",
 ]
 
 [tool.pyright]
@@ -89,7 +86,7 @@ exclude = [
     "scratch",
 ]
 extraPaths = [
-    "__pypackages__/3.12/lib/",
+    ".venv/lib/python3.13/site-packages/",
 ]
 typeCheckingMode = "strict"
 reportMissingTypeStubs = false
@@ -99,7 +96,7 @@ reportUnknownMemberType = false
 reportUnknownVariableType = false
 reportUnknownArgumentType = false
 reportPrivateUsage = "warning"
-pythonVersion = "3.12"
+pythonVersion = "3.13"
 pythonPlatform = "Darwin"
 
 [tool.codespell]
@@ -107,23 +104,31 @@ skip = "*/data/*"
 quiet-level = 3
 ignore-words-list = "crate,uptodate"
 
+[tool.pdm]
+
+[tool.vulture]
+min_confidence = 84
+paths = [
+    "starlette_async_jinja",
+]
+
 [project]
 name = "starlette-async-jinja"
-version = "1.7.11"
+version = "1.8.0"
 description = ""
 dependencies = [
-    "starlette>=0.39.2",
+    "starlette>=0.41.2",
     "jinja2>=3.1.4",
-    "jinja2-async-environment>=0.8.1",
+    "jinja2-async-environment>=0.9.0",
 ]
-requires-python = ">=3.12"
+requires-python = ">=3.13"
 readme = "README.md"
 authors = [
     { name = "lesleslie", email = "les@wedgwoodwebworks.com" },
 ]
 classifiers = [
     "Programming Language :: Python",
-    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
     "Operating System :: OS Independent",
     "Framework :: FastAPI",
