@@ -49,15 +49,15 @@ paths = [
 ]
 deps-file = "pyproject.toml"
 exclude-deps = [
-    "pdm",
-    "pdm-bump",
     "uv",
-    "pytest",
+    "pdm",
     "pre-commit",
     "tomli-w",
+    "pyyaml",
+    "pytest",
     "autotyping",
     "pyfiglet",
-    "pyyaml",
+    "pdm-bump",
 ]
 
 [tool.refurb]
@@ -69,12 +69,12 @@ target = [
 ]
 skips = [
     "B403",
-    "B311",
-    "B603",
     "B301",
     "B602",
+    "B311",
     "B404",
     "B607",
+    "B603",
 ]
 
 [tool.pyright]
@@ -114,7 +114,7 @@ paths = [
 
 [project]
 name = "starlette-async-jinja"
-version = "1.8.0"
+version = "1.8.1"
 description = ""
 dependencies = [
     "starlette>=0.41.2",
