@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = []
 lock_version = "4.5.0"
-content_hash = "sha256:a7de963f5fb9f05dc4f639ef9fe4b39c1e99d6cefce305cbeefe3ba15bf22a07"
+content_hash = "sha256:b2d8258b925cc40897d02e3860c8b5d5216cabadfd44fc72ecc9f8703addbbb3"
 
 [[metadata.targets]]
 requires_python = ">=3.13"
@@ -225,7 +225,7 @@ name = "click"
 version = "8.1.8"
 summary = ""
 dependencies = [
-    "colorama; platform_system == \"Windows\"",
+    "colorama; sys_platform == \"win32\"",
 ]
 files = [
     {file = "click-8.1.8-py3-none-any.whl", hash = "sha256:63c132bbbed01578a06712a2d1f497bb62d9c1c0d329b7903a866228027263b2"},
@@ -243,7 +243,7 @@ files = [
 
 [[package]]
 name = "crackerjack"
-version = "0.10.6"
+version = "0.10.7"
 summary = ""
 dependencies = [
     "acb",
@@ -260,8 +260,8 @@ dependencies = [
     "uv",
 ]
 files = [
-    {file = "crackerjack-0.10.6-py3-none-any.whl", hash = "sha256:2362aed6f734843ac26304c9d6e29519f22096dfada29ce0b7e85a368609e43e"},
-    {file = "crackerjack-0.10.6.tar.gz", hash = "sha256:e2ee0efedcee6c9cded6d0e0c91b4d601c89fca210989cd3eeba2cfde66ff31f"},
+    {file = "crackerjack-0.10.7-py3-none-any.whl", hash = "sha256:e313b011094587807758e539dda01de6b39c78dd28c1c701df3e268dc5351692"},
+    {file = "crackerjack-0.10.7.tar.gz", hash = "sha256:9524cea9127c0441e08998671ecc32af0870f5ad5b79605bc6781e537bf22c76"},
 ]
 
 [[package]]
@@ -998,14 +998,14 @@ files = [
 
 [[package]]
 name = "starlette"
-version = "0.45.0"
+version = "0.45.3"
 summary = ""
 dependencies = [
     "anyio",
 ]
 files = [
-    {file = "starlette-0.45.0-py3-none-any.whl", hash = "sha256:c911ba0e86eed5b336931623f45e56a8c6d76c618f2749d9f5ed9ee55a5bf1bb"},
-    {file = "starlette-0.45.0.tar.gz", hash = "sha256:ca7ee855c243a058a2f24bc832b8072bade47fbc2672ce4b98de66c7f6c924f0"},
+    {file = "starlette-0.45.3-py3-none-any.whl", hash = "sha256:dfb6d332576f136ec740296c7e8bb8c8a7125044e7c6da30744718880cdd059d"},
+    {file = "starlette-0.45.3.tar.gz", hash = "sha256:2cbcba2a75806f8a41c722141486f37c28e30a0921c5f6fe4346cb0dcee1302f"},
 ]
 
 [[package]]

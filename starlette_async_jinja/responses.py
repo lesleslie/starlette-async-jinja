@@ -14,7 +14,7 @@ from starlette.types import Receive, Scope, Send
 
 
 class JsonResponse(JSONResponse):
-    async def render(self, content: str) -> t.Any:  # type: ignore
+    def render(self, content: t.Any) -> bytes:  # type: ignore
         return json.encode(content)
 
 
