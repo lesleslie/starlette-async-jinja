@@ -95,10 +95,13 @@ class AsyncJinja2Templates:
         self,
         template_name: str,
         renderer: t.Optional[t.Callable[..., t.Any]] = None,
+        markup: bool = True,
         **data: t.Any,
-    ) -> Markup:
+    ) -> Markup | str:
         renderer = renderer or self.renderer
-        return Markup(await renderer(template_name, **data))
+        if markup:
+            return Markup(await renderer(template_name, **data))  # nosec
+        return await renderer(template_name, **data)
 
     def generate_render_partial(self, renderer: t.Any) -> t.Any:
         return partial(self.render_block, renderer=renderer)
