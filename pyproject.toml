@@ -1,6 +1,6 @@
 [dependency-groups]
 dev = [
-    "crackerjack>=0.10.7",
+    "crackerjack>=0.11.5",
 ]
 
 [tool.ruff]
@@ -9,6 +9,7 @@ target-version = "py313"
 fix = true
 show-fixes = true
 output-format = "full"
+unsafe-fixes = true
 
 [tool.ruff.format]
 docstring-code-format = true
@@ -49,13 +50,17 @@ paths = [
 ]
 deps-file = "pyproject.toml"
 exclude-deps = [
-    "pytest",
-    "uv",
-    "tomli-w",
-    "pyfiglet",
-    "autotyping",
+    "google-crc32c",
     "pyyaml",
+    "autotyping",
+    "tomli-w",
+    "uv",
+    "pyfiglet",
     "pre-commit",
+    "pytest-cov",
+    "pytest-asyncio",
+    "pytest-mock",
+    "pytest",
     "pdm-bump",
     "pdm",
 ]
@@ -68,13 +73,15 @@ target = [
     "starlette_async_jinja",
 ]
 skips = [
-    "B607",
-    "B301",
-    "B603",
-    "B403",
-    "B602",
+    "B101",
     "B404",
     "B311",
+    "B301",
+    "B704",
+    "B603",
+    "B607",
+    "B403",
+    "B602",
 ]
 
 [tool.pyright]
@@ -95,6 +102,9 @@ reportOptionalCall = false
 reportUnknownMemberType = false
 reportUnknownVariableType = false
 reportUnknownArgumentType = false
+reportInvalidTypeForm = false
+reportUnknownLambdaType = false
+reportUnknownParameterType = "warning"
 reportPrivateUsage = "warning"
 pythonVersion = "3.13"
 pythonPlatform = "Darwin"
@@ -110,14 +120,20 @@ paths = [
     "starlette_async_jinja",
 ]
 
+[tool.pytest.ini_options]
+addopts = "--cov=starlette_async_jinja"
+asyncio_default_fixture_loop_scope = "function"
+
 [project]
 name = "starlette-async-jinja"
-version = "1.8.3"
+version = "1.9.0"
 description = ""
 dependencies = [
-    "starlette>=0.45.3",
-    "jinja2>=3.1.5",
-    "jinja2-async-environment>=0.9.1",
+    "starlette>=0.46.1",
+    "jinja2>=3.1.6",
+    "jinja2-async-environment>=0.10.2",
+    "msgspec>=0.19.0",
+    "aiopath>=0.7.7",
 ]
 requires-python = ">=3.13"
 readme = "README.md"
