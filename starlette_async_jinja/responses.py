@@ -12,7 +12,6 @@ from starlette.responses import HTMLResponse, JSONResponse
 from starlette.templating import pass_context
 from starlette.types import Receive, Scope, Send
 
-# Type aliases for better readability
 ContextProcessor: t.TypeAlias = t.Callable[[t.Any], dict[str, t.Any]]
 RenderFunction: t.TypeAlias = t.Callable[..., t.Awaitable[t.Any]]
 
@@ -88,14 +87,10 @@ class AsyncJinja2Templates:
         env_options.setdefault("loader", loader)
         env_options.setdefault("autoescape", True)
 
-        # AsyncEnvironment has enable_async=True by default
         env = AsyncEnvironment(**env_options)
-        # Type ignore needed for globals assignment
         env.globals["render_block"] = self.generate_render_partial(self.renderer)  # type: ignore[assignment]
         env.globals["url_for"] = url_for  # type: ignore[assignment]
         return env
-
-    # Partials - https://github.com/mikeckennedy/jinja_partials
 
     async def render_block(
         self,
@@ -107,10 +102,9 @@ class AsyncJinja2Templates:
         renderer = renderer or self.renderer
         try:
             if markup:
-                return Markup(await renderer(template_name, **data))  # nosec
+                return Markup(await renderer(template_name, **data))
             return await renderer(template_name, **data)
         except Exception as e:
-            # Re-raise with more context for better error messages
             raise RuntimeError(
                 f"Error rendering block in template '{template_name}': {e}"
             ) from e
@@ -125,12 +119,9 @@ class AsyncJinja2Templates:
             template = await self.get_template(template_name)
             return await template.render_async(**data)
         except Exception as e:
-            # Re-raise with more context for better error messages
             raise RuntimeError(
                 f"Error rendering template '{template_name}': {e}"
             ) from e
-
-    # Fragments - https://github.com/sponsfreixes/jinja2-fragments
 
     async def render_fragment(
         self,
@@ -148,35 +139,29 @@ class AsyncJinja2Templates:
 
             ctx = template.new_context(dict(*args, **kwargs))
             try:
-                # Type ignore for async iterator
                 return self.env.concat(
                     [n async for n in block_render_func(ctx)]  # type: ignore[attr-defined]
                 )
             except Exception:
-                # Call handle_exception without arguments
                 return self.env.handle_exception()
         except BlockNotFoundError:
-            # Re-raise block not found errors directly
             raise
         except Exception as e:
-            # Re-raise with more context for better error messages
             raise RuntimeError(
                 f"Error rendering fragment '{block_name}' in template '{template_name}': {e}"
             ) from e
 
     async def get_template(self, name: str) -> Template:
         try:
-            # get_template in AsyncEnvironment returns an awaitable that resolves to a Template
             template = await self.env.get_template_async(name)
             return template
         except Exception as e:
-            # Re-raise with more context for better error messages
             raise RuntimeError(f"Error loading template '{name}': {e}") from e
 
     async def TemplateResponse(
         self, *args: t.Any, **kwargs: t.Any
     ) -> _TemplateResponse:
-        name = "<unknown>"  # Default value to avoid unbound name error
+        name = "<unknown>"
         try:
             if args:
                 request = args[0]
@@ -188,7 +173,7 @@ class AsyncJinja2Templates:
                 headers = args[4] if len(args) > 4 else kwargs.get("headers")
                 media_type = args[5] if len(args) > 5 else kwargs.get("media_type")
                 background = args[6] if len(args) > 6 else kwargs.get("background")
-            else:  # all arguments are kwargs
+            else:
                 context = kwargs.get("context", {})
                 request = kwargs.get("request", context.get("request"))
                 name = t.cast(str, kwargs["name"])
@@ -219,7 +204,6 @@ class AsyncJinja2Templates:
                 background=background,
             )
         except Exception as e:
-            # Re-raise with more context for better error messages
             raise RuntimeError(
                 f"Error creating template response for '{name}': {e}"
             ) from e

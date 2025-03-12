@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = []
 lock_version = "4.5.0"
-content_hash = "sha256:7114d53411751152cf38d6b8f87486b304935d483619192a0afe32dfdd0edc61"
+content_hash = "sha256:0cde0db709cede156f7d8687ed1af9b317dc07f30091e5852d57fa4a6708e516"
 
 [[metadata.targets]]
 requires_python = ">=3.13"
@@ -160,11 +160,10 @@ files = [
 
 [[package]]
 name = "crackerjack"
-version = "0.11.5"
+version = "0.14.0"
 summary = ""
 dependencies = [
     "autotyping",
-    "click",
     "pdm",
     "pdm-bump",
     "pre-commit",
@@ -173,12 +172,14 @@ dependencies = [
     "pytest-asyncio",
     "pytest-cov",
     "pytest-mock",
+    "rich",
     "tomli-w",
+    "typer",
     "uv",
 ]
 files = [
-    {file = "crackerjack-0.11.5-py3-none-any.whl", hash = "sha256:8cade1b5a61062c9dff8f101aaec9a9c0e5cc30ad8c5539253a8eae3a7ea50d7"},
-    {file = "crackerjack-0.11.5.tar.gz", hash = "sha256:f9b318105f564de43449b1202cb621bc38551a96dbec6db33c9c4bd1d0c80bb9"},
+    {file = "crackerjack-0.14.0-py3-none-any.whl", hash = "sha256:8783821524e05546d726c38467863db974c0ee7b165e5d99149f8a963d8a248a"},
+    {file = "crackerjack-0.14.0.tar.gz", hash = "sha256:59a3ad63b336546fffae3ef85b81e444524f2549bc0acbc9c97e033b7a7ea17b"},
 ]
 
 [[package]]
@@ -336,15 +337,16 @@ files = [
 
 [[package]]
 name = "jinja2-async-environment"
-version = "0.10.2"
+version = "0.10.3"
 summary = ""
 dependencies = [
+    "aiopath",
     "jinja2",
     "redis",
 ]
 files = [
-    {file = "jinja2_async_environment-0.10.2-py3-none-any.whl", hash = "sha256:d44cacf9715a7e3a23b41c164b3b3ba88784f5828c6e33758fd6c56eeb161f73"},
-    {file = "jinja2_async_environment-0.10.2.tar.gz", hash = "sha256:1ba8edc72a1fbfad39b62fe8f5e1130cec2cb65feaaa1b9da0292e9fae3ce396"},
+    {file = "jinja2_async_environment-0.10.3-py3-none-any.whl", hash = "sha256:604635a77f92951bcd38fef2809f629b91f5961907f121aa2a26096b1b1aa9c2"},
+    {file = "jinja2_async_environment-0.10.3.tar.gz", hash = "sha256:91779a2cc418c59400f3c5b360de3ce5df910aa736dd7156d3a022edbaf7ea71"},
 ]
 
 [[package]]
@@ -812,6 +814,21 @@ summary = ""
 files = [
     {file = "truststore-0.10.1-py3-none-any.whl", hash = "sha256:b64e6025a409a43ebdd2807b0c41c8bff49ea7ae6550b5087ac6df6619352d4c"},
     {file = "truststore-0.10.1.tar.gz", hash = "sha256:eda021616b59021812e800fa0a071e51b266721bef3ce092db8a699e21c63539"},
+]
+
+[[package]]
+name = "typer"
+version = "0.15.2"
+summary = ""
+dependencies = [
+    "click",
+    "rich",
+    "shellingham",
+    "typing-extensions",
+]
+files = [
+    {file = "typer-0.15.2-py3-none-any.whl", hash = "sha256:46a499c6107d645a9c13f7ee46c5d5096cae6f5fc57dd11eccbbb9ae3e44ddfc"},
+    {file = "typer-0.15.2.tar.gz", hash = "sha256:ab2fab47533a813c49fe1f16b1a370fd5819099c00b119e0633df65f22144ba5"},
 ]
 
 [[package]]

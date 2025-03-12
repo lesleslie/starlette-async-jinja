@@ -55,7 +55,6 @@ async def test_json_response_render() -> None:
     rendered = JsonResponse(data).render(data)
     assert rendered == b'{"key":"value"}'
 
-    # Test with nested data
     nested_data: dict[str, t.Any] = {"nested": {"key": ["value1", "value2"]}}
     rendered = JsonResponse(nested_data).render(nested_data)
     assert rendered == b'{"nested":{"key":["value1","value2"]}}'
@@ -180,7 +179,6 @@ async def test_async_jinja2_templates_render_fragment(
     """Test the render_fragment method."""
     with patch.object(templates, "get_template", AsyncMock(return_value=mock_template)):
         with patch.object(templates.env, "concat", return_value="Test Block"):
-            # Create a simpler patch that doesn't require async iteration
             with patch.object(
                 mock_template.blocks["my_block"], "__call__", return_value=[]
             ):
@@ -195,7 +193,6 @@ async def test_async_jinja2_templates_render_fragment_with_context(
     """Test the render_fragment method with context variables."""
     with patch.object(templates, "get_template", AsyncMock(return_value=mock_template)):
         with patch.object(templates.env, "concat", return_value="Hello World"):
-            # Create a simpler patch that doesn't require async iteration
             with patch.object(
                 mock_template.blocks["my_block"], "__call__", return_value=[]
             ):
@@ -210,7 +207,7 @@ async def test_async_jinja2_templates_render_fragment_block_not_found(
     templates: AsyncJinja2Templates, template_dir: AsyncPath, mock_template: MagicMock
 ) -> None:
     """Test render_fragment when the block is not found."""
-    mock_template.blocks = {}  # Empty blocks dictionary to trigger the key error
+    mock_template.blocks = {}
 
     with patch.object(templates, "get_template", AsyncMock(return_value=mock_template)):
         with pytest.raises(BlockNotFoundError) as exc_info:
@@ -315,7 +312,6 @@ async def test_async_jinja2_templates_template_response_context_processors(
         assert response.status_code == 200
         assert b"<h1>processed</h1>" in response.body
 
-        # Check that context processor was called and values were added to context
         context_with_processor = {
             "request": mock_request,
             "from_processor": "processed",
@@ -345,7 +341,6 @@ async def test_async_jinja2_templates_template_response_other_args(
         )
         assert response.status_code == 201
         assert response.media_type == "application/custom"
-        # The content-type header might not include charset in some Starlette versions
         assert "application/custom" in response.headers["content-type"]
         assert response.headers["custom-header"] == "value"
         assert b"<h1>Test Title</h1>" in response.body
@@ -378,7 +373,6 @@ async def test_render_block_error_handling(
 ) -> None:
     """Test error handling in render_block method."""
 
-    # Create a renderer that raises an exception
     async def failing_renderer(template_name: str, **data: t.Any) -> str:
         raise ValueError("Test renderer error")
 
@@ -400,7 +394,6 @@ async def test_template_response_with_none_context(
     mock_template.render_async.return_value = "<h1>Test</h1>"
 
     with patch.object(templates, "get_template", AsyncMock(return_value=mock_template)):
-        # Pass None as context to exercise the None-handling code path
         response = await templates.TemplateResponse(
             mock_request, "test.html", context=None
         )
