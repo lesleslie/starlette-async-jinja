@@ -1,6 +1,6 @@
 [dependency-groups]
 dev = [
-    "crackerjack>=0.14.1",
+    "crackerjack>=0.14.2",
 ]
 
 [tool.ruff]
@@ -49,18 +49,18 @@ paths = [
 ]
 deps-file = "pyproject.toml"
 exclude-deps = [
-    "pytest-mock",
-    "tomli-w",
+    "pytest",
+    "autotyping",
+    "pyyaml",
+    "google-crc32c",
     "pdm-bump",
     "uv",
     "pre-commit",
-    "pyfiglet",
     "pytest-asyncio",
+    "tomli-w",
+    "pytest-mock",
     "pdm",
-    "autotyping",
-    "pytest",
-    "pyyaml",
-    "google-crc32c",
+    "pyfiglet",
     "pytest-cov",
 ]
 
@@ -72,15 +72,15 @@ target = [
     "starlette_async_jinja",
 ]
 skips = [
-    "B301",
+    "B101",
+    "B403",
     "B607",
+    "B704",
+    "B301",
+    "B603",
+    "B311",
     "B602",
     "B404",
-    "B403",
-    "B603",
-    "B704",
-    "B101",
-    "B311",
 ]
 
 [tool.pyright]
@@ -128,12 +128,12 @@ asyncio_default_fixture_loop_scope = "function"
 
 [project]
 name = "starlette-async-jinja"
-version = "1.9.2"
+version = "1.9.3"
 description = ""
 dependencies = [
     "starlette>=0.46.1",
     "jinja2>=3.1.6",
-    "jinja2-async-environment>=0.10.5",
+    "jinja2-async-environment>=0.11.0",
     "msgspec>=0.19.0",
     "aiopath>=0.7.7",
 ]

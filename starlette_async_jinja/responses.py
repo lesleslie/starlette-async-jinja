@@ -116,7 +116,7 @@ class AsyncJinja2Templates:
 
     async def renderer(self, template_name: str, **data: t.Any) -> str:
         try:
-            template = await self.get_template(template_name)
+            template = await self.env.get_template_async(template_name)
             return await template.render_async(**data)
         except Exception as e:
             raise RuntimeError(
@@ -131,7 +131,7 @@ class AsyncJinja2Templates:
         **kwargs: t.Any,
     ) -> str:
         try:
-            template = await self.get_template(template_name)
+            template = await self.env.get_template_async(template_name)
             try:
                 block_render_func = template.blocks[block_name]
             except KeyError:
@@ -191,7 +191,7 @@ class AsyncJinja2Templates:
                 if processor_result:
                     context.update(processor_result)
 
-            template = await self.get_template(name)
+            template = await self.env.get_template_async(name)
             content = await template.render_async(context)
 
             return _TemplateResponse(
