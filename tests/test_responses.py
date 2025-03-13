@@ -166,7 +166,9 @@ async def test_async_jinja2_templates_renderer(
 ) -> None:
     """Test the renderer method."""
     mock_template.render_async.return_value = "<h1>Test Title</h1>"
-    with patch.object(templates, "get_template_async", AsyncMock(return_value=mock_template)):
+    with patch.object(
+        templates, "get_template_async", AsyncMock(return_value=mock_template)
+    ):
         result = await templates.renderer("test.html", title="Test Title")
         assert result == "<h1>Test Title</h1>"
         mock_template.render_async.assert_awaited_once_with(title="Test Title")
@@ -177,7 +179,9 @@ async def test_async_jinja2_templates_render_fragment(
     templates: AsyncJinja2Templates, template_dir: AsyncPath, mock_template: MagicMock
 ) -> None:
     """Test the render_fragment method."""
-    with patch.object(templates, "get_template_async", AsyncMock(return_value=mock_template)):
+    with patch.object(
+        templates, "get_template_async", AsyncMock(return_value=mock_template)
+    ):
         with patch.object(templates.env, "concat", return_value="Test Block"):
             with patch.object(
                 mock_template.blocks["my_block"], "__call__", return_value=[]
@@ -191,7 +195,9 @@ async def test_async_jinja2_templates_render_fragment_with_context(
     templates: AsyncJinja2Templates, template_dir: AsyncPath, mock_template: MagicMock
 ) -> None:
     """Test the render_fragment method with context variables."""
-    with patch.object(templates, "get_template_async", AsyncMock(return_value=mock_template)):
+    with patch.object(
+        templates, "get_template_async", AsyncMock(return_value=mock_template)
+    ):
         with patch.object(templates.env, "concat", return_value="Hello World"):
             with patch.object(
                 mock_template.blocks["my_block"], "__call__", return_value=[]
@@ -209,7 +215,9 @@ async def test_async_jinja2_templates_render_fragment_block_not_found(
     """Test render_fragment when the block is not found."""
     mock_template.blocks = {}
 
-    with patch.object(templates, "get_template_async", AsyncMock(return_value=mock_template)):
+    with patch.object(
+        templates, "get_template_async", AsyncMock(return_value=mock_template)
+    ):
         with pytest.raises(BlockNotFoundError) as exc_info:
             await templates.render_fragment("test.html", "my_block")
         assert "Block 'my_block' not found in template 'test.html'" in str(
@@ -228,7 +236,7 @@ async def test_async_jinja2_templates_get_template(
         mock_template = MagicMock()
         mock_get_template.return_value = mock_template
 
-        template = await templates.get_template("test.html")
+        template = await templates.get_template_async("test.html")
         assert template is mock_template
         mock_get_template.assert_awaited_once_with("test.html")
 
@@ -244,7 +252,7 @@ async def test_async_jinja2_templates_get_template_not_found(
         AsyncMock(side_effect=Exception("Template not found")),
     ):
         with pytest.raises(RuntimeError) as exc_info:
-            await templates.get_template("nonexistent.html")
+            await templates.get_template_async("nonexistent.html")
         assert "Error loading template 'nonexistent.html'" in str(exc_info.value)
 
 
@@ -258,7 +266,9 @@ async def test_async_jinja2_templates_template_response(
     """Test the TemplateResponse method."""
     mock_template.render_async.return_value = "<h1>Test Title</h1>"
 
-    with patch.object(templates, "get_template_async", AsyncMock(return_value=mock_template)):
+    with patch.object(
+        templates, "get_template_async", AsyncMock(return_value=mock_template)
+    ):
         response = await templates.TemplateResponse(
             mock_request, "test.html", context={"title": "Test Title"}
         )
@@ -278,7 +288,9 @@ async def test_async_jinja2_templates_template_response_kwargs(
     """Test the TemplateResponse method with kwargs."""
     mock_template.render_async.return_value = "<h1>Test Title</h1>"
 
-    with patch.object(templates, "get_template_async", AsyncMock(return_value=mock_template)):
+    with patch.object(
+        templates, "get_template_async", AsyncMock(return_value=mock_template)
+    ):
         response = await templates.TemplateResponse(
             name="test.html", context={"title": "Test Title"}, request=mock_request
         )
@@ -303,7 +315,9 @@ async def test_async_jinja2_templates_template_response_context_processors(
 
     mock_template.render_async.return_value = "<h1>processed</h1>"
 
-    with patch.object(templates, "get_template_async", AsyncMock(return_value=mock_template)):
+    with patch.object(
+        templates, "get_template_async", AsyncMock(return_value=mock_template)
+    ):
         response = await templates.TemplateResponse(
             request=mock_request,
             name="test.html",
@@ -329,7 +343,9 @@ async def test_async_jinja2_templates_template_response_other_args(
     """Test the TemplateResponse method with other args."""
     mock_template.render_async.return_value = "<h1>Test Title</h1>"
 
-    with patch.object(templates, "get_template_async", AsyncMock(return_value=mock_template)):
+    with patch.object(
+        templates, "get_template_async", AsyncMock(return_value=mock_template)
+    ):
         response = await templates.TemplateResponse(
             mock_request,
             "test.html",
@@ -357,8 +373,9 @@ async def test_render_template_alias(
     """Test the render_template alias for TemplateResponse."""
     mock_template.render_async.return_value = "<h1>Test Title</h1>"
 
-    with patch.object(templates, "get_template_async", AsyncMock(
-            return_value=mock_template)):
+    with patch.object(
+        templates, "get_template_async", AsyncMock(return_value=mock_template)
+    ):
         response = await templates.render_template(
             mock_request, "test.html", context={"title": "Test Title"}
         )
@@ -394,8 +411,9 @@ async def test_template_response_with_none_context(
     """Test TemplateResponse with None context."""
     mock_template.render_async.return_value = "<h1>Test</h1>"
 
-    with patch.object(templates, "get_template_async", AsyncMock(
-            return_value=mock_template)):
+    with patch.object(
+        templates, "get_template_async", AsyncMock(return_value=mock_template)
+    ):
         response = await templates.TemplateResponse(
             mock_request, "test.html", context=None
         )
