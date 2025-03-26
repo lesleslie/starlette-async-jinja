@@ -18,7 +18,6 @@ from starlette_async_jinja.responses import (
 
 @pytest.fixture
 def template_dir(tmp_path: Path) -> AsyncPath:
-    """Fixture for a temporary template directory."""
     template_path = tmp_path / "templates"
     template_path.mkdir()
     return AsyncPath(template_path)
@@ -26,13 +25,11 @@ def template_dir(tmp_path: Path) -> AsyncPath:
 
 @pytest.fixture
 def templates(template_dir: AsyncPath) -> AsyncJinja2Templates:
-    """Fixture for an AsyncJinja2Templates instance."""
     return AsyncJinja2Templates(directory=template_dir)
 
 
 @pytest.fixture
 def mock_template() -> MagicMock:
-    """Fixture for a mocked template."""
     template = MagicMock(spec=Template)
     template.render_async = AsyncMock(return_value="<h1>Mocked Content</h1>")
     template.blocks = {"my_block": MagicMock()}
@@ -42,7 +39,6 @@ def mock_template() -> MagicMock:
 
 @pytest.fixture
 def mock_request() -> MagicMock:
-    """Fixture for a mock request."""
     mock_request = MagicMock(spec=Request)
     mock_request.url_for.return_value = URL("http://testserver/test")
     return mock_request
@@ -50,7 +46,6 @@ def mock_request() -> MagicMock:
 
 @pytest.mark.asyncio
 async def test_json_response_render() -> None:
-    """Test that JsonResponse.render encodes content as JSON."""
     data: dict[str, t.Any] = {"key": "value"}
     rendered = JsonResponse(data).render(data)
     assert rendered == b'{"key":"value"}'
@@ -62,7 +57,6 @@ async def test_json_response_render() -> None:
 
 @pytest.mark.asyncio
 async def test_template_response_init() -> None:
-    """Test the initialization of _TemplateResponse."""
     mock_template = MagicMock()
     context: dict[str, t.Any] = {"key": "value"}
     content = "<html></html>"
@@ -76,7 +70,6 @@ async def test_template_response_init() -> None:
 
 @pytest.mark.asyncio
 async def test_template_response_call_with_debug_extension() -> None:
-    """Test _TemplateResponse.__call__ with the debug extension."""
     mock_template = MagicMock()
     context: dict[str, t.Any] = {"request": {"extensions": {"http.response.debug": {}}}}
     content = "<html></html>"
@@ -100,7 +93,6 @@ async def test_template_response_call_with_debug_extension() -> None:
 
 @pytest.mark.asyncio
 async def test_async_jinja2_templates_init(template_dir: AsyncPath) -> None:
-    """Test the initialization of AsyncJinja2Templates."""
     templates = AsyncJinja2Templates(directory=template_dir)
     assert templates.env is not None
     assert templates.env.loader is not None
@@ -113,7 +105,6 @@ async def test_async_jinja2_templates_init(template_dir: AsyncPath) -> None:
 async def test_async_jinja2_templates_init_with_options(
     template_dir: AsyncPath,
 ) -> None:
-    """Test the initialization of AsyncJinja2Templates with custom options."""
     templates = AsyncJinja2Templates(
         directory=template_dir, autoescape=False, trim_blocks=True
     )
@@ -126,7 +117,6 @@ async def test_async_jinja2_templates_init_with_options(
 
 @pytest.mark.asyncio
 async def test_async_jinja2_templates_create_env(template_dir: AsyncPath) -> None:
-    """Test _create_env method."""
     env = AsyncJinja2Templates(directory=template_dir)._create_env(template_dir)
     assert env is not None
     assert "render_block" in env.globals
@@ -140,7 +130,6 @@ async def test_async_jinja2_templates_create_env(template_dir: AsyncPath) -> Non
 async def test_async_jinja2_templates_render_block(
     templates: AsyncJinja2Templates, template_dir: AsyncPath, mock_template: MagicMock
 ) -> None:
-    """Test the render_block method."""
     with patch.object(templates, "get_template_async", return_value=mock_template):
         with patch.object(templates, "renderer", AsyncMock(return_value="Test Block")):
             result = await templates.render_block("test.html", my_block="my block")
@@ -151,7 +140,6 @@ async def test_async_jinja2_templates_render_block(
 async def test_async_jinja2_templates_generate_render_partial(
     templates: AsyncJinja2Templates, template_dir: AsyncPath, mock_template: MagicMock
 ) -> None:
-    """Test the generate_render_partial method."""
     mock_renderer = AsyncMock(return_value="Test Block")
     with patch.object(templates, "get_template_async", return_value=mock_template):
         partial_renderer = templates.generate_render_partial(mock_renderer)
@@ -164,7 +152,6 @@ async def test_async_jinja2_templates_generate_render_partial(
 async def test_async_jinja2_templates_renderer(
     templates: AsyncJinja2Templates, template_dir: AsyncPath, mock_template: MagicMock
 ) -> None:
-    """Test the renderer method."""
     mock_template.render_async.return_value = "<h1>Test Title</h1>"
     with patch.object(
         templates, "get_template_async", AsyncMock(return_value=mock_template)
@@ -178,7 +165,6 @@ async def test_async_jinja2_templates_renderer(
 async def test_async_jinja2_templates_render_fragment(
     templates: AsyncJinja2Templates, template_dir: AsyncPath, mock_template: MagicMock
 ) -> None:
-    """Test the render_fragment method."""
     with patch.object(
         templates, "get_template_async", AsyncMock(return_value=mock_template)
     ):
@@ -194,7 +180,6 @@ async def test_async_jinja2_templates_render_fragment(
 async def test_async_jinja2_templates_render_fragment_with_context(
     templates: AsyncJinja2Templates, template_dir: AsyncPath, mock_template: MagicMock
 ) -> None:
-    """Test the render_fragment method with context variables."""
     with patch.object(
         templates, "get_template_async", AsyncMock(return_value=mock_template)
     ):
@@ -212,7 +197,6 @@ async def test_async_jinja2_templates_render_fragment_with_context(
 async def test_async_jinja2_templates_render_fragment_block_not_found(
     templates: AsyncJinja2Templates, template_dir: AsyncPath, mock_template: MagicMock
 ) -> None:
-    """Test render_fragment when the block is not found."""
     mock_template.blocks = {}
 
     with patch.object(
@@ -229,7 +213,6 @@ async def test_async_jinja2_templates_render_fragment_block_not_found(
 async def test_async_jinja2_templates_get_template(
     templates: AsyncJinja2Templates, template_dir: AsyncPath
 ) -> None:
-    """Test the get_template method."""
     with patch.object(
         templates.env, "get_template_async", AsyncMock()
     ) as mock_get_template:
@@ -245,7 +228,6 @@ async def test_async_jinja2_templates_get_template(
 async def test_async_jinja2_templates_get_template_not_found(
     templates: AsyncJinja2Templates,
 ) -> None:
-    """Test get_template when the template is not found."""
     with patch.object(
         templates.env,
         "get_template_async",
@@ -263,7 +245,6 @@ async def test_async_jinja2_templates_template_response(
     mock_request: MagicMock,
     mock_template: MagicMock,
 ) -> None:
-    """Test the TemplateResponse method."""
     mock_template.render_async.return_value = "<h1>Test Title</h1>"
 
     with patch.object(
@@ -285,7 +266,6 @@ async def test_async_jinja2_templates_template_response_kwargs(
     mock_request: MagicMock,
     mock_template: MagicMock,
 ) -> None:
-    """Test the TemplateResponse method with kwargs."""
     mock_template.render_async.return_value = "<h1>Test Title</h1>"
 
     with patch.object(
@@ -304,8 +284,6 @@ async def test_async_jinja2_templates_template_response_kwargs(
 async def test_async_jinja2_templates_template_response_context_processors(
     template_dir: AsyncPath, mock_request: MagicMock, mock_template: MagicMock
 ) -> None:
-    """Test the TemplateResponse method with context processors."""
-
     def context_processor(request: Request) -> dict[str, str]:
         return {"from_processor": "processed"}
 
@@ -340,7 +318,6 @@ async def test_async_jinja2_templates_template_response_other_args(
     mock_request: MagicMock,
     mock_template: MagicMock,
 ) -> None:
-    """Test the TemplateResponse method with other args."""
     mock_template.render_async.return_value = "<h1>Test Title</h1>"
 
     with patch.object(
@@ -370,7 +347,6 @@ async def test_render_template_alias(
     mock_request: MagicMock,
     mock_template: MagicMock,
 ) -> None:
-    """Test the render_template alias for TemplateResponse."""
     mock_template.render_async.return_value = "<h1>Test Title</h1>"
 
     with patch.object(
@@ -389,8 +365,6 @@ async def test_render_template_alias(
 async def test_render_block_error_handling(
     templates: AsyncJinja2Templates, template_dir: AsyncPath
 ) -> None:
-    """Test error handling in render_block method."""
-
     async def failing_renderer(template_name: str, **data: t.Any) -> str:
         raise ValueError("Test renderer error")
 
@@ -408,7 +382,6 @@ async def test_template_response_with_none_context(
     mock_request: MagicMock,
     mock_template: MagicMock,
 ) -> None:
-    """Test TemplateResponse with None context."""
     mock_template.render_async.return_value = "<h1>Test</h1>"
 
     with patch.object(

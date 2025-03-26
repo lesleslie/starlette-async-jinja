@@ -49,19 +49,19 @@ paths = [
 ]
 deps-file = "pyproject.toml"
 exclude-deps = [
-    "pytest-asyncio",
     "autotyping",
-    "uv",
-    "pdm-bump",
-    "pdm",
-    "pytest",
-    "pytest-mock",
-    "tomli-w",
-    "pyyaml",
-    "pyfiglet",
     "pytest-cov",
-    "google-crc32c",
+    "pdm",
     "pre-commit",
+    "pyfiglet",
+    "pdm-bump",
+    "tomli-w",
+    "uv",
+    "pytest-mock",
+    "pyyaml",
+    "google-crc32c",
+    "pytest-asyncio",
+    "pytest",
 ]
 
 [tool.refurb]
@@ -72,15 +72,15 @@ target = [
     "starlette_async_jinja",
 ]
 skips = [
-    "B404",
+    "B101",
     "B301",
-    "B704",
     "B602",
-    "B403",
+    "B704",
     "B311",
     "B607",
-    "B101",
+    "B404",
     "B603",
+    "B403",
 ]
 
 [tool.pyright]
@@ -125,10 +125,55 @@ ignore_names = [
 [tool.pytest.ini_options]
 addopts = "--cov=starlette_async_jinja"
 asyncio_default_fixture_loop_scope = "function"
+python_files = [
+    "test_*.py",
+    "*_test.py",
+]
+asyncio_mode = "auto"
+testpaths = [
+    "tests",
+    "starlette_async_jinja",
+]
+python_classes = [
+    "Test*",
+]
+python_functions = [
+    "test_*",
+]
+
+[tool.coverage.run]
+branch = true
+source = [
+    "starlette_async_jinja",
+]
+omit = [
+    "*/tests/*",
+    "*/site-packages/*",
+    "*/__pycache__/*",
+    "*/__init__.py",
+    "*/_version.py",
+    "*/conftest.py",
+    "*/test_*.py",
+    "*/_test.py",
+]
+
+[tool.coverage.report]
+exclude_also = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "pass",
+    "raise ImportError",
+    "except ImportError",
+    "def __str__",
+    "@abstractmethod",
+]
+ignore_errors = false
 
 [project]
 name = "starlette-async-jinja"
-version = "1.9.5"
+version = "1.9.6"
 description = ""
 dependencies = [
     "starlette>=0.46.1",
