@@ -10,12 +10,23 @@ An asynchronous Jinja2 template integration for Starlette, built on top of the `
 - **Seamless Starlette integration** - Works with Starlette's request/response cycle
 - **Template fragments** - Render specific blocks from templates
 - **Template partials** - Include sub-templates with their own context using `render_block`
+- **Fast JSON responses** - Enhanced JSON responses using `msgspec` for faster serialization
+- **Context processors** - Add global context to all templates
 
 ## Installation
 
-```bash
+```
 pip install starlette-async-jinja
 ```
+
+## Requirements
+
+- Python 3.13+
+- Starlette
+- Jinja2
+- jinja2-async-environment
+- aiopath
+- msgspec
 
 ## Basic Usage
 
@@ -44,7 +55,8 @@ app.routes = [
 
 ## Using Template Partials with `render_block`
 
-In traditional Jinja2, macros are commonly used for reusable components. However, macros don't work properly in async templates. The `render_block` feature provides a more powerful alternative, inspired by [jinja_partials](https://github.com/mikeckennedy/jinja_partials).
+In traditional Jinja2, macros are commonly used for reusable components. However, macros don't work properly in async templates.
+The `render_block` feature provides a more powerful alternative, inspired by [jinja_partials](https://github.com/mikeckennedy/jinja_partials).
 
 ### Component Templates
 
@@ -70,18 +82,18 @@ In traditional Jinja2, macros are commonly used for reusable components. However
     <h1>Welcome to {{ site_name }}</h1>
 
     {# Instead of a macro, use render_block #}
-    {{ await render_block('components/alert.html',
+    {{ render_block('components/alert.html',
                           type='warning',
                           title='Attention!',
                           message='This is an important notice.',
-                          dismissible=True) | safe }}
+                          dismissible=True) }}
 
     {% for item in items %}
         {# Another component rendered with render_block #}
-        {{ await render_block('components/card.html',
+        {{ render_block('components/card.html',
                              title=item.title,
                              content=item.description,
-                             image_url=item.image) | safe }}
+                             image_url=item.image) }}
     {% endfor %}
 </div>
 {% endblock %}
@@ -89,14 +101,31 @@ In traditional Jinja2, macros are commonly used for reusable components. However
 
 ### Important Notes on `render_block`
 
-- Always use the `await` keyword when calling `render_block` within templates
-- Apply the `safe` filter to prevent HTML escaping of the rendered content
 - Each component only receives the variables explicitly passed to it
 - `render_block` completely replaces the need for macros in async templates
 
+## Context Processors
+
+Context processors allow you to add global context to all templates:
+
+```python
+def global_context(request):
+    return {
+        "site_name": "My Awesome Site",
+        "current_year": 2024
+    }
+
+templates = AsyncJinja2Templates(
+    directory=AsyncPath("templates"),
+    context_processors=[global_context]
+)
+
+# Now all templates will have access to site_name and current_year
+```
+
 ## Using Template Fragments
 
-Fragments allow you to render specific blocks from within a template.
+Fragments allow you to render specific blocks from within a template:
 
 ```html
 <!-- In your template (page.html) -->
@@ -110,6 +139,8 @@ Fragments allow you to render specific blocks from within a template.
 ```
 
 ```python
+from starlette.responses import HTMLResponse
+
 # In your route handler:
 async def render_header(request):
     content = await templates.render_fragment(
@@ -125,7 +156,7 @@ Enhanced JSON response using `msgspec` for faster serialization:
 ```python
 from starlette_async_jinja import JsonResponse
 
-async def api_endpoint(request):
+def api_endpoint(request):
     data = {"name": "John", "email": "john@example.com"}
     return JsonResponse(data)
 ```
@@ -151,10 +182,10 @@ templates = AsyncJinja2Templates(
 
 #### Methods
 
-- `async TemplateResponse(request, name, context={}, status_code=200, ...)` - Render a template to a response
-- `async render_template(request, name, context={}, status_code=200, ...)` - Alias for TemplateResponse
+- `async TemplateResponse(request, name, context={}, status_code=200, headers=None, media_type=None, background=None)` - Render a template to a response
+- `async render_template(request, name, context={}, status_code=200, headers=None, media_type=None, background=None)` - Alias for TemplateResponse
 - `async render_fragment(template_name, block_name, **kwargs)` - Render a specific block from a template
-- `async render_block(template_name, **data)` - Render a template as a partial
+- `async render_block(template_name, markup=True, **data)` - Render a template as a partial with optional markup escaping (default: True)
 
 ### JsonResponse
 
@@ -163,6 +194,10 @@ Enhanced JSON response using `msgspec` for faster serialization.
 ### BlockNotFoundError
 
 Exception raised when attempting to render a template block that doesn't exist.
+
+## Type Annotations
+
+This package is fully typed with Python's type annotations and is compatible with static type checkers like mypy and pyright.
 
 ## Acknowledgements
 
