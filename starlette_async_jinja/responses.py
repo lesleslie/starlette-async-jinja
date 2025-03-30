@@ -107,7 +107,7 @@ class AsyncJinja2Templates:
         except Exception as e:
             raise RuntimeError(
                 f"Error rendering block in template '{template_name}': {e}"
-            ) from e
+            )
 
     def generate_render_partial(
         self, renderer: RenderFunction
@@ -119,9 +119,7 @@ class AsyncJinja2Templates:
             template = await self.get_template_async(template_name)
             return await template.render_async(**data)
         except Exception as e:
-            raise RuntimeError(
-                f"Error rendering template '{template_name}': {e}"
-            ) from e
+            raise RuntimeError(f"Error rendering template '{template_name}': {e}")
 
     async def render_fragment(
         self,
@@ -149,7 +147,7 @@ class AsyncJinja2Templates:
         except Exception as e:
             raise RuntimeError(
                 f"Error rendering fragment '{block_name}' in template '{template_name}': {e}"
-            ) from e
+            )
 
     async def get_template_async(self, name: str) -> Template:
         try:
@@ -204,8 +202,6 @@ class AsyncJinja2Templates:
                 background=background,
             )
         except Exception as e:
-            raise RuntimeError(
-                f"Error creating template response for '{name}': {e}"
-            ) from e
+            raise RuntimeError(f"Error creating template response for '{name}': {e}")
 
     render_template = TemplateResponse
