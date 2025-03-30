@@ -155,8 +155,8 @@ class AsyncJinja2Templates:
         try:
             template = await self.env.get_template_async(name)
             return template
-        except Exception as e:
-            raise RuntimeError(f"Error loading template '{name}': {e}") from e
+        except Exception:
+            raise RuntimeError(f"Error loading template '{name}'")
 
     async def TemplateResponse(
         self, *args: t.Any, **kwargs: t.Any
