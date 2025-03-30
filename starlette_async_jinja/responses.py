@@ -1,7 +1,7 @@
 import typing as t
 from functools import partial
 
-from aiopath import AsyncPath
+from anyio import Path as AsyncPath
 from jinja2.environment import Template
 from jinja2_async_environment import AsyncEnvironment, AsyncFileSystemLoader
 from markupsafe import Markup

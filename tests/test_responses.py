@@ -3,7 +3,7 @@ from pathlib import Path
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
-from aiopath import AsyncPath
+from anyio import Path as AsyncPath
 from jinja2.environment import Template
 from starlette.background import BackgroundTask
 from starlette.datastructures import URL

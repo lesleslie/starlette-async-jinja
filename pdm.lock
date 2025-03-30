@@ -5,35 +5,10 @@
 groups = ["default", "dev"]
 strategy = []
 lock_version = "4.5.0"
-content_hash = "sha256:1d72b928531059b55259264db3269cf359f28bd5e18c310432f2728a47596c82"
+content_hash = "sha256:9d26ea6f684db451cc4e750ef137e6902563ef42fa7542b5ebb4307fd6159e69"
 
 [[metadata.targets]]
 requires_python = ">=3.13"
-
-[[package]]
-name = "aiofile"
-version = "3.9.0"
-summary = ""
-dependencies = [
-    "caio",
-]
-files = [
-    {file = "aiofile-3.9.0-py3-none-any.whl", hash = "sha256:ce2f6c1571538cbdfa0143b04e16b208ecb0e9cb4148e528af8a640ed51cc8aa"},
-    {file = "aiofile-3.9.0.tar.gz", hash = "sha256:e5ad718bb148b265b6df1b3752c4d1d83024b93da9bd599df74b9d9ffcf7919b"},
-]
-
-[[package]]
-name = "aiopath"
-version = "0.7.7"
-summary = ""
-dependencies = [
-    "aiofile",
-    "anyio",
-]
-files = [
-    {file = "aiopath-0.7.7-py2.py3-none-any.whl", hash = "sha256:cd5d18de8ede167e1db659f02ee448fe085f923cb8e194407ccc568bffc4fe4e"},
-    {file = "aiopath-0.7.7.tar.gz", hash = "sha256:ad4b9d09ae08ddf6d39dd06e7b0a353939e89528da571c0cd4f3fe071aefad4f"},
-]
 
 [[package]]
 name = "annotated-types"
@@ -77,17 +52,6 @@ summary = ""
 files = [
     {file = "blinker-1.9.0-py3-none-any.whl", hash = "sha256:ba0efaa9080b619ff2f3459d1d500c57bddea4a6b424b60a91141db6fd2f08bc"},
     {file = "blinker-1.9.0.tar.gz", hash = "sha256:b4ce2265a7abece45e7cc896e98dbebe6cead56bcf805a3d23136d145f5445bf"},
-]
-
-[[package]]
-name = "caio"
-version = "0.9.21"
-summary = ""
-files = [
-    {file = "caio-0.9.21-cp313-cp313-macosx_10_13_universal2.whl", hash = "sha256:de5a805bb646ce687ae7ffd5288d167ab306bef83af15771bd53681b98c46b90"},
-    {file = "caio-0.9.21-cp313-cp313-manylinux_2_34_aarch64.whl", hash = "sha256:1819f4b8ca13f8f24350aa4ada40e5632abb595adf4f3a67babb695916fbb4c8"},
-    {file = "caio-0.9.21-cp313-cp313-manylinux_2_34_x86_64.whl", hash = "sha256:56073b55bf37ec687ae4036b9fd1da365116627cc637f878006e984812270eac"},
-    {file = "caio-0.9.21.tar.gz", hash = "sha256:4f1d30ad0f975de07b4a3ae1cd2e9275fa574f2ca0b49ba5ab16208575650a92"},
 ]
 
 [[package]]
@@ -337,16 +301,16 @@ files = [
 
 [[package]]
 name = "jinja2-async-environment"
-version = "0.11.4"
+version = "0.11.5"
 summary = ""
 dependencies = [
-    "aiopath",
+    "anyio",
     "jinja2",
     "redis",
 ]
 files = [
-    {file = "jinja2_async_environment-0.11.4-py3-none-any.whl", hash = "sha256:4c5445f74897f956c14668bf0f4dc3bc682618ade03e7ee54cc98a25369b5746"},
-    {file = "jinja2_async_environment-0.11.4.tar.gz", hash = "sha256:13e09278faab4c9db0f34c7506dfae01d80c03327f56a107dfba4fe55305ea8c"},
+    {file = "jinja2_async_environment-0.11.5-py3-none-any.whl", hash = "sha256:1d0a1d43c2b6fb3b72778eaa62295a9c132afee3b722c718eaa2b360cb46a2fb"},
+    {file = "jinja2_async_environment-0.11.5.tar.gz", hash = "sha256:821e855b13cf7e27cfdfce808cf1226762e6c0d7f115aa1e7f2cc32474b612a0"},
 ]
 
 [[package]]

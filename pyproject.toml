@@ -49,19 +49,19 @@ paths = [
 ]
 deps-file = "pyproject.toml"
 exclude-deps = [
-    "pdm-bump",
-    "pyfiglet",
-    "pre-commit",
-    "pdm",
-    "tomli-w",
-    "uv",
     "pytest-asyncio",
-    "pytest-mock",
-    "google-crc32c",
+    "tomli-w",
+    "pyfiglet",
+    "uv",
     "pytest-cov",
     "pytest",
-    "pyyaml",
+    "google-crc32c",
+    "pre-commit",
     "autotyping",
+    "pdm",
+    "pyyaml",
+    "pytest-mock",
+    "pdm-bump",
 ]
 
 [tool.refurb]
@@ -72,15 +72,15 @@ target = [
     "starlette_async_jinja",
 ]
 skips = [
+    "B704",
+    "B404",
+    "B603",
+    "B403",
+    "B311",
+    "B607",
     "B301",
     "B101",
-    "B603",
-    "B311",
-    "B704",
     "B602",
-    "B607",
-    "B403",
-    "B404",
 ]
 
 [tool.pyright]
@@ -173,14 +173,14 @@ ignore_errors = false
 
 [project]
 name = "starlette-async-jinja"
-version = "1.9.8"
+version = "1.9.9"
 description = ""
 dependencies = [
     "starlette>=0.46.1",
     "jinja2>=3.1.6",
-    "jinja2-async-environment>=0.11.4",
+    "jinja2-async-environment>=0.11.5",
     "msgspec>=0.19.0",
-    "aiopath>=0.7.7",
+    "anyio>=4.9.0",
 ]
 requires-python = ">=3.13"
 readme = "README.md"
