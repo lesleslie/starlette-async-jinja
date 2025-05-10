@@ -5,6 +5,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 from anyio import Path as AsyncPath
 from jinja2.environment import Template
+from markupsafe import Markup
 from starlette.background import BackgroundTask
 from starlette.datastructures import URL
 from starlette.requests import Request
@@ -396,3 +397,108 @@ async def test_template_response_with_none_context(
         assert b"<h1>Test</h1>" in response.body
         assert "request" in response.context
         assert response.context["request"] == mock_request
+
+
+@pytest.mark.asyncio
+async def test_async_jinja2_templates_renderer_error_handling(
+    templates: AsyncJinja2Templates, template_dir: AsyncPath
+) -> None:
+    with patch.object(
+        templates,
+        "get_template_async",
+        AsyncMock(side_effect=ValueError("Template rendering error")),
+    ):
+        with pytest.raises(RuntimeError) as exc_info:
+            await templates.renderer("test.html", title="Test Title")
+        assert "Error rendering template 'test.html'" in str(exc_info.value)
+        assert "Template rendering error" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_async_jinja2_templates_render_fragment_exception_handling(
+    templates: AsyncJinja2Templates, template_dir: AsyncPath, mock_template: MagicMock
+) -> None:
+    with patch.object(
+        templates,
+        "get_template_async",
+        AsyncMock(side_effect=Exception("Template loading error")),
+    ):
+        with pytest.raises(RuntimeError) as exc_info:
+            await templates.render_fragment("test.html", "my_block")
+        assert "Error rendering fragment 'my_block' in template 'test.html'" in str(
+            exc_info.value
+        )
+        assert "Template loading error" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_async_jinja2_templates_template_response_error_handling(
+    templates: AsyncJinja2Templates, mock_request: MagicMock
+) -> None:
+    with patch.object(
+        templates,
+        "get_template_async",
+        AsyncMock(side_effect=ValueError("Template loading error")),
+    ):
+        with pytest.raises(RuntimeError) as exc_info:
+            await templates.TemplateResponse(mock_request, "test.html", {})
+        assert "Error creating template response for 'test.html'" in str(exc_info.value)
+        assert "Template loading error" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_async_jinja2_templates_render_block_no_markup(
+    templates: AsyncJinja2Templates, template_dir: AsyncPath, mock_template: MagicMock
+) -> None:
+    with patch.object(templates, "get_template_async", return_value=mock_template):
+        with patch.object(templates, "renderer", AsyncMock(return_value="Test Block")):
+            result = await templates.render_block(
+                "test.html", markup=False, my_block="my block"
+            )
+            assert result == "Test Block"
+            assert not isinstance(result, Markup)
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "data,expected",
+    [
+        ({"key": "value"}, b'{"key":"value"}'),
+        (
+            {"nested": {"key": ["value1", "value2"]}},
+            b'{"nested":{"key":["value1","value2"]}}',
+        ),
+        ([], b"[]"),
+        ({}, b"{}"),
+        (None, b"null"),
+        (123, b"123"),
+        ("string", b'"string"'),
+        (True, b"true"),
+    ],
+)
+async def test_json_response_render_parametrized(data: t.Any, expected: bytes) -> None:
+    rendered = JsonResponse(data).render(data)
+    assert rendered == expected
+
+
+@pytest.mark.asyncio
+async def test_async_jinja2_templates_render_fragment_handle_exception(
+    templates: AsyncJinja2Templates, template_dir: AsyncPath, mock_template: MagicMock
+) -> None:
+    async def mock_generator():
+        raise Exception("Block rendering error")
+        yield "This will never be yielded"
+
+    mock_block_func = MagicMock()
+    mock_block_func.return_value = mock_generator()
+
+    mock_template.blocks = {"my_block": mock_block_func}
+
+    with patch.object(
+        templates, "get_template_async", AsyncMock(return_value=mock_template)
+    ):
+        mock_handle_exception = MagicMock(return_value="Error handled")
+        with patch.object(templates.env, "handle_exception", mock_handle_exception):
+            result = await templates.render_fragment("test.html", "my_block")
+            assert result == "Error handled"
+            mock_handle_exception.assert_called_once()
