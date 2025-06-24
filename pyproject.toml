@@ -1,22 +1,63 @@
-[dependency-groups]
-dev = [
-    "crackerjack>=0.18.2",
+[build-system]
+build-backend = "pdm.backend"
+requires = [
+    "pdm-backend",
 ]
 
+[project]
+name = "starlette-async-jinja"
+version = "1.9.14"
+description = ""
+readme = "README.md"
+license.text = "BSD-3-Clause"
+authors = [
+    { name = "lesleslie", email = "les@wedgwoodwebworks.com" },
+]
+requires-python = ">=3.13"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Framework :: AsyncIO",
+    "Framework :: FastAPI",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+    "Typing :: Typed",
+]
+dependencies = [
+    "anyio>=4.9",
+    "jinja2>=3.1.6",
+    "jinja2-async-environment>=0.12.1",
+    "msgspec>=0.19",
+    "starlette>=0.47.1",
+]
+
+optional-dependencies.dev = [
+    "crackerjack>=0.20.20",
+]
+urls.Documentation = "https://github.com/lesleslie/starlette-async-jinja"
+urls.Homepage = "https://github.com/lesleslie/starlette-async-jinja"
+urls.Repository = "https://github.com/lesleslie/starlette-async-jinja"
+
 [tool.ruff]
-line-length = 88
 target-version = "py313"
+line-length = 88
 fix = true
+unsafe-fixes = true
 show-fixes = true
 output-format = "full"
-unsafe-fixes = true
 
-[tool.ruff.format]
-docstring-code-format = true
-
-[tool.ruff.lint]
-ignore = [
-    "F821",
+format.docstring-code-format = true
+lint.extend-select = [
+    "C901",
+    "D",
+    "F",
+    "I",
+    "UP",
+]
+lint.ignore = [
     "D100",
     "D101",
     "D102",
@@ -25,112 +66,35 @@ ignore = [
     "D105",
     "D106",
     "D107",
+    "F821",
+    "UP040",
 ]
-extend-select = [
-    "I",
-    "C901",
-    "D",
+lint.fixable = [
+    "ALL",
 ]
-
-[tool.ruff.lint.isort]
-no-lines-before = [
+lint.unfixable = [  ]
+lint.isort.no-lines-before = [
     "first-party",
 ]
-
-[tool.ruff.lint.mccabe]
-max-complexity = 13
-
-[tool.ruff.lint.pydocstyle]
-convention = "google"
-
-[tool.creosote]
-paths = [
-    "starlette_async_jinja",
-]
-deps-file = "pyproject.toml"
-exclude-deps = [
-    "tomli-w",
-    "google-crc32c",
-    "uv",
-    "pyfiglet",
-    "pyyaml",
-    "pdm-bump",
-    "pytest",
-    "pre-commit",
-    "pdm",
-    "pytest-cov",
-    "pytest-mock",
-    "autotyping",
-    "pytest-asyncio",
-    "pytest-timeout",
-]
-
-[tool.refurb]
-enable_all = true
-
-[tool.bandit]
-target = [
-    "starlette_async_jinja",
-]
-skips = [
-    "B603",
-    "B301",
-    "B704",
-    "B403",
-    "B404",
-    "B101",
-    "B602",
-    "B607",
-    "B311",
-]
-
-[tool.pyright]
-verboseOutput = true
-include = [
-    "starlette_async_jinja",
-]
-exclude = [
-    "scratch",
-]
-extraPaths = [
-    ".venv/lib/python3.13/site-packages/",
-]
-typeCheckingMode = "strict"
-reportMissingTypeStubs = false
-reportOptionalMemberAccess = false
-reportOptionalCall = false
-reportUnknownMemberType = false
-reportUnknownVariableType = false
-reportUnknownArgumentType = false
-reportInvalidTypeForm = false
-reportUnknownLambdaType = false
-reportUnknownParameterType = "warning"
-reportPrivateUsage = false
-pythonVersion = "3.13"
-pythonPlatform = "Darwin"
+lint.mccabe.max-complexity = 13
+lint.pydocstyle.convention = "google"
 
 [tool.codespell]
 skip = "*/data/*"
 quiet-level = 3
-ignore-words-list = "crate,uptodate"
+ignore-words-list = "crate,uptodate,nd"
 
-[tool.vulture]
-min_confidence = 86
-paths = [
-    "starlette_async_jinja",
-]
-ignore_names = [
-    "cls",
-]
+[tool.pyproject-fmt]
+column_width = 120
+indent = 4
 
 [tool.pytest.ini_options]
-addopts = "--cov=starlette_async_jinja --cov-report=term"
+asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
 python_files = [
     "test_*.py",
     "*_test.py",
 ]
-asyncio_mode = "auto"
 testpaths = [
     "tests",
     "starlette_async_jinja",
@@ -141,6 +105,21 @@ python_classes = [
 python_functions = [
     "test_*",
 ]
+markers = [
+    "unit: marks test as a unit test",
+    "benchmark: mark test as a benchmark (disables parallel execution)",
+    "integration: marks test as an integration test",
+]
+timeout = 300
+timeout_method = "thread"
+addopts = "--cov=starlette_async_jinja --cov-report=term --cov-fail-under=42"
+
+[tool.pytest.benchmark]
+disable_gc = true
+warmup = false
+warmup_iterations = 0
+min_rounds = 1
+max_time = 5.0
 
 [tool.coverage.run]
 branch = false
@@ -174,44 +153,80 @@ exclude_also = [
 ]
 ignore_errors = false
 
-[project]
-name = "starlette-async-jinja"
-version = "1.9.13"
-description = ""
-dependencies = [
-    "starlette>=0.46.2",
-    "jinja2>=3.1.6",
-    "jinja2-async-environment>=0.11.8",
-    "msgspec>=0.19.0",
-    "anyio>=4.9.0",
+[tool.pyright]
+verboseOutput = true
+include = [
+    "starlette_async_jinja",
 ]
-requires-python = ">=3.13"
-readme = "README.md"
-authors = [
-    { name = "lesleslie", email = "les@wedgwoodwebworks.com" },
+exclude = [
+    "scratch",
 ]
-classifiers = [
-    "Programming Language :: Python",
-    "Programming Language :: Python :: 3.13",
-    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
-    "Operating System :: OS Independent",
-    "Framework :: FastAPI",
-    "Framework :: AsyncIO",
-    "Typing :: Typed",
-    "License :: OSI Approved :: BSD License",
-    "Development Status :: 4 - Beta",
+extraPaths = [
+    ".venv/lib/python3.13/site-packages/",
+]
+typeCheckingMode = "strict"
+reportMissingTypeStubs = false
+reportOptionalMemberAccess = false
+reportOptionalCall = false
+reportUnknownMemberType = false
+reportUnknownVariableType = false
+reportUnknownArgumentType = false
+reportInvalidTypeForm = false
+reportUnknownLambdaType = false
+reportUnknownParameterType = "warning"
+reportPrivateUsage = false
+pythonVersion = "3.13"
+
+[tool.creosote]
+paths = [
+    "starlette_async_jinja",
+]
+deps-file = "pyproject.toml"
+exclude-deps = [
+    "uv",
+    "pytest-xdist",
+    "pytest-timeout",
+    "tomli-w",
+    "pytest-asyncio",
+    "pre-commit",
+    "pytest-benchmark",
+    "pytest-cov",
+    "pdm-bump",
+    "pyfiglet",
+    "google-crc32c",
+    "keyring",
+    "pytest-mock",
+    "pdm",
+    "autotyping",
+    "pyyaml",
+    "pytest",
 ]
 
-[project.license]
-text = "BSD-3-Clause"
+[tool.refurb]
+enable_all = true
+quiet = true
 
-[project.urls]
-Homepage = "https://github.com/lesleslie/starlette-async-jinja"
-Documentation = "https://github.com/lesleslie/starlette-async-jinja"
-Repository = "https://github.com/lesleslie/starlette-async-jinja"
-
-[build-system]
-requires = [
-    "pdm-backend",
+[tool.bandit]
+target = [
+    "starlette_async_jinja",
 ]
-build-backend = "pdm.backend"
+skips = [
+    "B603",
+    "B403",
+    "B602",
+    "B301",
+    "B101",
+    "B311",
+    "B404",
+    "B704",
+    "B607",
+]
+
+[tool.vulture]
+min_confidence = 86
+paths = [
+    "starlette_async_jinja",
+]
+ignore_names = [
+    "cls",
+]
