@@ -313,6 +313,375 @@ async def test_async_jinja2_templates_template_response_context_processors(
 
 
 @pytest.mark.asyncio
+async def test_context_processor_caching(
+    template_dir: AsyncPath, mock_request: MagicMock, mock_template: MagicMock
+) -> None:
+    call_count = 0
+
+    def expensive_context_processor(request: Request) -> dict[str, str]:
+        nonlocal call_count
+        call_count += 1
+        return {"call_count": str(call_count), "expensive_data": "computed"}
+
+    templates = AsyncJinja2Templates(
+        directory=template_dir,
+        context_processors=[expensive_context_processor],
+        context_cache_ttl=1.0,  # 1 second TTL for testing
+    )
+
+    mock_template.render_async.return_value = "<h1>cached content</h1>"
+
+    with patch.object(
+        templates, "get_template_async", AsyncMock(return_value=mock_template)
+    ):
+        # First call - should execute context processor
+        await templates.TemplateResponse(
+            request=mock_request, name="test.html", context={}
+        )
+        assert call_count == 1
+
+        # Second call - should use cached result
+        await templates.TemplateResponse(
+            request=mock_request, name="test.html", context={}
+        )
+        assert call_count == 1  # No additional call
+
+        # Wait for cache to expire and call again
+        import time
+
+        time.sleep(1.1)
+        await templates.TemplateResponse(
+            request=mock_request, name="test.html", context={}
+        )
+        assert call_count == 2  # New call after cache expiry
+
+
+@pytest.mark.asyncio
+async def test_context_processor_cache_key_generation(template_dir: AsyncPath) -> None:
+    templates = AsyncJinja2Templates(directory=template_dir)
+
+    # Mock request with URL and method
+    mock_request1 = MagicMock()
+    mock_request1.url.path = "/home"
+    mock_request1.method = "GET"
+
+    mock_request2 = MagicMock()
+    mock_request2.url.path = "/about"
+    mock_request2.method = "GET"
+
+    mock_request3 = MagicMock()
+    mock_request3.url.path = "/home"
+    mock_request3.method = "POST"
+
+    key1 = templates._get_context_cache_key(mock_request1)
+    key2 = templates._get_context_cache_key(mock_request2)
+    key3 = templates._get_context_cache_key(mock_request3)
+
+    assert key1 == "GET:/home"
+    assert key2 == "GET:/about"
+    assert key3 == "POST:/home"
+    assert key1 != key2
+    assert key1 != key3
+
+
+@pytest.mark.asyncio
+async def test_context_processor_cache_size_limit(
+    template_dir: AsyncPath, mock_template: MagicMock
+) -> None:
+    templates = AsyncJinja2Templates(
+        directory=template_dir,
+        context_processors=[lambda req: {"static": "data"}],
+        context_cache_size=2,  # Small cache for testing
+    )
+
+    with patch.object(
+        templates, "get_template_async", AsyncMock(return_value=mock_template)
+    ):
+        # Create multiple requests with different paths
+        requests = []
+        for i in range(3):
+            mock_req = MagicMock()
+            mock_req.url.path = f"/page{i}"
+            mock_req.method = "GET"
+            requests.append(mock_req)
+
+        # Fill cache beyond limit
+        for req in requests:
+            templates._get_processed_context(req)
+
+        # Cache should only contain 2 entries (newest ones)
+        assert len(templates._context_cache) == 2
+
+        # First entry should be evicted (LRU behavior)
+        assert "GET:/page0" not in templates._context_cache
+        assert "GET:/page1" in templates._context_cache
+        assert "GET:/page2" in templates._context_cache
+
+
+@pytest.mark.asyncio
+async def test_context_processor_no_caching_with_request_in_context(
+    template_dir: AsyncPath, mock_request: MagicMock
+) -> None:
+    def context_processor_with_request(request: Request) -> dict[str, t.Any]:
+        # This context contains request, so should not be cached
+        return {"request_specific": request, "data": "value"}
+
+    templates = AsyncJinja2Templates(
+        directory=template_dir, context_processors=[context_processor_with_request]
+    )
+
+    # Process context
+    context = templates._get_processed_context(mock_request)
+
+    # Should not be cached due to request object
+    assert not templates._context_cache
+    assert context["data"] == "value"
+    assert context["request_specific"] == mock_request
+
+
+@pytest.mark.asyncio
+async def test_fragment_block_function_caching(
+    template_dir: AsyncPath, mock_template: MagicMock
+) -> None:
+    templates = AsyncJinja2Templates(
+        directory=template_dir,
+        fragment_cache_ttl=1.0,  # 1 second TTL for testing
+    )
+
+    # Mock block function
+    mock_block_func = MagicMock()
+    mock_template.blocks = {"test_block": mock_block_func}
+    mock_template.new_context = MagicMock(return_value={})
+
+    with patch.object(
+        templates, "get_template_async", AsyncMock(return_value=mock_template)
+    ):
+        # First call - should cache block function
+        await templates._get_cached_block_func("test.html", "test_block")
+        assert len(templates._block_cache) == 1
+
+        # Second call - should use cached function
+        cached_func = await templates._get_cached_block_func("test.html", "test_block")
+        assert cached_func == mock_block_func
+
+        # Wait for cache to expire
+        import time
+
+        time.sleep(1.1)
+
+        # Third call - should reload after expiry
+        await templates._get_cached_block_func("test.html", "test_block")
+        # Cache should still contain the entry but with updated timestamp
+
+
+@pytest.mark.asyncio
+async def test_fragment_block_cache_size_limit(
+    template_dir: AsyncPath, mock_template: MagicMock
+) -> None:
+    templates = AsyncJinja2Templates(
+        directory=template_dir,
+        fragment_cache_size=2,  # Small cache for testing
+    )
+
+    # Create different block functions
+    mock_template.blocks = {
+        "block1": MagicMock(),
+        "block2": MagicMock(),
+        "block3": MagicMock(),
+    }
+    mock_template.new_context = MagicMock(return_value={})
+
+    with patch.object(
+        templates, "get_template_async", AsyncMock(return_value=mock_template)
+    ):
+        # Fill cache beyond limit
+        await templates._get_cached_block_func("test.html", "block1")
+        await templates._get_cached_block_func("test.html", "block2")
+        await templates._get_cached_block_func("test.html", "block3")
+
+        # Cache should only contain 2 entries (LRU eviction)
+        assert len(templates._block_cache) == 2
+        assert "test.html:block1" not in templates._block_cache  # Oldest evicted
+        assert "test.html:block2" in templates._block_cache
+        assert "test.html:block3" in templates._block_cache
+
+
+@pytest.mark.asyncio
+async def test_context_pooling(template_dir: AsyncPath) -> None:
+    templates = AsyncJinja2Templates(directory=template_dir, context_pool_size=2)
+
+    # Get contexts from pool
+    ctx1 = templates._get_pooled_context({"key1": "value1"})
+    ctx2 = templates._get_pooled_context({"key2": "value2"})
+
+    assert ctx1 == {"key1": "value1"}
+    assert ctx2 == {"key2": "value2"}
+    assert not templates._context_pool  # Pool empty
+
+    # Return contexts to pool
+    templates._return_to_pool(ctx1)
+    templates._return_to_pool(ctx2)
+
+    assert len(templates._context_pool) == 2
+
+    # Get context from pool - should reuse
+    ctx3 = templates._get_pooled_context({"key3": "value3"})
+    assert ctx3 == {"key3": "value3"}
+    assert len(templates._context_pool) == 1  # One removed from pool
+
+    # Test pool size limit
+    templates._return_to_pool(ctx3)
+    extra_ctx = templates._get_pooled_context({"extra": "data"})
+    templates._return_to_pool(extra_ctx)
+
+    # Should not exceed pool size limit
+    assert len(templates._context_pool) == 2
+
+
+@pytest.mark.asyncio
+async def test_template_blocks_preloading(
+    template_dir: AsyncPath, mock_template: MagicMock
+) -> None:
+    templates = AsyncJinja2Templates(directory=template_dir)
+
+    mock_template.blocks = {"header": MagicMock(), "footer": MagicMock()}
+
+    # Preload blocks
+    templates._preload_template_blocks(mock_template, "test.html")
+
+    assert "test.html" in templates._template_blocks
+    assert templates._template_blocks["test.html"] == {"header", "footer"}
+
+    # Test validation
+    assert templates._validate_block_exists("test.html", "header")
+    assert not templates._validate_block_exists("test.html", "nonexistent")
+    assert templates._validate_block_exists("unknown.html", "any")  # Unknown template
+
+
+@pytest.mark.asyncio
+async def test_stringio_threshold_logic(template_dir: AsyncPath) -> None:
+    templates = AsyncJinja2Templates(
+        directory=template_dir, fragment_stringio_threshold=100
+    )
+
+    # Small size - should not use StringIO
+    assert not templates._should_use_stringio(50)
+
+    # Large size - should use StringIO
+    assert templates._should_use_stringio(200)
+
+    # Exact threshold - should use StringIO
+    assert not templates._should_use_stringio(100)
+    assert templates._should_use_stringio(101)
+
+
+@pytest.mark.asyncio
+async def test_optimized_render_fragment_with_stringio(
+    template_dir: AsyncPath, mock_template: MagicMock
+) -> None:
+    templates = AsyncJinja2Templates(
+        directory=template_dir,
+        fragment_stringio_threshold=10,  # Low threshold to trigger StringIO
+    )
+
+    # Mock block function that yields chunks
+    async def mock_block_generator(ctx: t.Any) -> t.AsyncIterator[str]:
+        yield "Hello "
+        yield "World "
+        yield "from StringIO!"
+
+    mock_block_func = MagicMock(side_effect=mock_block_generator)
+    mock_template.blocks = {"test_block": mock_block_func}
+    mock_template.new_context = MagicMock(return_value={})
+
+    with patch.object(
+        templates, "get_template_async", AsyncMock(return_value=mock_template)
+    ):
+        result = await templates.render_fragment(
+            "test.html",
+            "test_block",
+            large_data="x" * 50,  # Triggers StringIO
+        )
+
+        assert result == "Hello World from StringIO!"
+        assert len(templates._context_pool) == 1  # Context returned to pool
+
+
+@pytest.mark.asyncio
+async def test_optimized_render_fragment_with_concat(
+    template_dir: AsyncPath, mock_template: MagicMock
+) -> None:
+    templates = AsyncJinja2Templates(
+        directory=template_dir,
+        fragment_stringio_threshold=1000,  # High threshold to use concat
+    )
+
+    # Mock block function
+    async def mock_block_generator(ctx: t.Any) -> t.AsyncIterator[str]:
+        yield "Small "
+        yield "output"
+
+    mock_block_func = MagicMock(side_effect=mock_block_generator)
+    mock_template.blocks = {"test_block": mock_block_func}
+    mock_template.new_context = MagicMock(return_value={})
+
+    with (
+        patch.object(
+            templates, "get_template_async", AsyncMock(return_value=mock_template)
+        ),
+        patch.object(
+            templates.env, "concat", return_value="Small output"
+        ) as mock_concat,
+    ):
+        result = await templates.render_fragment(
+            "test.html", "test_block", small_data="tiny"
+        )
+
+        assert result == "Small output"
+        mock_concat.assert_called_once()
+        assert len(templates._context_pool) == 1  # Context returned to pool
+
+
+@pytest.mark.asyncio
+async def test_fragment_cache_integration(
+    template_dir: AsyncPath, mock_template: MagicMock
+) -> None:
+    call_count = 0
+
+    def get_template_side_effect(name: str):
+        nonlocal call_count
+        call_count += 1
+        return mock_template
+
+    templates = AsyncJinja2Templates(directory=template_dir)
+
+    mock_template.blocks = {"cached_block": MagicMock()}
+    mock_template.new_context = MagicMock(return_value={})
+
+    with (
+        patch.object(
+            templates,
+            "get_template_async",
+            AsyncMock(side_effect=get_template_side_effect),
+        ),
+        patch.object(templates.env, "concat", return_value="cached result"),
+    ):
+        # First call - should load template and cache block
+        result1 = await templates.render_fragment("test.html", "cached_block")
+        assert result1 == "cached result"
+        assert call_count == 1
+
+        # Second call - should use cached block, but still load template for context
+        result2 = await templates.render_fragment("test.html", "cached_block")
+        assert result2 == "cached result"
+        assert call_count == 2  # Template still loaded for context creation
+
+        # Block should be cached
+        assert len(templates._block_cache) == 1
+        assert "test.html:cached_block" in templates._block_cache
+
+
+@pytest.mark.asyncio
 async def test_async_jinja2_templates_template_response_other_args(
     templates: AsyncJinja2Templates,
     template_dir: AsyncPath,
