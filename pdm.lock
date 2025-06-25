@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = []
 lock_version = "4.5.0"
-content_hash = "sha256:c1c92aacf659f0bfbee9517e8b4085c04c861262cebbeb46911b4cb8a69199ff"
+content_hash = "sha256:df1d20c747196b0888a19812a97ba26f4a9d4e0e48e82e08253a621feadedae7"
 
 [[metadata.targets]]
 requires_python = ">=3.13"
@@ -440,7 +440,7 @@ files = [
 
 [[package]]
 name = "jinja2-async-environment"
-version = "0.12.2"
+version = "0.12.4"
 summary = ""
 dependencies = [
     "anyio",
@@ -448,8 +448,8 @@ dependencies = [
     "redis",
 ]
 files = [
-    {file = "jinja2_async_environment-0.12.2-py3-none-any.whl", hash = "sha256:e50f526f91d3f4320a2b0b9da4d13b2cea728a63b65229cf8fe1c3fca17bfef1"},
-    {file = "jinja2_async_environment-0.12.2.tar.gz", hash = "sha256:6e44635aeb0d8cb5d4a51fa7eb2429a9875f7298c96dffa3ca450279837693ea"},
+    {file = "jinja2_async_environment-0.12.4-py3-none-any.whl", hash = "sha256:a17c80462933e209be9886f257141ef19d37ceae768c4f33e21acf95423a2036"},
+    {file = "jinja2_async_environment-0.12.4.tar.gz", hash = "sha256:36b27aace0332c06b655a104bd8edd3bdd89fffc185b59ab96d44b88c957e7d7"},
 ]
 
 [[package]]

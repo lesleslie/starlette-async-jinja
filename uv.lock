@@ -423,16 +423,16 @@ wheels = [
 
 [[package]]
 name = "jinja2-async-environment"
-version = "0.12.2"
+version = "0.12.4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "anyio" },
     { name = "jinja2" },
     { name = "redis" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/a5/12/ad4a8092543fca65972d03233cf0fa63d422b00c30e25bd2d9fcc1921f38/jinja2_async_environment-0.12.2.tar.gz", hash = "sha256:6e44635aeb0d8cb5d4a51fa7eb2429a9875f7298c96dffa3ca450279837693ea", size = 53380, upload-time = "2025-06-24T06:26:58.514Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/9a/ac/e4df77bfcce004451247c7332573352b85a9b8f61100428116eccddc9518/jinja2_async_environment-0.12.4.tar.gz", hash = "sha256:36b27aace0332c06b655a104bd8edd3bdd89fffc185b59ab96d44b88c957e7d7", size = 53888, upload-time = "2025-06-25T03:19:29.399Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/d9/74/556cebaa4a4b96b8ddf117b94c3fc5a74ebefc9fef873aa062f54ca49cef/jinja2_async_environment-0.12.2-py3-none-any.whl", hash = "sha256:e50f526f91d3f4320a2b0b9da4d13b2cea728a63b65229cf8fe1c3fca17bfef1", size = 16237, upload-time = "2025-06-24T06:26:57.047Z" },
+    { url = "https://files.pythonhosted.org/packages/b5/30/b68092ee3b3da40cbe1dc61618f01c66bc7449e346553730ae45cb2f83e5/jinja2_async_environment-0.12.4-py3-none-any.whl", hash = "sha256:a17c80462933e209be9886f257141ef19d37ceae768c4f33e21acf95423a2036", size = 16289, upload-time = "2025-06-25T03:19:28.013Z" },
 ]
 
 [[package]]
@@ -1020,7 +1020,7 @@ wheels = [
 
 [[package]]
 name = "starlette-async-jinja"
-version = "1.9.14"
+version = "1.10.0"
 source = { editable = "." }
 dependencies = [
     { name = "anyio" },
@@ -1040,7 +1040,7 @@ requires-dist = [
     { name = "anyio", specifier = ">=4.9" },
     { name = "crackerjack", marker = "extra == 'dev'", specifier = ">=0.20.20" },
     { name = "jinja2", specifier = ">=3.1.6" },
-    { name = "jinja2-async-environment", specifier = ">=0.12.2" },
+    { name = "jinja2-async-environment", specifier = ">=0.12.4" },
     { name = "msgspec", specifier = ">=0.19" },
     { name = "starlette", specifier = ">=0.47.1" },
 ]
