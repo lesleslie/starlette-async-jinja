@@ -102,8 +102,7 @@ async def get_data():
 
 ## Using Template Partials with `render_block`
 
-In traditional Jinja2, macros are commonly used for reusable components. However, macros don't work properly in async templates.
-The `render_block` feature provides a more powerful alternative, inspired by [jinja_partials](https://github.com/mikeckennedy/jinja_partials).
+The `render_block` feature allows you to render entire template files as reusable components, inspired by [jinja_partials](https://github.com/mikeckennedy/jinja_partials). This is especially useful for creating modular template components.
 
 ### Component Templates
 
@@ -149,7 +148,7 @@ The `render_block` feature provides a more powerful alternative, inspired by [ji
 ### Important Notes on `render_block`
 
 - Each component only receives the variables explicitly passed to it
-- `render_block` completely replaces the need for macros in async templates
+- `render_block` renders entire template files as components
 - The `markup=True` parameter (default) ensures proper HTML escaping
 
 ## Context Processors
@@ -285,11 +284,63 @@ async def get_user():
     return JsonResponse(data)  # Faster than FastAPI's default JSONResponse
 ```
 
+## Jinja2 Macros Support
+
+Jinja2 macros are fully supported in async templates with the updated `jinja2-async-environment>=0.13`:
+
+```html
+<!-- templates/components.html -->
+{% macro alert(type, message) %}
+<div class="alert alert-{{ type }}">{{ message }}</div>
+{% endmacro %}
+
+{% macro button(text, style='primary') %}
+<button class="btn btn-{{ style }}">{{ text }}</button>
+{% endmacro %}
+```
+
+### Using Macros in Templates
+
+Macros work seamlessly with `render_block` when called within templates:
+
+```html
+<!-- templates/page.html -->
+{% from 'components.html' import alert, button %}
+
+<h1>Welcome!</h1>
+{{ alert('info', 'Welcome to our site!') }}
+{{ button('Get Started', 'success') }}
+```
+
+```python
+# This works perfectly with macros inside
+content = await templates.render_block("page.html", {})
+```
+
+### Direct Macro Access
+
+For advanced use cases, macros can be called directly from template modules:
+
+```python
+async def render_macro_component():
+    template = await templates.env.get_template_async("components.html")
+    module = await template.make_module_async()
+
+    # Call macro directly and await the result
+    alert_html = await module.alert('warning', 'Direct macro call')
+    return alert_html
+```
+
+### Choosing Your Approach
+
+- **Macros**: Traditional Jinja2 components defined within templates, great for simple reusable elements
+- **render_block**: Renders entire template files as components, useful for complex reusable template partials
+- **render_fragment**: Renders specific named blocks from templates, ideal for partial page updates
+
 ## Issues and Limitations
 
 - Only [asynchronous template loaders](https://github.com/lesleslie/jinja2-async-environment/blob/main/jinja2_async_environment/loaders.py) are fully supported
 - The Jinja bytecodecache requires an asynchronous Redis backend
-- Jinja macros don't work in async mode - use `render_block` instead
 
 ## API Reference
 

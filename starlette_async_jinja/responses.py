@@ -336,38 +336,65 @@ class AsyncJinja2Templates:
         except Exception:
             raise RuntimeError(f"Error loading template '{name}'")
 
+    def _parse_template_args(
+        self, *args: t.Any, **kwargs: t.Any
+    ) -> tuple[t.Any, str, dict[str, t.Any], int, t.Any, t.Any, t.Any]:
+        """Parse arguments for TemplateResponse, handling both positional and keyword args."""
+        if args:
+            return self._parse_positional_args(args, kwargs)
+        return self._parse_keyword_args(kwargs)
+
+    def _parse_positional_args(
+        self, args: tuple[t.Any, ...], kwargs: dict[str, t.Any]
+    ) -> tuple[t.Any, str, dict[str, t.Any], int, t.Any, t.Any, t.Any]:
+        """Parse positional arguments for TemplateResponse."""
+        request = args[0]
+        name = args[1] if len(args) > 1 else kwargs["name"]
+        context = args[2] if len(args) > 2 else kwargs.get("context", {})
+        status_code = args[3] if len(args) > 3 else kwargs.get("status_code", 200)
+        headers = args[4] if len(args) > 4 else kwargs.get("headers")
+        media_type = args[5] if len(args) > 5 else kwargs.get("media_type")
+        background = args[6] if len(args) > 6 else kwargs.get("background")
+        return request, name, context, status_code, headers, media_type, background
+
+    def _parse_keyword_args(
+        self, kwargs: dict[str, t.Any]
+    ) -> tuple[t.Any, str, dict[str, t.Any], int, t.Any, t.Any, t.Any]:
+        """Parse keyword arguments for TemplateResponse."""
+        context = kwargs.get("context", {})
+        request = kwargs.get("request", context.get("request"))
+        name = t.cast(str, kwargs["name"])
+        status_code = kwargs.get("status_code", 200)
+        headers = kwargs.get("headers")
+        media_type = kwargs.get("media_type")
+        background = kwargs.get("background")
+        return request, name, context, status_code, headers, media_type, background
+
+    def _prepare_template_context(
+        self, context: dict[str, t.Any] | None, request: t.Any
+    ) -> dict[str, t.Any]:
+        """Prepare the template context with processed context and request."""
+        if context is None:
+            context = {}
+
+        context.setdefault("request", request)
+
+        processed_context = self._get_processed_context(request)
+        if processed_context:
+            context.update(processed_context)
+
+        return context
+
     async def TemplateResponse(
         self, *args: t.Any, **kwargs: t.Any
     ) -> _TemplateResponse:
         name = "<unknown>"
         try:
-            if args:
-                request = args[0]
-                name = args[1] if len(args) > 1 else kwargs["name"]
-                context = args[2] if len(args) > 2 else kwargs.get("context", {})
-                status_code = (
-                    args[3] if len(args) > 3 else kwargs.get("status_code", 200)
-                )
-                headers = args[4] if len(args) > 4 else kwargs.get("headers")
-                media_type = args[5] if len(args) > 5 else kwargs.get("media_type")
-                background = args[6] if len(args) > 6 else kwargs.get("background")
-            else:
-                context = kwargs.get("context", {})
-                request = kwargs.get("request", context.get("request"))
-                name = t.cast(str, kwargs["name"])
-                status_code = kwargs.get("status_code", 200)
-                headers = kwargs.get("headers")
-                media_type = kwargs.get("media_type")
-                background = kwargs.get("background")
+            request, name, context, status_code, headers, media_type, background = (
+                self._parse_template_args(*args, **kwargs)
+            )
 
-            if context is None:
-                context = {}
-
-            context.setdefault("request", request)
-
-            processed_context = self._get_processed_context(request)
-            if processed_context:
-                context.update(processed_context)
+            context = self._prepare_template_context(context, request)
 
             template = await self.get_template_async(name)
             content = await template.render_async(context)

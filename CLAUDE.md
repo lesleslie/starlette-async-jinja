@@ -69,10 +69,11 @@ Pre-commit hooks are configured and include:
 4. Templates rendered via `render_async()` method
 
 ### Special Features
-- **render_block**: Allows rendering template partials (replaces Jinja macros in async mode)
+- **render_block**: Renders entire template files as reusable components
 - **render_fragment**: Renders specific blocks from templates with caching optimizations
 - **Context processors**: Functions that add global context to all templates with smart caching
 - **JsonResponse**: Uses `msgspec` for faster JSON serialization than standard responses
+- **Macro support**: Full Jinja2 macro support with `jinja2-async-environment>=0.13`
 
 ### Performance Optimizations
 - **Context processor caching**: Caches processor results by request path/method to avoid recomputation

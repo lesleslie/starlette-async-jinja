@@ -6,7 +6,7 @@ requires = [
 
 [project]
 name = "starlette-async-jinja"
-version = "1.10.1"
+version = "1.11.0"
 description = ""
 readme = "README.md"
 license.text = "BSD-3-Clause"
@@ -29,13 +29,13 @@ classifiers = [
 dependencies = [
     "anyio>=4.9",
     "jinja2>=3.1.6",
-    "jinja2-async-environment>=0.12.4",
+    "jinja2-async-environment>=0.13",
     "msgspec>=0.19",
     "starlette>=0.47.1",
 ]
 
 optional-dependencies.dev = [
-    "crackerjack>=0.20.20",
+    "crackerjack>=0.21.3",
 ]
 urls.Documentation = "https://github.com/lesleslie/starlette-async-jinja"
 urls.Homepage = "https://github.com/lesleslie/starlette-async-jinja"
@@ -66,6 +66,7 @@ lint.ignore = [
     "D105",
     "D106",
     "D107",
+    "E402",
     "F821",
     "UP040",
 ]
@@ -183,23 +184,25 @@ paths = [
 ]
 deps-file = "pyproject.toml"
 exclude-deps = [
-    "pdm-bump",
     "google-crc32c",
+    "keyring",
+    "pytest-cov",
+    "pdm-bump",
+    "pyyaml",
+    "inflection",
+    "pytest-benchmark",
+    "pytest-mock",
+    "pytest",
+    "pytest-xdist",
     "pytest-timeout",
+    "autotyping",
+    "pre-commit",
+    "pydantic-settings",
+    "pdm",
+    "tomli-w",
+    "pytest-asyncio",
     "uv",
     "pyfiglet",
-    "pytest-benchmark",
-    "tomli-w",
-    "pytest-cov",
-    "pytest-xdist",
-    "pdm",
-    "pre-commit",
-    "pytest-mock",
-    "autotyping",
-    "pyyaml",
-    "pytest",
-    "keyring",
-    "pytest-asyncio",
 ]
 
 [tool.refurb]
@@ -211,15 +214,15 @@ target = [
     "starlette_async_jinja",
 ]
 skips = [
-    "B101",
-    "B403",
-    "B404",
-    "B602",
-    "B704",
-    "B301",
     "B603",
-    "B607",
+    "B404",
     "B311",
+    "B301",
+    "B704",
+    "B607",
+    "B403",
+    "B101",
+    "B602",
 ]
 
 [tool.vulture]
