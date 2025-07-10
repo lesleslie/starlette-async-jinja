@@ -122,3 +122,20 @@ AsyncJinja2Templates(
 - **Decrease TTL values** for applications with frequently changing context data
 - **Adjust pool size** based on concurrent template rendering load
 - **Tune StringIO threshold** based on typical fragment output sizes
+
+## Task Completion Requirements
+
+**MANDATORY: Before marking any task as complete, AI assistants MUST:**
+
+1. **Run crackerjack verification**: Execute `python -m crackerjack -t --ai-agent` to run all quality checks and tests with AI-optimized output
+2. **Fix any issues found**: Address all formatting, linting, type checking, and test failures
+3. **Re-run verification**: Ensure crackerjack passes completely (all hooks pass, all tests pass)
+4. **Document verification**: Mention that crackerjack verification was completed successfully
+
+**Why this is critical:**
+- Ensures all code meets project quality standards
+- Prevents broken code from being committed
+- Maintains consistency with project development workflow
+- Catches issues early before they become problems
+
+**Never skip crackerjack verification** - it's the project's standard quality gate.
