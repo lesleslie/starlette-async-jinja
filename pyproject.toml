@@ -6,7 +6,7 @@ requires = [
 
 [project]
 name = "starlette-async-jinja"
-version = "1.11.0"
+version = "1.11.1"
 description = ""
 readme = "README.md"
 license.text = "BSD-3-Clause"
@@ -29,13 +29,13 @@ classifiers = [
 dependencies = [
     "anyio>=4.9",
     "jinja2>=3.1.6",
-    "jinja2-async-environment>=0.13",
+    "jinja2-async-environment>=0.13.1",
     "msgspec>=0.19",
     "starlette>=0.47.1",
 ]
 
 optional-dependencies.dev = [
-    "crackerjack>=0.21.3",
+    "crackerjack>=0.22.4",
 ]
 urls.Documentation = "https://github.com/lesleslie/starlette-async-jinja"
 urls.Homepage = "https://github.com/lesleslie/starlette-async-jinja"
@@ -184,25 +184,25 @@ paths = [
 ]
 deps-file = "pyproject.toml"
 exclude-deps = [
-    "google-crc32c",
-    "keyring",
-    "pytest-cov",
-    "pdm-bump",
-    "pyyaml",
-    "inflection",
     "pytest-benchmark",
-    "pytest-mock",
-    "pytest",
-    "pytest-xdist",
-    "pytest-timeout",
-    "autotyping",
-    "pre-commit",
     "pydantic-settings",
-    "pdm",
+    "pytest",
+    "pdm-bump",
+    "keyring",
+    "google-crc32c",
+    "pytest-xdist",
+    "pre-commit",
+    "inflection",
     "tomli-w",
     "pytest-asyncio",
+    "pytest-mock",
+    "pytest-cov",
+    "pdm",
     "uv",
+    "autotyping",
+    "pytest-timeout",
     "pyfiglet",
+    "pyyaml",
 ]
 
 [tool.refurb]
@@ -215,14 +215,14 @@ target = [
 ]
 skips = [
     "B603",
-    "B404",
-    "B311",
-    "B301",
-    "B704",
-    "B607",
-    "B403",
-    "B101",
     "B602",
+    "B704",
+    "B311",
+    "B403",
+    "B404",
+    "B607",
+    "B301",
+    "B101",
 ]
 
 [tool.vulture]

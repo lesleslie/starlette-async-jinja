@@ -166,7 +166,6 @@ class AsyncJinja2Templates:
     async def _get_cached_block_func(
         self, template_name: str, block_name: str
     ) -> t.Callable[..., t.Any]:
-        """Get cached block function or load and cache it."""
         cache_key = f"{template_name}:{block_name}"
         current_time = time.time()
 
@@ -234,7 +233,6 @@ class AsyncJinja2Templates:
     async def _get_block_function_and_template(
         self, template_name: str, block_name: str
     ) -> tuple[t.Callable[..., t.Any], Template]:
-        """Get block function and template, using cache when possible."""
         cache_key = f"{template_name}:{block_name}"
         current_time = time.time()
         block_render_func = None
@@ -273,7 +271,6 @@ class AsyncJinja2Templates:
         template_ctx: t.Any,
         estimated_size: int,
     ) -> str:
-        """Render block content using optimal strategy based on size."""
         if self._should_use_stringio(estimated_size):
             output = io.StringIO()
             try:
@@ -339,7 +336,6 @@ class AsyncJinja2Templates:
     def _parse_template_args(
         self, *args: t.Any, **kwargs: t.Any
     ) -> tuple[t.Any, str, dict[str, t.Any], int, t.Any, t.Any, t.Any]:
-        """Parse arguments for TemplateResponse, handling both positional and keyword args."""
         if args:
             return self._parse_positional_args(args, kwargs)
         return self._parse_keyword_args(kwargs)
@@ -347,7 +343,6 @@ class AsyncJinja2Templates:
     def _parse_positional_args(
         self, args: tuple[t.Any, ...], kwargs: dict[str, t.Any]
     ) -> tuple[t.Any, str, dict[str, t.Any], int, t.Any, t.Any, t.Any]:
-        """Parse positional arguments for TemplateResponse."""
         request = args[0]
         name = args[1] if len(args) > 1 else kwargs["name"]
         context = args[2] if len(args) > 2 else kwargs.get("context", {})
@@ -360,7 +355,6 @@ class AsyncJinja2Templates:
     def _parse_keyword_args(
         self, kwargs: dict[str, t.Any]
     ) -> tuple[t.Any, str, dict[str, t.Any], int, t.Any, t.Any, t.Any]:
-        """Parse keyword arguments for TemplateResponse."""
         context = kwargs.get("context", {})
         request = kwargs.get("request", context.get("request"))
         name = t.cast(str, kwargs["name"])
@@ -373,7 +367,6 @@ class AsyncJinja2Templates:
     def _prepare_template_context(
         self, context: dict[str, t.Any] | None, request: t.Any
     ) -> dict[str, t.Any]:
-        """Prepare the template context with processed context and request."""
         if context is None:
             context = {}
 
