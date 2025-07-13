@@ -1,15 +1,14 @@
 [build-system]
-build-backend = "pdm.backend"
+build-backend = "hatchling.build"
 requires = [
-    "pdm-backend",
+    "hatchling",
 ]
 
 [project]
 name = "starlette-async-jinja"
-version = "1.11.2"
+version = "1.12.0"
 description = ""
 readme = "README.md"
-license.text = "BSD-3-Clause"
 authors = [
     { name = "lesleslie", email = "les@wedgwoodwebworks.com" },
 ]
@@ -34,12 +33,19 @@ dependencies = [
     "starlette>=0.47.1",
 ]
 
-optional-dependencies.dev = [
+[project.license]
+text = "BSD-3-Clause"
+
+[project.urls]
+Documentation = "https://github.com/lesleslie/starlette-async-jinja"
+Homepage = "https://github.com/lesleslie/starlette-async-jinja"
+Repository = "https://github.com/lesleslie/starlette-async-jinja"
+
+[dependency-groups]
+dev = [
     "crackerjack>=0.22.5",
+    "httpx>=0.28.1",
 ]
-urls.Documentation = "https://github.com/lesleslie/starlette-async-jinja"
-urls.Homepage = "https://github.com/lesleslie/starlette-async-jinja"
-urls.Repository = "https://github.com/lesleslie/starlette-async-jinja"
 
 [tool.ruff]
 target-version = "py313"
@@ -49,36 +55,45 @@ unsafe-fixes = true
 show-fixes = true
 output-format = "full"
 
-format.docstring-code-format = true
-lint.extend-select = [
+[tool.ruff.format]
+docstring-code-format = true
+
+[tool.ruff.lint]
+extend-select = [
     "C901",
     "D",
     "F",
     "I",
     "UP",
 ]
-lint.ignore = [
+ignore = [
+    "F821",
     "D100",
-    "D101",
-    "D102",
-    "D103",
     "D104",
+    "E402",
     "D105",
+    "D101",
+    "UP040",
+    "D102",
     "D106",
     "D107",
-    "E402",
-    "F821",
-    "UP040",
+    "D103",
 ]
-lint.fixable = [
+fixable = [
     "ALL",
 ]
-lint.unfixable = [  ]
-lint.isort.no-lines-before = [
+unfixable = []
+
+[tool.ruff.lint.isort]
+no-lines-before = [
     "first-party",
 ]
-lint.mccabe.max-complexity = 13
-lint.pydocstyle.convention = "google"
+
+[tool.ruff.lint.mccabe]
+max-complexity = 13
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
 
 [tool.codespell]
 skip = "*/data/*"
@@ -184,25 +199,24 @@ paths = [
 ]
 deps-file = "pyproject.toml"
 exclude-deps = [
-    "pyyaml",
-    "google-crc32c",
-    "tomli-w",
-    "pdm-bump",
-    "pre-commit",
-    "pdm",
-    "pytest-timeout",
-    "keyring",
-    "pytest-mock",
-    "autotyping",
-    "inflection",
-    "pytest",
-    "pytest-asyncio",
     "pytest-cov",
+    "pyyaml",
+    "pytest-benchmark",
     "uv",
-    "pytest-xdist",
+    "pytest",
+    "pre-commit",
+    "hatchling",
     "pyfiglet",
     "pydantic-settings",
-    "pytest-benchmark",
+    "autotyping",
+    "tomli-w",
+    "keyring",
+    "google-crc32c",
+    "pytest-timeout",
+    "inflection",
+    "pytest-asyncio",
+    "pytest-xdist",
+    "pytest-mock",
 ]
 
 [tool.refurb]
@@ -214,15 +228,15 @@ target = [
     "starlette_async_jinja",
 ]
 skips = [
-    "B404",
-    "B301",
+    "B101",
     "B311",
-    "B607",
-    "B704",
-    "B403",
+    "B404",
     "B603",
     "B602",
-    "B101",
+    "B403",
+    "B607",
+    "B704",
+    "B301",
 ]
 
 [tool.vulture]
@@ -233,3 +247,6 @@ paths = [
 ignore_names = [
     "cls",
 ]
+
+[tool.uv]
+keyring-provider = "subprocess"

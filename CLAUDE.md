@@ -55,7 +55,7 @@ creosote
 ### Pre-commit Hooks
 Pre-commit hooks are configured and include:
 - File structure validation (trailing whitespace, YAML/TOML validation)
-- Package management (PDM and UV lock file sync)
+- Package management (UV lock file management)
 - Security checks (detect-secrets, bandit)
 - Code quality (ruff, vulture, creosote, refurb)
 - Type checking (pyright, autotyping)
