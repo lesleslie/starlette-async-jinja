@@ -6,10 +6,9 @@ requires = [
 
 [project]
 name = "starlette-async-jinja"
-version = "1.12.1"
+version = "1.12.3"
 description = ""
 readme = "README.md"
-license.text = "BSD-3-Clause"
 authors = [
     { name = "lesleslie", email = "les@wedgwoodwebworks.com" },
 ]
@@ -34,9 +33,13 @@ dependencies = [
     "starlette>=0.47.1",
 ]
 
-urls.Documentation = "https://github.com/lesleslie/starlette-async-jinja"
-urls.Homepage = "https://github.com/lesleslie/starlette-async-jinja"
-urls.Repository = "https://github.com/lesleslie/starlette-async-jinja"
+[project.license]
+text = "BSD-3-Clause"
+
+[project.urls]
+Documentation = "https://github.com/lesleslie/starlette-async-jinja"
+Homepage = "https://github.com/lesleslie/starlette-async-jinja"
+Repository = "https://github.com/lesleslie/starlette-async-jinja"
 
 [dependency-groups]
 dev = [
@@ -52,36 +55,45 @@ unsafe-fixes = true
 show-fixes = true
 output-format = "full"
 
-format.docstring-code-format = true
-lint.extend-select = [
+[tool.ruff.format]
+docstring-code-format = true
+
+[tool.ruff.lint]
+extend-select = [
     "C901",
     "D",
     "F",
     "I",
     "UP",
 ]
-lint.ignore = [
-    "D100",
-    "D101",
-    "D102",
-    "D103",
+ignore = [
     "D104",
+    "D100",
+    "F821",
+    "D102",
     "D105",
+    "D103",
+    "UP040",
     "D106",
     "D107",
+    "D101",
     "E402",
-    "F821",
-    "UP040",
 ]
-lint.fixable = [
+fixable = [
     "ALL",
 ]
-lint.unfixable = [  ]
-lint.isort.no-lines-before = [
+unfixable = []
+
+[tool.ruff.lint.isort]
+no-lines-before = [
     "first-party",
 ]
-lint.mccabe.max-complexity = 13
-lint.pydocstyle.convention = "google"
+
+[tool.ruff.lint.mccabe]
+max-complexity = 13
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
 
 [tool.codespell]
 skip = "*/data/*"
@@ -187,24 +199,24 @@ paths = [
 ]
 deps-file = "pyproject.toml"
 exclude-deps = [
-    "autotyping",
-    "keyring",
-    "hatchling",
-    "pydantic-settings",
-    "pytest-cov",
-    "google-crc32c",
-    "pytest",
-    "pre-commit",
-    "uv",
     "pyyaml",
+    "tomli-w",
+    "pre-commit",
     "pytest-asyncio",
     "pytest-xdist",
-    "pytest-mock",
-    "pytest-timeout",
-    "pyfiglet",
     "inflection",
     "pytest-benchmark",
-    "tomli-w",
+    "google-crc32c",
+    "pyfiglet",
+    "keyring",
+    "pytest-mock",
+    "pytest-timeout",
+    "pytest",
+    "uv",
+    "autotyping",
+    "hatchling",
+    "pytest-cov",
+    "pydantic-settings",
 ]
 
 [tool.refurb]
@@ -216,15 +228,15 @@ target = [
     "starlette_async_jinja",
 ]
 skips = [
-    "B704",
-    "B311",
-    "B602",
     "B301",
-    "B101",
-    "B607",
-    "B404",
-    "B403",
+    "B704",
     "B603",
+    "B403",
+    "B602",
+    "B607",
+    "B101",
+    "B311",
+    "B404",
 ]
 
 [tool.vulture]
@@ -239,3 +251,5 @@ ignore_names = [
 [tool.uv]
 keyring-provider = "subprocess"
 index-url = "https://pypi.org/simple/"
+publish-url = "https://upload.pypi.org/legacy/"
+check-url = "https://pypi.org/simple/"
