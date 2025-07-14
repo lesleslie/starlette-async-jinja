@@ -6,7 +6,7 @@ requires = [
 
 [project]
 name = "starlette-async-jinja"
-version = "1.12.3"
+version = "1.12.5"
 description = ""
 readme = "README.md"
 authors = [
@@ -67,17 +67,17 @@ extend-select = [
     "UP",
 ]
 ignore = [
+    "E402",
     "D104",
-    "D100",
-    "F821",
-    "D102",
-    "D105",
-    "D103",
     "UP040",
     "D106",
-    "D107",
+    "D100",
     "D101",
-    "E402",
+    "D102",
+    "D107",
+    "D105",
+    "D103",
+    "F821",
 ]
 fixable = [
     "ALL",
@@ -129,6 +129,9 @@ markers = [
 timeout = 300
 timeout_method = "thread"
 addopts = "--cov=starlette_async_jinja --cov-report=term --cov-fail-under=42"
+filterwarnings = [
+    "ignore::pytest_benchmark.logger.PytestBenchmarkWarning",
+]
 
 [tool.pytest.benchmark]
 disable_gc = true
@@ -199,24 +202,24 @@ paths = [
 ]
 deps-file = "pyproject.toml"
 exclude-deps = [
-    "pyyaml",
-    "tomli-w",
-    "pre-commit",
-    "pytest-asyncio",
-    "pytest-xdist",
-    "inflection",
-    "pytest-benchmark",
-    "google-crc32c",
-    "pyfiglet",
-    "keyring",
-    "pytest-mock",
-    "pytest-timeout",
     "pytest",
-    "uv",
-    "autotyping",
-    "hatchling",
-    "pytest-cov",
+    "pytest-timeout",
+    "tomli-w",
+    "pytest-asyncio",
+    "pytest-mock",
+    "pyyaml",
+    "inflection",
     "pydantic-settings",
+    "hatchling",
+    "pytest-xdist",
+    "uv",
+    "google-crc32c",
+    "pre-commit",
+    "autotyping",
+    "pyfiglet",
+    "pytest-cov",
+    "keyring",
+    "pytest-benchmark",
 ]
 
 [tool.refurb]
@@ -228,15 +231,15 @@ target = [
     "starlette_async_jinja",
 ]
 skips = [
-    "B301",
-    "B704",
-    "B603",
     "B403",
     "B602",
     "B607",
-    "B101",
     "B311",
+    "B704",
     "B404",
+    "B301",
+    "B101",
+    "B603",
 ]
 
 [tool.vulture]

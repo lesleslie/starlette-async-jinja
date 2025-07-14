@@ -39,11 +39,11 @@ wheels = [
 
 [[package]]
 name = "certifi"
-version = "2025.7.9"
+version = "2025.7.14"
 source = { registry = "https://pypi.org/simple/" }
-sdist = { url = "https://files.pythonhosted.org/packages/de/8a/c729b6b60c66a38f590c4e774decc4b2ec7b0576be8f1aa984a53ffa812a/certifi-2025.7.9.tar.gz", hash = "sha256:c1d2ec05395148ee10cf672ffc28cd37ea0ab0d99f9cc74c43e588cbd111b079", size = 160386, upload-time = "2025-07-09T02:13:58.874Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/b3/76/52c535bcebe74590f296d6c77c86dabf761c41980e1347a2422e4aa2ae41/certifi-2025.7.14.tar.gz", hash = "sha256:8ea99dbdfaaf2ba2f9bac77b9249ef62ec5218e7c2b2e903378ed5fccf765995", size = 163981, upload-time = "2025-07-14T03:29:28.449Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/66/f3/80a3f974c8b535d394ff960a11ac20368e06b736da395b551a49ce950cce/certifi-2025.7.9-py3-none-any.whl", hash = "sha256:d842783a14f8fdd646895ac26f719a061408834473cfc10203f6a575beb15d39", size = 159230, upload-time = "2025-07-09T02:13:57.007Z" },
+    { url = "https://files.pythonhosted.org/packages/4f/52/34c6cf5bb9285074dc3531c437b3919e825d976fde097a7a73f79e726d03/certifi-2025.7.14-py3-none-any.whl", hash = "sha256:6b31f564a415d79ee77df69d757bb49a5bb53bd9f756cbbe24394ffd6fc1f4b2", size = 162722, upload-time = "2025-07-14T03:29:26.863Z" },
 ]
 
 [[package]]
@@ -127,7 +127,7 @@ wheels = [
 
 [[package]]
 name = "crackerjack"
-version = "0.24.7"
+version = "0.24.10"
 source = { registry = "https://pypi.org/simple/" }
 dependencies = [
     { name = "autotyping" },
@@ -148,9 +148,9 @@ dependencies = [
     { name = "typer" },
     { name = "uv" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/16/a6/1ac8ab4a5fe4f4312daf33a4df8382f57e9d6892d19de882c89417d82a6a/crackerjack-0.24.7.tar.gz", hash = "sha256:66a16ec4c79dfc7487bda903e802e27627ac0fff8b04124a39d3e75d4b2c10eb", size = 104415, upload-time = "2025-07-13T02:20:49.296Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/31/e1/c33b47b9fda44d257c3d3c684578381c620105eef982041627cd7f15921a/crackerjack-0.24.10.tar.gz", hash = "sha256:b262846bd157a96c189cf21db7d931724952aba05ca20bc3e89b331f32fbdc59", size = 105869, upload-time = "2025-07-14T11:29:17.939Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/c4/ce/7f15802ec297e1e9ee68b300b0a19d136024d85c8dcbf1ff325cf0f20352/crackerjack-0.24.7-py3-none-any.whl", hash = "sha256:e0d392fd3b5f2bd553357290199eb7118aa70ed0e9742c08adba1dce70d02435", size = 35770, upload-time = "2025-07-13T02:20:47.57Z" },
+    { url = "https://files.pythonhosted.org/packages/fd/63/f72b1fd1660c3bf8b08b2d6f8def0fc4eb64702d691a3dc8c82464693eef/crackerjack-0.24.10-py3-none-any.whl", hash = "sha256:975fff593b725b9e4c3782385041db061a7ac35752f4fb8db8a144e0b9f76b8b", size = 36688, upload-time = "2025-07-14T11:29:16.284Z" },
 ]
 
 [[package]]
@@ -344,16 +344,16 @@ wheels = [
 
 [[package]]
 name = "jinja2-async-environment"
-version = "0.14.2"
+version = "0.14.4"
 source = { registry = "https://pypi.org/simple/" }
 dependencies = [
     { name = "anyio" },
     { name = "jinja2" },
     { name = "redis" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/31/66/fb8fe31b4618f626c17bc6a328c06faff5ea3c18f365eb3eccd13a7f5e96/jinja2_async_environment-0.14.2.tar.gz", hash = "sha256:d0350cc2763f121ae4fe2e18507ba4c89eddb246be08bdded522dce9f8ce1a12", size = 276744, upload-time = "2025-07-13T05:04:08.05Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/c9/b0/262f57c4f35166a8b6f41e4050def2c6a6719d9cc8b5d6b76ce6d43604a6/jinja2_async_environment-0.14.4.tar.gz", hash = "sha256:0642c673be2ea0ef3d2dac6181b1f28de86567baf5b45f99e2d82274a7441fab", size = 96154, upload-time = "2025-07-14T11:51:00.629Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/15/22/c7f93d39ce4a2175e9d3fa15b2d8b5bd24efbfa0aecd4170d8d540312731/jinja2_async_environment-0.14.2-py3-none-any.whl", hash = "sha256:2a82e35bf382c6c5f114e3aec0ca45617c75450682144c876cc77f962d4fd727", size = 17861, upload-time = "2025-07-13T05:04:06.257Z" },
+    { url = "https://files.pythonhosted.org/packages/eb/04/06480b01b1606e8228b20640d11f9fdb733a3ae62cd7a379ed89fb3d0f34/jinja2_async_environment-0.14.4-py3-none-any.whl", hash = "sha256:745c777fd369b1c2934c21a29eb8619100a3112f77c1a13678a529f7003496f9", size = 17857, upload-time = "2025-07-14T11:50:59.409Z" },
 ]
 
 [[package]]
@@ -817,7 +817,7 @@ wheels = [
 
 [[package]]
 name = "starlette-async-jinja"
-version = "1.12.3"
+version = "1.12.5"
 source = { editable = "." }
 dependencies = [
     { name = "anyio" },
