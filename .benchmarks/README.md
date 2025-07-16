@@ -20,18 +20,22 @@ test_benchmark_json_response               18,759.9981 (111.92)    158,315.0006 
 The benchmarks measure the performance of key components in the `starlette-async-jinja` package:
 
 1. **JSON Response Serialization**: Measures the performance of the `JsonResponse` class when serializing data.
+
    - Operations per second: ~45K ops/sec
    - This is the slowest operation due to the actual serialization of data
 
-2. **Template Rendering**: Simulates the performance of template rendering.
+1. **Template Rendering**: Simulates the performance of template rendering.
+
    - Operations per second: ~4.9M ops/sec
    - Very fast as it's using a mock implementation
 
-3. **Fragment Rendering**: Simulates the performance of rendering template fragments.
+1. **Fragment Rendering**: Simulates the performance of rendering template fragments.
+
    - Operations per second: ~5.1M ops/sec
    - Slightly faster than full template rendering
 
-4. **Context Processors**: Measures the performance impact of context processors.
+1. **Context Processors**: Measures the performance impact of context processors.
+
    - Operations per second: ~660K ops/sec
    - Slower than template operations but still quite efficient
 

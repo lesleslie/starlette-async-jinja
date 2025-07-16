@@ -3,7 +3,6 @@
 [![Code style: crackerjack](https://img.shields.io/badge/code%20style-crackerjack-000042)](https://github.com/lesleslie/crackerjack)
 [![Python: 3.13+](https://img.shields.io/badge/python-3.13%2B-green)](https://www.python.org/downloads/)
 
-
 An asynchronous Jinja2 template integration for Starlette and FastAPI, built on top of the `jinja2-async-environment` package.
 
 ## Features
@@ -45,18 +44,22 @@ from starlette_async_jinja import AsyncJinja2Templates
 # Initialize templates with an async path
 templates = AsyncJinja2Templates(directory=AsyncPath("templates"))
 
+
 async def homepage(request):
-    return await templates.TemplateResponse(request, "index.html", {"message": "Hello, world!"})
+    return await templates.TemplateResponse(
+        request, "index.html", {"message": "Hello, world!"}
+    )
+
 
 # Or using the alias
 async def about(request):
-    return await templates.render_template(request, "about.html", {"message": "About page"})
+    return await templates.render_template(
+        request, "about.html", {"message": "About page"}
+    )
+
 
 # Define routes
-app = Starlette(routes=[
-    Route("/", homepage),
-    Route("/about", about)
-])
+app = Starlette(routes=[Route("/", homepage), Route("/about", about)])
 ```
 
 ### FastAPI Example
@@ -72,32 +75,42 @@ app = FastAPI()
 # Initialize templates with an async path
 templates = AsyncJinja2Templates(directory=AsyncPath("templates"))
 
+
 @app.get("/", response_class=HTMLResponse)
 async def homepage(request: Request):
     """Render the homepage template."""
-    return await templates.TemplateResponse(request, "index.html", {
-        "title": "FastAPI with Async Jinja2",
-        "message": "Welcome to FastAPI with async template rendering!"
-    })
+    return await templates.TemplateResponse(
+        request,
+        "index.html",
+        {
+            "title": "FastAPI with Async Jinja2",
+            "message": "Welcome to FastAPI with async template rendering!",
+        },
+    )
+
 
 @app.get("/about", response_class=HTMLResponse)
 async def about(request: Request):
     """Render the about page template."""
-    return await templates.render_template(request, "about.html", {
-        "title": "About Us",
-        "message": "Learn more about our company"
-    })
+    return await templates.render_template(
+        request,
+        "about.html",
+        {"title": "About Us", "message": "Learn more about our company"},
+    )
+
 
 @app.get("/api/data")
 async def get_data():
     """Return JSON data using the optimized JsonResponse."""
-    return JsonResponse({
-        "items": [
-            {"id": 1, "name": "Item 1"},
-            {"id": 2, "name": "Item 2"},
-            {"id": 3, "name": "Item 3"}
-        ]
-    })
+    return JsonResponse(
+        {
+            "items": [
+                {"id": 1, "name": "Item 1"},
+                {"id": 2, "name": "Item 2"},
+                {"id": 3, "name": "Item 3"},
+            ]
+        }
+    )
 ```
 
 ## Using Template Partials with `render_block`
@@ -107,6 +120,7 @@ The `render_block` feature allows you to render entire template files as reusabl
 ### Component Templates
 
 **templates/components/alert.html**
+
 ```html
 <div class="alert alert-{{ type | default('info') }}">
     <h4 class="alert-heading">{{ title }}</h4>
@@ -120,6 +134,7 @@ The `render_block` feature allows you to render entire template files as reusabl
 ### Using Components in Your Templates
 
 **templates/index.html**
+
 ```html
 {% extends "base.html" %}
 
@@ -157,14 +172,11 @@ Context processors allow you to add global context to all templates:
 
 ```python
 def global_context(request):
-    return {
-        "site_name": "My Awesome Site",
-        "current_year": 2024
-    }
+    return {"site_name": "My Awesome Site", "current_year": 2024}
+
 
 templates = AsyncJinja2Templates(
-    directory=AsyncPath("templates"),
-    context_processors=[global_context]
+    directory=AsyncPath("templates"), context_processors=[global_context]
 )
 
 # Now all templates will have access to site_name and current_year
@@ -179,25 +191,22 @@ from starlette_async_jinja import AsyncJinja2Templates
 
 app = FastAPI()
 
+
 # Define context processors
 def global_context(request):
-    return {
-        "site_name": "My FastAPI App",
-        "current_year": 2024,
-        "version": "1.0.0"
-    }
+    return {"site_name": "My FastAPI App", "current_year": 2024, "version": "1.0.0"}
+
 
 def user_context(request):
     # In a real app, you might get this from a session or JWT
-    return {
-        "user": {"name": "Guest User"}
-    }
+    return {"user": {"name": "Guest User"}}
+
 
 # Initialize templates with context processors
 templates = AsyncJinja2Templates(
-    directory=AsyncPath("templates"),
-    context_processors=[global_context, user_context]
+    directory=AsyncPath("templates"), context_processors=[global_context, user_context]
 )
+
 
 @app.get("/")
 async def homepage(request: Request):
@@ -206,9 +215,9 @@ async def homepage(request: Request):
     # - current_year
     # - version
     # - user
-    return await templates.TemplateResponse(request, "index.html", {
-        "title": "Home Page"
-    })
+    return await templates.TemplateResponse(
+        request, "index.html", {"title": "Home Page"}
+    )
 ```
 
 ## Using Template Fragments
@@ -231,6 +240,7 @@ Fragments allow you to render specific blocks from within a template:
 ```python
 from starlette.responses import HTMLResponse
 
+
 # In your route handler:
 async def render_header(request):
     content = await templates.render_fragment(
@@ -248,6 +258,7 @@ from fastapi.responses import HTMLResponse
 app = FastAPI()
 templates = AsyncJinja2Templates(directory=AsyncPath("templates"))
 
+
 @app.get("/header", response_class=HTMLResponse)
 async def get_header(request: Request):
     """Return just the header fragment."""
@@ -255,6 +266,7 @@ async def get_header(request: Request):
         "page.html", "header", site_name="My FastAPI Site"
     )
     return HTMLResponse(content)
+
 
 @app.get("/footer", response_class=HTMLResponse)
 async def get_footer(request: Request):
@@ -272,10 +284,12 @@ Enhanced JSON response using `msgspec` for faster serialization:
 ```python
 from starlette_async_jinja import JsonResponse
 
+
 # Starlette example
 async def api_endpoint(request):
     data = {"name": "John", "email": "john@example.com"}
     return JsonResponse(data)
+
 
 # FastAPI example
 @app.get("/api/user")
@@ -327,7 +341,7 @@ async def render_macro_component():
     module = await template.make_module_async()
 
     # Call macro directly and await the result
-    alert_html = await module.alert('warning', 'Direct macro call')
+    alert_html = await module.alert("warning", "Direct macro call")
     return alert_html
 ```
 
@@ -351,15 +365,15 @@ templates = AsyncJinja2Templates(
     directory=AsyncPath("templates"),
     context_processors=[global_context],
     # Performance optimization options
-    context_cache_size=128,           # Context processor cache size
-    context_cache_ttl=300.0,          # Context cache TTL (seconds)
-    fragment_cache_size=64,           # Fragment block cache size
-    fragment_cache_ttl=600.0,         # Fragment cache TTL (seconds)
-    context_pool_size=10,             # Context object pool size
-    fragment_stringio_threshold=1024, # StringIO threshold for large fragments
+    context_cache_size=128,  # Context processor cache size
+    context_cache_ttl=300.0,  # Context cache TTL (seconds)
+    fragment_cache_size=64,  # Fragment block cache size
+    fragment_cache_ttl=600.0,  # Fragment cache TTL (seconds)
+    context_pool_size=10,  # Context object pool size
+    fragment_stringio_threshold=1024,  # StringIO threshold for large fragments
     # Standard Jinja2 environment options
     autoescape=True,
-    **env_options
+    **env_options,
 )
 ```
 
@@ -393,14 +407,15 @@ def expensive_context_processor(request):
     # and be cached for subsequent requests
     return {
         "expensive_data": fetch_expensive_data(),
-        "computed_value": perform_complex_calculation()
+        "computed_value": perform_complex_calculation(),
     }
+
 
 templates = AsyncJinja2Templates(
     directory=AsyncPath("templates"),
     context_processors=[expensive_context_processor],
-    context_cache_size=128,    # Number of cache entries
-    context_cache_ttl=300.0,   # Cache for 5 minutes
+    context_cache_size=128,  # Number of cache entries
+    context_cache_ttl=300.0,  # Cache for 5 minutes
 )
 ```
 
@@ -418,7 +433,7 @@ content = await templates.render_fragment(
     "components/card.html",
     "card_block",
     title="Product Name",
-    description="Product description..."
+    description="Product description...",
 )
 ```
 
@@ -428,14 +443,13 @@ content = await templates.render_fragment(
 templates = AsyncJinja2Templates(
     directory=AsyncPath("templates"),
     # Context processor caching
-    context_cache_size=128,           # Max cached context entries
-    context_cache_ttl=300.0,          # Cache TTL in seconds
-
+    context_cache_size=128,  # Max cached context entries
+    context_cache_ttl=300.0,  # Cache TTL in seconds
     # Fragment rendering optimizations
-    fragment_cache_size=64,           # Max cached block functions
-    fragment_cache_ttl=600.0,         # Block cache TTL in seconds
-    context_pool_size=10,             # Context object pool size
-    fragment_stringio_threshold=1024, # Use StringIO for fragments > 1KB
+    fragment_cache_size=64,  # Max cached block functions
+    fragment_cache_ttl=600.0,  # Block cache TTL in seconds
+    context_pool_size=10,  # Context object pool size
+    fragment_stringio_threshold=1024,  # Use StringIO for fragments > 1KB
 )
 ```
 
@@ -466,8 +480,7 @@ bytecode_cache = AsyncRedisBytecodeCache(redis_client, prefix="jinja2_")
 
 # Create templates with caching
 templates = AsyncJinja2Templates(
-    directory=AsyncPath("templates"),
-    bytecode_cache=bytecode_cache
+    directory=AsyncPath("templates"), bytecode_cache=bytecode_cache
 )
 ```
 
@@ -481,25 +494,27 @@ from starlette_async_jinja import AsyncJinja2Templates
 from jinja2_async_environment.loaders import (
     AsyncFileSystemLoader,
     AsyncPackageLoader,
-    AsyncChoiceLoader
+    AsyncChoiceLoader,
 )
 
 # Load templates from filesystem
-fs_loader = AsyncFileSystemLoader('templates')
+fs_loader = AsyncFileSystemLoader("templates")
 
 # Load templates from a Python package
-package_loader = AsyncPackageLoader('your_package', 'templates')
+package_loader = AsyncPackageLoader("your_package", "templates")
 
 # Create a loader that tries multiple sources
-choice_loader = AsyncChoiceLoader([
-    fs_loader,  # First try the filesystem
-    package_loader  # Then try the package
-])
+choice_loader = AsyncChoiceLoader(
+    [
+        fs_loader,  # First try the filesystem
+        package_loader,  # Then try the package
+    ]
+)
 
 # Create templates with the choice loader
 templates = AsyncJinja2Templates(
     directory=AsyncPath("templates"),  # This is still required
-    loader=choice_loader  # But we override the loader
+    loader=choice_loader,  # But we override the loader
 )
 ```
 
