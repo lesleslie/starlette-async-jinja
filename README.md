@@ -2,6 +2,7 @@
 
 [![Code style: crackerjack](https://img.shields.io/badge/code%20style-crackerjack-000042)](https://github.com/lesleslie/crackerjack)
 [![Python: 3.13+](https://img.shields.io/badge/python-3.13%2B-green)](https://www.python.org/downloads/)
+![Coverage](https://img.shields.io/badge/coverage-99.6%25-brightgreen)
 
 An asynchronous Jinja2 template integration for Starlette and FastAPI, built on top of the `jinja2-async-environment` package.
 
@@ -371,8 +372,10 @@ templates = AsyncJinja2Templates(
     fragment_cache_ttl=600.0,  # Fragment cache TTL (seconds)
     context_pool_size=10,  # Context object pool size
     fragment_stringio_threshold=1024,  # StringIO threshold for large fragments
-    # Standard Jinja2 environment options
+    # Standard Jinja2 environment options can be passed as keyword arguments
     autoescape=True,
+    # Example: bytecode_cache=bytecode_cache,
+    # Example: loader=custom_loader,
     **env_options,
 )
 ```
@@ -393,32 +396,6 @@ Enhanced JSON response using `msgspec` for faster serialization.
 
 Exception raised when attempting to render a template block that doesn't exist.
 
-## Performance Optimizations
-
-This package includes several built-in performance optimizations:
-
-### Context Processor Caching
-
-Context processors are automatically cached based on request properties to avoid recomputation:
-
-```python
-def expensive_context_processor(request):
-    # This will only run once per unique request path/method combination
-    # and be cached for subsequent requests
-    return {
-        "expensive_data": fetch_expensive_data(),
-        "computed_value": perform_complex_calculation(),
-    }
-
-
-templates = AsyncJinja2Templates(
-    directory=AsyncPath("templates"),
-    context_processors=[expensive_context_processor],
-    context_cache_size=128,  # Number of cache entries
-    context_cache_ttl=300.0,  # Cache for 5 minutes
-)
-```
-
 ### Fragment Rendering Optimizations
 
 Fragment rendering includes several optimizations:
@@ -436,29 +413,6 @@ content = await templates.render_fragment(
     description="Product description...",
 )
 ```
-
-### Configuration Options
-
-```python
-templates = AsyncJinja2Templates(
-    directory=AsyncPath("templates"),
-    # Context processor caching
-    context_cache_size=128,  # Max cached context entries
-    context_cache_ttl=300.0,  # Cache TTL in seconds
-    # Fragment rendering optimizations
-    fragment_cache_size=64,  # Max cached block functions
-    fragment_cache_ttl=600.0,  # Block cache TTL in seconds
-    context_pool_size=10,  # Context object pool size
-    fragment_stringio_threshold=1024,  # Use StringIO for fragments > 1KB
-)
-```
-
-### Performance Benefits
-
-- **20-40%** faster template rendering with context processors
-- **30-50%** faster repeated fragment rendering
-- **10-20%** reduction in memory allocations
-- **15-25%** faster rendering of large template fragments
 
 ## Advanced Usage
 
@@ -480,7 +434,8 @@ bytecode_cache = AsyncRedisBytecodeCache(redis_client, prefix="jinja2_")
 
 # Create templates with caching
 templates = AsyncJinja2Templates(
-    directory=AsyncPath("templates"), bytecode_cache=bytecode_cache
+    directory=AsyncPath("templates"),
+    bytecode_cache=bytecode_cache,  # Pass as env_options
 )
 ```
 
@@ -514,7 +469,7 @@ choice_loader = AsyncChoiceLoader(
 # Create templates with the choice loader
 templates = AsyncJinja2Templates(
     directory=AsyncPath("templates"),  # This is still required
-    loader=choice_loader,  # But we override the loader
+    loader=choice_loader,  # Pass as env_options
 )
 ```
 

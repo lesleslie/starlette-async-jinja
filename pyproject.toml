@@ -6,10 +6,9 @@ requires = [
 
 [project]
 name = "starlette-async-jinja"
-version = "1.12.6"
-description = ""
+version = "1.13.0"
+description = "An asynchronous Jinja2 template integration for Starlette and FastAPI"
 readme = "README.md"
-license.text = "BSD-3-Clause"
 authors = [
     { name = "lesleslie", email = "les@wedgwoodwebworks.com" },
 ]
@@ -34,14 +33,19 @@ dependencies = [
     "starlette>=0.47.1",
 ]
 
-urls.Documentation = "https://github.com/lesleslie/starlette-async-jinja"
-urls.Homepage = "https://github.com/lesleslie/starlette-async-jinja"
-urls.Repository = "https://github.com/lesleslie/starlette-async-jinja"
+[project.license]
+text = "BSD-3-Clause"
+
+[project.urls]
+Documentation = "https://github.com/lesleslie/starlette-async-jinja"
+Homepage = "https://github.com/lesleslie/starlette-async-jinja"
+Repository = "https://github.com/lesleslie/starlette-async-jinja"
 
 [dependency-groups]
 dev = [
     "crackerjack>=0.22.5",
     "httpx>=0.28.1",
+    "session-mgmt-mcp>=0.1.3",
 ]
 
 [tool.ruff]
@@ -52,15 +56,18 @@ unsafe-fixes = true
 show-fixes = true
 output-format = "full"
 
-format.docstring-code-format = true
-lint.extend-select = [
+[tool.ruff.format]
+docstring-code-format = true
+
+[tool.ruff.lint]
+extend-select = [
     "C901",
     "D",
     "F",
     "I",
     "UP",
 ]
-lint.ignore = [
+ignore = [
     "D100",
     "D101",
     "D102",
@@ -73,18 +80,24 @@ lint.ignore = [
     "F821",
     "UP040",
 ]
-lint.fixable = [
+fixable = [
     "ALL",
 ]
-lint.unfixable = [  ]
-lint.isort.no-lines-before = [
+unfixable = []
+
+[tool.ruff.lint.isort]
+no-lines-before = [
     "first-party",
 ]
-lint.mccabe.max-complexity = 13
-lint.pydocstyle.convention = "google"
+
+[tool.ruff.lint.mccabe]
+max-complexity = 13
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
 
 [tool.codespell]
-skip = "*/data/*"
+skip = "*/data/*,tests/*,test_*.py,*_test.py"
 quiet-level = 3
 ignore-words-list = "crate,uptodate,nd"
 
@@ -222,6 +235,49 @@ exclude-deps = [
 enable_all = true
 quiet = true
 python_version = "3.13"
+ignore = [
+    "FURB184",
+    "FURB120",
+]
+
+[[tool.refurb.amend]]
+path = "tests"
+ignore = [
+    "FURB100",
+    "FURB101",
+    "FURB102",
+    "FURB103",
+    "FURB104",
+    "FURB105",
+    "FURB106",
+    "FURB107",
+]
+
+[[tool.refurb.amend]]
+path = "test_*.py"
+ignore = [
+    "FURB100",
+    "FURB101",
+    "FURB102",
+    "FURB103",
+    "FURB104",
+    "FURB105",
+    "FURB106",
+    "FURB107",
+]
+
+[[tool.refurb.amend]]
+path = "*_test.py"
+ignore = [
+    "FURB100",
+    "FURB101",
+    "FURB102",
+    "FURB103",
+    "FURB104",
+    "FURB105",
+    "FURB106",
+    "FURB107",
+]
 
 [tool.bandit]
 target = [
@@ -247,6 +303,11 @@ exclude_dirs = [
 min_confidence = 86
 paths = [
     "starlette_async_jinja",
+]
+exclude = [
+    "tests/",
+    "test_*.py",
+    "*_test.py",
 ]
 ignore_names = [
     "cls",

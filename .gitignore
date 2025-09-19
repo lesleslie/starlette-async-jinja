@@ -11,3 +11,8 @@
 /tmp/
 /__pycache__/
 /*.pyc
+/.coverage
+/.envrc
+/.mcp.json
+/.venv/
+/.claude/

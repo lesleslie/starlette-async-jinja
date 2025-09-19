@@ -101,7 +101,7 @@ class AsyncJinja2Templates:
     ) -> AsyncEnvironment:
         @pass_context  # type: ignore[misc]
         def url_for(context: dict[str, t.Any], name: str, **path_params: t.Any) -> URL:
-            return context["request"].url_for(name, **path_params)
+            return t.cast(URL, context["request"].url_for(name, **path_params))
 
         loader = AsyncFileSystemLoader(directory)
         env_options.setdefault("loader", loader)
@@ -283,7 +283,7 @@ class AsyncJinja2Templates:
         else:
             chunk_generator = block_render_func(template_ctx)
             chunks = [chunk async for chunk in chunk_generator]  # type: ignore[misc]
-            return self.env.concat(chunks)
+            return t.cast(str, self.env.concat(chunks))
 
     async def render_fragment(
         self,
@@ -296,7 +296,7 @@ class AsyncJinja2Templates:
             raise BlockNotFoundError(block_name, template_name)
 
         try:
-            ctx_data = dict(*args, **kwargs)
+            ctx_data: dict[str, t.Any] = dict(*args, **kwargs)
             ctx = self._get_pooled_context(ctx_data)
 
             try:
@@ -315,7 +315,7 @@ class AsyncJinja2Templates:
                 )
 
             except Exception:
-                return self.env.handle_exception()
+                return t.cast(str, self.env.handle_exception())
             finally:
                 self._return_to_pool(ctx)
 
@@ -329,7 +329,7 @@ class AsyncJinja2Templates:
     async def get_template_async(self, name: str) -> Template:
         try:
             template = await self.env.get_template_async(name)
-            return template
+            return t.cast(Template, template)
         except Exception:
             raise RuntimeError(f"Error loading template '{name}'")
 
