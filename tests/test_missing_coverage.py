@@ -1,11 +1,8 @@
-import typing as t
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 from anyio import Path as AsyncPath
 from jinja2.environment import Template
-from starlette.requests import Request
-from starlette.testclient import TestClient
 from starlette_async_jinja.responses import AsyncJinja2Templates, BlockNotFoundError
 
 
@@ -170,4 +167,6 @@ async def test_render_fragment_block_not_found_validation() -> None:
     with pytest.raises(BlockNotFoundError) as exc_info:
         await templates.render_fragment("test.html", "nonexistent_block")
 
-    assert "Block 'nonexistent_block' not found in template 'test.html'" in str(exc_info.value)
+    assert "Block 'nonexistent_block' not found in template 'test.html'" in str(
+        exc_info.value
+    )

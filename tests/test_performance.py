@@ -1,13 +1,11 @@
 """Performance and benchmarking tests for starlette-async-jinja."""
 
-import time
 import typing as t
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 from anyio import Path as AsyncPath
 from jinja2.environment import Template
-from starlette.testclient import TestClient
 from starlette_async_jinja.responses import AsyncJinja2Templates
 
 
@@ -64,7 +62,9 @@ async def test_benchmark_fragment_rendering_nested_blocks(benchmark) -> None:
         with patch.object(
             templates, "get_template_async", AsyncMock(return_value=mock_template)
         ):
-            with patch.object(templates.env, "concat", return_value="<div>Content</div>"):
+            with patch.object(
+                templates.env, "concat", return_value="<div>Content</div>"
+            ):
                 return await templates.render_fragment("test.html", "outer")
 
     # Run benchmark
@@ -76,6 +76,7 @@ async def test_benchmark_fragment_rendering_nested_blocks(benchmark) -> None:
 @pytest.mark.asyncio
 async def test_benchmark_context_processor_performance(benchmark) -> None:
     """Benchmark context processor performance with complex processors."""
+
     # Create a complex context processor
     def complex_context_processor(request: t.Any) -> dict[str, t.Any]:
         # Simulate complex processing
@@ -85,8 +86,7 @@ async def test_benchmark_context_processor_performance(benchmark) -> None:
         return result
 
     templates = AsyncJinja2Templates(
-        directory=AsyncPath("templates"),
-        context_processors=[complex_context_processor]
+        directory=AsyncPath("templates"), context_processors=[complex_context_processor]
     )
 
     # Create mock template
@@ -102,9 +102,7 @@ async def test_benchmark_context_processor_performance(benchmark) -> None:
         with patch.object(
             templates, "get_template_async", AsyncMock(return_value=mock_template)
         ):
-            return await templates.TemplateResponse(
-                mock_request, "test.html", {}
-            )
+            return await templates.TemplateResponse(mock_request, "test.html", {})
 
     # Run benchmark
     result = await benchmark(process_context)
@@ -116,7 +114,7 @@ def test_benchmark_memory_usage_context_pooling(benchmark) -> None:
     """Benchmark memory usage with context pooling."""
     templates = AsyncJinja2Templates(
         directory=AsyncPath("templates"),
-        context_pool_size=100  # Large pool size
+        context_pool_size=100,  # Large pool size
     )
 
     # Test context pooling performance
@@ -145,7 +143,7 @@ async def test_benchmark_cache_performance_under_load(benchmark) -> None:
     templates = AsyncJinja2Templates(
         directory=AsyncPath("templates"),
         context_cache_size=1000,
-        fragment_cache_size=1000
+        fragment_cache_size=1000,
     )
 
     # Create mock template
@@ -177,8 +175,7 @@ async def test_benchmark_cache_performance_under_load(benchmark) -> None:
 async def test_benchmark_stringio_vs_concat_performance() -> None:
     """Test StringIO vs concat performance for different fragment sizes."""
     templates = AsyncJinja2Templates(
-        directory=AsyncPath("templates"),
-        fragment_stringio_threshold=1024
+        directory=AsyncPath("templates"), fragment_stringio_threshold=1024
     )
 
     # Create mock template
@@ -197,7 +194,9 @@ async def test_benchmark_stringio_vs_concat_performance() -> None:
         with patch.object(
             templates, "get_template_async", AsyncMock(return_value=mock_template)
         ):
-            with patch.object(templates.env, "concat", return_value="Small content") as mock_concat:
+            with patch.object(
+                templates.env, "concat", return_value="Small content"
+            ) as mock_concat:
                 result = await templates.render_fragment(
                     "test.html", "test_block", small_data="tiny"
                 )
@@ -234,8 +233,7 @@ async def test_benchmark_stringio_vs_concat_performance() -> None:
 async def test_memory_usage_context_pooling_detailed() -> None:
     """Detailed test for context pooling memory usage."""
     templates = AsyncJinja2Templates(
-        directory=AsyncPath("templates"),
-        context_pool_size=50
+        directory=AsyncPath("templates"), context_pool_size=50
     )
 
     # Fill the pool
@@ -297,7 +295,7 @@ async def test_benchmark_cache_hit_vs_miss(benchmark) -> None:
     """Benchmark cache hit vs miss performance."""
     templates = AsyncJinja2Templates(
         directory=AsyncPath("templates"),
-        fragment_cache_ttl=0.1  # Short TTL for testing
+        fragment_cache_ttl=0.1,  # Short TTL for testing
     )
 
     # Create mock template
