@@ -16,3 +16,5 @@
 /.mcp.json
 /.venv/
 /.claude/
+/.crackerjack/
+/.benchmarks/
