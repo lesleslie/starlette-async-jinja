@@ -26,11 +26,11 @@ classifiers = [
     "Typing :: Typed",
 ]
 dependencies = [
-    "anyio>=4.9",
+    "anyio>=4.11.0",
     "jinja2>=3.1.6",
-    "jinja2-async-environment>=0.14",
-    "msgspec>=0.19",
-    "starlette>=0.47.1",
+    "jinja2-async-environment>=0.18.6",
+    "msgspec>=0.20.0",
+    "starlette>=0.50.0",
 ]
 
 [project.license]
@@ -43,10 +43,12 @@ Repository = "https://github.com/lesleslie/starlette-async-jinja"
 
 [dependency-groups]
 dev = [
-    "crackerjack>=0.22.5",
+    "crackerjack>=0.44.42",
     "httpx>=0.28.1",
-    "session-mgmt-mcp>=0.1.3",
+    "session-mgmt-mcp>=0.9.7",
+    "uv-bump>=0.3.1",
 ]
+
 
 [tool.ruff]
 target-version = "py313"
@@ -129,17 +131,10 @@ markers = [
 ]
 timeout = 300
 timeout_method = "thread"
-addopts = "--cov=starlette_async_jinja --cov-report=term --cov-fail-under=42"
+addopts = "--cov=starlette_async_jinja --cov-report=term --cov-fail-under=42 --benchmark-disable-gc --benchmark-warmup=off --benchmark-max-time=5.0 --benchmark-min-rounds=1"
 filterwarnings = [
     "ignore::pytest_benchmark.logger.PytestBenchmarkWarning",
 ]
-
-[tool.pytest.benchmark]
-disable_gc = true
-warmup = false
-warmup_iterations = 0
-min_rounds = 1
-max_time = 5.0
 
 [tool.coverage.run]
 branch = false
@@ -174,9 +169,7 @@ exclude_also = [
 ignore_errors = false
 
 [tool.pyright]
-verboseOutput = true
 include = [
-    "tests",
     "starlette_async_jinja",
 ]
 exclude = [
@@ -184,10 +177,10 @@ exclude = [
     "dist",
     "scratch",
     ".venv",
+    "**/site-packages/**",
+    "**/tests/**",
 ]
-extraPaths = [
-    ".venv/lib/python3.13/site-packages/",
-]
+extraPaths = []
 typeCheckingMode = "strict"
 reportMissingTypeStubs = false
 reportOptionalMemberAccess = false
@@ -203,6 +196,49 @@ pythonVersion = "3.13"
 reportUnnecessaryTypeIgnoreComment = "warning"
 reportUnnecessaryComparison = "warning"
 reportConstantRedefinition = "warning"
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+ignore_missing_imports = true
+show_error_codes = true
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+files = ["starlette_async_jinja"]
+# Exclude tests and other directories to limit scope to just the package
+exclude = [
+    ".*venv.*",
+    ".*site-packages.*",
+    "tests",
+    ".*__pycache__.*",
+    ".*conftest.*",
+]
+
+[tool.zuban]
+strict = true
+show_error_codes = true
+exclude = [
+    ".*venv.*",
+    ".*tox.*",
+    ".*__pycache__.*",
+    ".*pytest_cache.*",
+    ".*mypy_cache.*",
+    ".*ruff_cache.*",
+    ".*uv_cache.*",
+    ".*\\.git.*",
+    ".*\\.hg.*",
+    ".*\\.svn.*",
+    ".*build.*",
+    ".*dist.*",
+    ".*eggs.*",
+    ".*\\.egg-info.*",
+    ".*node_modules.*",
+    ".*vscode.*",
+    ".*idea.*",
+    ".*docs/_build.*",
+    "tests",
+]
 
 [tool.creosote]
 paths = [
@@ -233,7 +269,7 @@ exclude-deps = [
 
 [tool.refurb]
 enable_all = true
-quiet = true
+quiet = false
 python_version = "3.13"
 ignore = [
     "FURB184",
@@ -318,14 +354,8 @@ keyring-provider = "subprocess"
 index-url = "https://pypi.org/simple/"
 publish-url = "https://upload.pypi.org/legacy/"
 check-url = "https://pypi.org/simple/"
+prerelease = "allow"
 
-[tool.autotyping]
-exclude = [
-    "tests/data/*",
-    "*/conftest.py",
-]
-safe = true
-aggressive = true
 
 [tool.complexipy]
 default_pattern = "**/*.py"

@@ -151,9 +151,11 @@ async def test_benchmark_cache_performance_under_load(benchmark) -> None:
     mock_template.blocks = {}
     mock_template.new_context = MagicMock(return_value={})
 
-    # Add blocks to template
+    # Add blocks to template - rebuild the entire blocks dict
+    blocks_dict = {}
     for i in range(100):
-        mock_template.blocks[f"block_{i}"] = MagicMock()
+        blocks_dict[f"block_{i}"] = MagicMock()
+    mock_template.blocks = blocks_dict
 
     async def high_load_test():
         with patch.object(

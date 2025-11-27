@@ -1,0 +1,164 @@
+[
+  {
+    "complexity": 0,
+    "file_name": "responses.py",
+    "function_name": "AsyncJinja2Templates::_create_env",
+    "path": "responses.py"
+  },
+  {
+    "complexity": 0,
+    "file_name": "responses.py",
+    "function_name": "AsyncJinja2Templates::_parse_keyword_args",
+    "path": "responses.py"
+  },
+  {
+    "complexity": 0,
+    "file_name": "responses.py",
+    "function_name": "AsyncJinja2Templates::_should_use_stringio",
+    "path": "responses.py"
+  },
+  {
+    "complexity": 0,
+    "file_name": "responses.py",
+    "function_name": "AsyncJinja2Templates::generate_render_partial",
+    "path": "responses.py"
+  },
+  {
+    "complexity": 0,
+    "file_name": "responses.py",
+    "function_name": "BlockNotFoundError::__init__",
+    "path": "responses.py"
+  },
+  {
+    "complexity": 0,
+    "file_name": "responses.py",
+    "function_name": "JsonResponse::render",
+    "path": "responses.py"
+  },
+  {
+    "complexity": 0,
+    "file_name": "responses.py",
+    "function_name": "_TemplateResponse::__init__",
+    "path": "responses.py"
+  },
+  {
+    "complexity": 1,
+    "file_name": "responses.py",
+    "function_name": "AsyncJinja2Templates::TemplateResponse",
+    "path": "responses.py"
+  },
+  {
+    "complexity": 1,
+    "file_name": "responses.py",
+    "function_name": "AsyncJinja2Templates::__init__",
+    "path": "responses.py"
+  },
+  {
+    "complexity": 1,
+    "file_name": "responses.py",
+    "function_name": "AsyncJinja2Templates::_get_pooled_context",
+    "path": "responses.py"
+  },
+  {
+    "complexity": 1,
+    "file_name": "responses.py",
+    "function_name": "AsyncJinja2Templates::_parse_template_args",
+    "path": "responses.py"
+  },
+  {
+    "complexity": 1,
+    "file_name": "responses.py",
+    "function_name": "AsyncJinja2Templates::_preload_template_blocks",
+    "path": "responses.py"
+  },
+  {
+    "complexity": 1,
+    "file_name": "responses.py",
+    "function_name": "AsyncJinja2Templates::_return_to_pool",
+    "path": "responses.py"
+  },
+  {
+    "complexity": 1,
+    "file_name": "responses.py",
+    "function_name": "AsyncJinja2Templates::_validate_block_exists",
+    "path": "responses.py"
+  },
+  {
+    "complexity": 1,
+    "file_name": "responses.py",
+    "function_name": "AsyncJinja2Templates::get_template_async",
+    "path": "responses.py"
+  },
+  {
+    "complexity": 1,
+    "file_name": "responses.py",
+    "function_name": "AsyncJinja2Templates::renderer",
+    "path": "responses.py"
+  },
+  {
+    "complexity": 1,
+    "file_name": "responses.py",
+    "function_name": "_TemplateResponse::__call__",
+    "path": "responses.py"
+  },
+  {
+    "complexity": 2,
+    "file_name": "responses.py",
+    "function_name": "AsyncJinja2Templates::_prepare_template_context",
+    "path": "responses.py"
+  },
+  {
+    "complexity": 3,
+    "file_name": "responses.py",
+    "function_name": "AsyncJinja2Templates::_get_context_cache_key",
+    "path": "responses.py"
+  },
+  {
+    "complexity": 4,
+    "file_name": "responses.py",
+    "function_name": "AsyncJinja2Templates::_is_context_cacheable",
+    "path": "responses.py"
+  },
+  {
+    "complexity": 4,
+    "file_name": "responses.py",
+    "function_name": "AsyncJinja2Templates::render_block",
+    "path": "responses.py"
+  },
+  {
+    "complexity": 4,
+    "file_name": "responses.py",
+    "function_name": "AsyncJinja2Templates::render_fragment",
+    "path": "responses.py"
+  },
+  {
+    "complexity": 5,
+    "file_name": "responses.py",
+    "function_name": "AsyncJinja2Templates::_get_cached_block_func",
+    "path": "responses.py"
+  },
+  {
+    "complexity": 5,
+    "file_name": "responses.py",
+    "function_name": "AsyncJinja2Templates::_render_block_content",
+    "path": "responses.py"
+  },
+  {
+    "complexity": 6,
+    "file_name": "responses.py",
+    "function_name": "AsyncJinja2Templates::_parse_positional_args",
+    "path": "responses.py"
+  },
+  {
+    "complexity": 9,
+    "file_name": "responses.py",
+    "function_name": "AsyncJinja2Templates::_get_block_function_and_template",
+    "path": "responses.py"
+  },
+  {
+    "complexity": 10,
+    "file_name": "responses.py",
+    "function_name": "AsyncJinja2Templates::_get_processed_context",
+    "path": "responses.py"
+  }
+]

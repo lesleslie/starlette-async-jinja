@@ -19,7 +19,7 @@ RenderFunction: t.TypeAlias = t.Callable[..., t.Awaitable[t.Any]]
 
 
 class JsonResponse(JSONResponse):
-    def render(self, content: t.Any) -> bytes:  # type: ignore
+    def render(self, content: t.Any) -> bytes:
         return json.encode(content)
 
 
@@ -99,7 +99,7 @@ class AsyncJinja2Templates:
     def _create_env(
         self, directory: AsyncPath, **env_options: t.Any
     ) -> AsyncEnvironment:
-        @pass_context  # type: ignore[misc]
+        @pass_context
         def url_for(context: dict[str, t.Any], name: str, **path_params: t.Any) -> URL:
             return t.cast(URL, context["request"].url_for(name, **path_params))
 
@@ -108,8 +108,8 @@ class AsyncJinja2Templates:
         env_options.setdefault("autoescape", True)
 
         env = AsyncEnvironment(**env_options)
-        env.globals["render_block"] = self.generate_render_partial(self.renderer)  # type: ignore[assignment]
-        env.globals["url_for"] = url_for  # type: ignore[assignment]
+        env.globals["render_block"] = self.generate_render_partial(self.renderer)
+        env.globals["url_for"] = url_for
         return env
 
     def _get_context_cache_key(self, request: t.Any) -> str:
@@ -275,14 +275,14 @@ class AsyncJinja2Templates:
             output = io.StringIO()
             try:
                 chunk_generator = block_render_func(template_ctx)
-                async for chunk in chunk_generator:  # type: ignore[misc]
+                async for chunk in chunk_generator:
                     output.write(str(chunk))
                 return output.getvalue()
             finally:
                 output.close()
         else:
             chunk_generator = block_render_func(template_ctx)
-            chunks = [chunk async for chunk in chunk_generator]  # type: ignore[misc]
+            chunks = [chunk async for chunk in chunk_generator]
             return t.cast(str, self.env.concat(chunks))
 
     async def render_fragment(
@@ -328,8 +328,8 @@ class AsyncJinja2Templates:
 
     async def get_template_async(self, name: str) -> Template:
         try:
-            template = await self.env.get_template_async(name)
-            return t.cast(Template, template)
+            template = t.cast(Template, await self.env.get_template_async(name))
+            return template
         except Exception:
             raise RuntimeError(f"Error loading template '{name}'")
 

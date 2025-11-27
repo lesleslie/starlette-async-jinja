@@ -33,9 +33,7 @@ async def renderer(self, template_name: str, **data: t.Any) -> str:
 **File**: `starlette_async_jinja/responses.py`
 
 ```python
-async def TemplateResponse(
-    self, *args: t.Any, **kwargs: t.Any
-) -> _TemplateResponse:
+async def TemplateResponse(self, *args: t.Any, **kwargs: t.Any) -> _TemplateResponse:
     name = "<unknown>"
     try:
         request, name, context, status_code, headers, media_type, background = (
@@ -91,6 +89,7 @@ async def _render_block_content(
 ```
 
 This pattern:
+
 - Gets the template's block function as an async generator
 - Iterates with `async for` to collect chunks
 - Properly handles jinja2-async-environment's architecture
@@ -104,6 +103,7 @@ Same issue as ACB and FastBlocks:
 jinja2-async-environment generates templates as **async generators** that must be iterated with `async for`. Jinja2's standard `render_async()` method doesn't properly handle jinja2-async-environment's async generator pattern for **template inheritance**.
 
 **Impact**:
+
 - ✅ **Simple templates work fine** (no inheritance)
 - ❌ **Templates with inheritance fail** with `TypeError: 'async for' requires an object with __aiter__ method, got coroutine`
 - ❌ **All Starlette responses using inherited templates fail**
@@ -115,6 +115,7 @@ jinja2-async-environment generates templates as **async generators** that must b
 **Lines 226-231** - Change to use root_render_func pattern:
 
 **Before**:
+
 ```python
 async def renderer(self, template_name: str, **data: t.Any) -> str:
     try:
@@ -124,7 +125,8 @@ async def renderer(self, template_name: str, **data: t.Any) -> str:
         raise RuntimeError(f"Error rendering template '{template_name}': {e}")
 ```
 
-**After** (using existing _render_block_content pattern):
+**After** (using existing \_render_block_content pattern):
+
 ```python
 async def renderer(self, template_name: str, **data: t.Any) -> str:
     """Render template using jinja2-async-environment compatible pattern.
@@ -151,10 +153,9 @@ async def renderer(self, template_name: str, **data: t.Any) -> str:
 **Lines 381-405** - Change to use root_render_func pattern:
 
 **Before**:
+
 ```python
-async def TemplateResponse(
-    self, *args: t.Any, **kwargs: t.Any
-) -> _TemplateResponse:
+async def TemplateResponse(self, *args: t.Any, **kwargs: t.Any) -> _TemplateResponse:
     name = "<unknown>"
     try:
         request, name, context, status_code, headers, media_type, background = (
@@ -180,10 +181,9 @@ async def TemplateResponse(
 ```
 
 **After**:
+
 ```python
-async def TemplateResponse(
-    self, *args: t.Any, **kwargs: t.Any
-) -> _TemplateResponse:
+async def TemplateResponse(self, *args: t.Any, **kwargs: t.Any) -> _TemplateResponse:
     """Create Starlette TemplateResponse with jinja2-async-environment support.
 
     Uses root_render_func() for template inheritance compatibility.
@@ -245,6 +245,7 @@ async def renderer(self, template_name: str, **data: t.Any) -> str:
     except Exception as e:
         raise RuntimeError(f"Error rendering template '{template_name}': {e}")
 
+
 async def TemplateResponse(self, *args: t.Any, **kwargs: t.Any) -> _TemplateResponse:
     name = "<unknown>"
     try:
@@ -256,7 +257,9 @@ async def TemplateResponse(self, *args: t.Any, **kwargs: t.Any) -> _TemplateResp
         content = await self._render_template_content(template, context)
 
         return _TemplateResponse(
-            template, context, content,
+            template,
+            context,
+            content,
             status_code=status_code,
             headers=headers,
             media_type=media_type,
@@ -307,6 +310,7 @@ from anyio import Path as AsyncPath
 {% endblock %}
 """
 
+
 @pytest.mark.asyncio
 async def test_template_response_with_inheritance(tmp_path):
     # Setup templates
@@ -324,6 +328,7 @@ async def test_template_response_with_inheritance(tmp_path):
 
     # Test TemplateResponse
     from unittest.mock import Mock
+
     request = Mock()
     request.url = Mock()
     request.url.path = "/test"
@@ -335,8 +340,8 @@ async def test_template_response_with_inheritance(tmp_path):
         context={
             "page_title": "Test Page",
             "heading": "Welcome",
-            "message": "Inheritance works!"
-        }
+            "message": "Inheritance works!",
+        },
     )
 
     content = response.body.decode()
@@ -363,7 +368,7 @@ async def test_renderer_with_inheritance(tmp_path):
         "child.html",
         page_title="Test Page",
         heading="Welcome",
-        message="Renderer works!"
+        message="Renderer works!",
     )
 
     assert "<title>Test Page</title>" in result
@@ -421,6 +426,7 @@ async def test_render_fragment_still_works(tmp_path):
 ## Performance Impact
 
 **None expected**. The `root_render_func()` pattern:
+
 - Is actually **more direct** than `render_async()`
 - Eliminates compatibility layer overhead
 - Matches how `render_fragment()` already works (proven performance)
@@ -429,6 +435,7 @@ async def test_render_fragment_still_works(tmp_path):
 ## Breaking Changes
 
 **None**. This is a **purely internal change**:
+
 - Public API remains identical (`TemplateResponse()` and `renderer()` signatures unchanged)
 - Behavior remains identical for simple templates
 - **Fixes broken behavior** for inherited templates (was failing before)
@@ -437,6 +444,7 @@ async def test_render_fragment_still_works(tmp_path):
 ## Implementation Priority
 
 **High Priority** - This affects the core functionality of the library:
+
 - `TemplateResponse()` is the **primary public API** (line 407 aliases it as `render_template`)
 - Template inheritance is a **fundamental Jinja2 feature**
 - Current implementation **silently breaks** when users try to use inheritance
@@ -445,11 +453,13 @@ async def test_render_fragment_still_works(tmp_path):
 ## Related Issues
 
 This issue was discovered while fixing:
+
 1. ACB templates adapter (same issue, same fix applied)
-2. FastBlocks templates adapter (same issue, documentation created)
-3. jinja2-async-environment itself (codegen bug fixed)
+1. FastBlocks templates adapter (same issue, documentation created)
+1. jinja2-async-environment itself (codegen bug fixed)
 
 **Related Documentation**:
+
 - jinja2-async-environment bug analysis: `/Users/les/Projects/jinja2-async-environment/docs/TEMPLATE_INHERITANCE_BUG_ANALYSIS.md`
 - ACB templates adapter: `/Users/les/Projects/acb/acb/adapters/templates/jinja2.py` (fixed implementation)
 - FastBlocks documentation: `/Users/les/Projects/fastblocks/docs/JINJA2_ASYNC_ENVIRONMENT_USAGE.md`

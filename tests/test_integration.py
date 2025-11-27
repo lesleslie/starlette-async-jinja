@@ -12,6 +12,41 @@ from starlette.testclient import TestClient
 from starlette_async_jinja.responses import AsyncJinja2Templates, JsonResponse
 
 
+class MockAsyncJinja2Templates(AsyncJinja2Templates):
+    """A version of AsyncJinja2Templates with mocked methods."""
+
+    def __init__(
+        self,
+        directory,
+        mock_get_template_func=None,
+        mock_render_fragment_func=None,
+        **kwargs,
+    ):
+        super().__init__(directory, **kwargs)
+        self._mock_get_template_func = mock_get_template_func
+        self._mock_render_fragment_func = mock_render_fragment_func
+
+    async def get_template_async(self, name: str):
+        if self._mock_get_template_func:
+            result = self._mock_get_template_func(name)
+            # If the result is a coroutine, await it, otherwise return as-is
+            if hasattr(result, "__await__"):
+                return await result
+            return result
+        return await super().get_template_async(name)
+
+    async def render_fragment(self, template_name: str, block_name: str, **kwargs):
+        if self._mock_render_fragment_func:
+            result = self._mock_render_fragment_func(
+                template_name, block_name, **kwargs
+            )
+            # If the result is a coroutine, await it, otherwise return as-is
+            if hasattr(result, "__await__"):
+                return await result
+            return result
+        return await super().render_fragment(template_name, block_name, **kwargs)
+
+
 @pytest.mark.asyncio
 async def test_full_application_integration() -> None:
     """Test integration with a full Starlette application using mocks."""
@@ -52,31 +87,6 @@ async def test_full_application_integration() -> None:
     """
     )
 
-    # Create a templates instance with mocked methods
-    templates = AsyncJinja2Templates(directory=AsyncPath("templates"))
-
-    # Mock the get_template_async method
-    templates.get_template_async = AsyncMock(return_value=mock_home_template)
-
-    # Mock the render_fragment method
-    templates.render_fragment = AsyncMock(
-        side_effect=lambda template_name,
-        block_name,
-        **kwargs: """<div class="product-info">
-            <h3>Test Product</h3>
-            <p>Price: $99.99</p>
-            <p>Description: This is a test product</p>
-        </div>"""
-        if block_name == "product_info"
-        else """<div class="user-info">
-            <h3>User Information</h3>
-            <p>Username: testuser</p>
-            <p>Email: test@example.com</p>
-        </div>"""
-        if block_name == "user_info"
-        else "Unknown block"
-    )
-
     # Create context processor
     def context_processor(request: Request) -> dict[str, t.Any]:
         return {
@@ -84,18 +94,47 @@ async def test_full_application_integration() -> None:
             "version": "1.0.0",
         }
 
+    # Create templates with mocked methods using our mock class
+    def mock_get_template_func(name: str):
+        return mock_home_template
+
+    async def mock_render_fragment_func(template_name: str, block_name: str, **kwargs):
+        return (
+            """<div class="product-info">
+            <h3>Test Product</h3>
+            <p>Price: $99.99</p>
+            <p>Description: This is a test product</p>
+        </div>"""
+            if block_name == "product_info"
+            else """<div class="user-info">
+            <h3>User Information</h3>
+            <p>Username: testuser</p>
+            <p>Email: test@example.com</p>
+        </div>"""
+            if block_name == "user_info"
+            else "Unknown block"
+        )
+
+    MockAsyncJinja2Templates(
+        directory=AsyncPath("templates"),
+        mock_get_template_func=mock_get_template_func,
+        mock_render_fragment_func=mock_render_fragment_func,
+    )
+
     # Create templates with context processor
-    templates_with_processor = AsyncJinja2Templates(
+    templates_with_processor = MockAsyncJinja2Templates(
         directory=AsyncPath("templates"),
         context_processors=[context_processor],
+        mock_get_template_func=mock_get_template_func,
+        mock_render_fragment_func=mock_render_fragment_func,
     )
-    templates_with_processor.get_template_async = templates.get_template_async
-    templates_with_processor.render_fragment = templates.render_fragment
 
     # Create routes
     async def homepage(request: Request) -> t.Any:
         user = {"username": "testuser", "email": "test@example.com"}
-        return await templates.TemplateResponse(request, "home.html", {"user": user})
+        return await templates_with_processor.TemplateResponse(
+            request, "home.html", {"user": user}
+        )
 
     async def get_data(request: Request) -> t.Any:
         data = {
@@ -113,7 +152,7 @@ async def test_full_application_integration() -> None:
             "price": 99.99,
             "description": "This is a test product",
         }
-        fragment = await templates.render_fragment(
+        fragment = await templates_with_processor.render_fragment(
             "fragments.html", "product_info", product=product
         )
         return JSONResponse({"html": fragment})
@@ -179,23 +218,29 @@ async def test_context_processors() -> None:
         }
 
     # Create templates with context processor
-    templates = AsyncJinja2Templates(
+    AsyncJinja2Templates(
         directory=AsyncPath("templates"),
         context_processors=[context_processor],
     )
 
-    # Mock the get_template_async method
-    templates.get_template_async = AsyncMock(return_value=mock_template)
-
     # Create a mock request
     mock_request = MagicMock(spec=Request)
 
-    # Create a response
+    # Create a new templates instance using our mock class
+    def mock_get_template_func(name: str):
+        return mock_template
+
+    templates_mock_cls = MockAsyncJinja2Templates(
+        directory=AsyncPath("templates"),
+        context_processors=[context_processor],
+        mock_get_template_func=mock_get_template_func,
+    )
+
     with patch(
         "starlette_async_jinja.responses._TemplateResponse"
     ) as mock_response_class:
         # Create a response
-        await templates.TemplateResponse(
+        await templates_mock_cls.TemplateResponse(
             request=mock_request,
             name="test.html",
             context={"title": "Test Page"},

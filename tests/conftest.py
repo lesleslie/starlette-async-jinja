@@ -47,17 +47,27 @@ def mock_template() -> MagicMock:
     return template
 
 
+class MockAsyncJinja2Templates(AsyncJinja2Templates):
+    """A version of AsyncJinja2Templates with a mocked get_template_async method."""
+
+    def __init__(self, directory, mock_template, **kwargs):
+        super().__init__(directory, **kwargs)
+        self._mock_template = mock_template
+
+    async def get_template_async(self, name: str):
+        return self._mock_template
+
+
 @pytest.fixture
 def templates(mock_template: MagicMock) -> AsyncJinja2Templates:
     """Create AsyncJinja2Templates instance with mocked internals."""
     # Create a mock directory
     mock_dir = AsyncPath("templates")
 
-    # Create templates with the mock directory
-    templates = AsyncJinja2Templates(directory=mock_dir)
-
-    # Patch the get_template_async method to return our mock template
-    templates.get_template_async = AsyncMock(return_value=mock_template)
+    # Create templates with the mock directory using our mock class
+    templates = MockAsyncJinja2Templates(
+        directory=mock_dir, mock_template=mock_template
+    )
 
     return templates
 
