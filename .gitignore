@@ -19,3 +19,47 @@
 /.crackerjack/
 /.benchmarks/
 /.complexipy_cache/
+
+# Crackerjack patterns
+
+
+
+
+# Build/Distribution
+# Caches
+# Coverage
+# Crackerjack specific
+# Development
+*.egg-info/
+*.pyc
+.DS_STORE
+.coverage*
+.crackerjack-*
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.venv/
+/*.pyc
+/.benchmarks/
+/.claude/
+/.complexipy_cache/
+/.coverage
+/.crackerjack/
+/.envrc
+/.idea
+/.mcp.json
+/.mypy_cache/
+/.pdm-build/
+/.pdm-python
+/.pdm.toml
+/.ruff_cache/
+/.venv/
+/__pycache__/
+/__pypackages__/
+/build/
+/dist/
+/tmp/
+__pycache__/
+crackerjack-ai-debug-*.log
+crackerjack-debug-*.log
+htmlcov/

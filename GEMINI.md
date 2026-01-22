@@ -16,6 +16,53 @@ This document provides context for the Gemini Code Assistant to understand the `
 - **anyio:** An asynchronous networking and concurrency library.
 - **msgspec:** A fast and memory-efficient JSON and MessagePack library.
 
+**Technology Stack Visualization:**
+
+```mermaid
+mindmap
+    root((starlette-async-jinja))
+        Frameworks
+            Starlette<br/>[ASGI Framework]
+            FastAPI<br/>[Modern Web API]
+        Templating
+            Jinja2<br/>[Template Engine]
+            jinja2-async-environment<br/>[Async Adapter]
+        Async_Runtime
+            anyio<br/>[Async I/O Library]
+            AsyncPath<br/>[Filesystem Operations]
+        Performance
+            msgspec<br/>[Fast JSON/MessagingPack]
+            Caching<br/>[Context + Fragment Caches]
+            Object Pooling<br/>[Memory Optimization]
+        Testing
+            pytest<br/>[Test Framework]
+            TestClient<br/>[Integration Testing]
+```
+
+**Technology Relationships:**
+
+| Category | Technologies | Purpose |
+|----------|--------------|---------|
+| **Web Frameworks** | Starlette, FastAPI | ASGI server integration, request/response handling |
+| **Templating** | Jinja2, jinja2-async-environment | Async template rendering, inheritance, macros |
+| **Async Runtime** | anyio, AsyncPath | Non-blocking I/O, filesystem operations |
+| **Performance** | msgspec, caching, pooling | Fast serialization, reduced allocations |
+| **Testing** | pytest, TestClient | Async test execution, integration testing |
+
+**Dependency Flow:**
+
+```
+Python 3.13+
+    ├─→ Starlette/FastAPI (Web Framework)
+    │       └─→ starlette-async-jinja (This Library)
+    │               ├─→ jinja2-async-environment (Async Templates)
+    │               │       └─→ Jinja2 (Template Engine)
+    │               ├─→ anyio (Async I/O)
+    │               └─→ msgspec (Fast JSON)
+    └─→ pytest (Testing)
+            └─→ TestClient (Integration Tests)
+```
+
 **Architecture:**
 
 The core of the library is the `AsyncJinja2Templates` class, which provides an interface for rendering Jinja2 templates asynchronously. It integrates with Starlette and FastAPI's request/response cycle and provides features like:

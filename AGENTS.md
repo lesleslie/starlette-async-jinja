@@ -4,10 +4,67 @@ Contributors keep `starlette-async-jinja` fast, typed, and async-native; follow 
 
 ## Project Structure & Module Organization
 
-- `starlette_async_jinja/` holds the library; `responses.py` implements `AsyncJinja2Templates`, caching utilities, and `JsonResponse`.
-- `tests/` groups async unit, integration, and benchmark suites with fixtures in `conftest.py`; place new cases alongside the feature under test.
-- `pyproject.toml` captures build metadata, Ruff settings, pytest defaults, and dependency groups; `uv.lock` pins versions for reproducible installs.
-- Generated artefacts such as `dist/`, `build/`, and coverage outputs stay out of authored changes.
+```mermaid
+graph TD
+    Root[starlette-async-jinja/]
+
+    Root --> Core[starlette_async_jinja/]
+    Root --> Tests[tests/]
+    Root --> Docs[docs/]
+    Root --> Config[pyproject.toml]
+    Root --> Lock[uv.lock]
+    Root --> Build[dist/]
+    Root --> BuildArtifacts[build/]
+    Root --> Coverage[.coverage.json<br/>coverage.json]
+
+    Core --> Init[__init__.py]
+    Core --> Responses[responses.py<br/>Main implementation]
+
+    Tests --> Unit[unit tests/]
+    Tests --> Integration[integration tests/]
+    Tests --> Benchmarks[benchmarks/]
+    Tests --> Fixtures[conftest.py<br/>Shared fixtures]
+
+    Docs --> Technical[docs/JINJA2_ASYNC_ENVIRONMENT_USAGE.md<br/>Technical analysis]
+
+    Config -.->.Config
+    Lock -.->.Dependencies
+    Build -.->.Generated
+    BuildArtifacts -.->.Generated
+    Coverage -.->.Generated
+
+    style Core fill:#e3f2fd
+    style Tests fill:#fff3e0
+    style Docs fill:#f3e5f5
+    style Config fill:#e8f5e9
+    style Build fill:#ffebee
+    style BuildArtifacts fill:#ffebee
+    style Coverage fill:#ffebee
+    style Init fill:#bbdefb
+    style Responses fill:#bbdefb
+    style Fixtures fill:#ffe0b2
+```
+
+**Directory Legend:**
+
+| Directory | Purpose | Color |
+|-----------|---------|-------|
+| **starlette_async_jinja/** | Core library code | 🔵 Blue |
+| **tests/** | Test suites (unit, integration, benchmark) | 🟠 Orange |
+| **docs/** | Technical documentation | 🟣 Purple |
+| **pyproject.toml** | Build metadata, dependencies, tools | 🟢 Green |
+| **uv.lock** | Pinned dependency versions | 🟢 Green |
+| **dist/, build/** | Generated build artifacts | 🔴 Red (generated) |
+| **coverage files** | Test coverage reports | 🔴 Red (generated) |
+
+**Key Module Responsibilities:**
+
+- `starlette_async_jinja/__init__.py` - Public API exports
+- `starlette_async_jinja/responses.py` - Main implementation with `AsyncJinja2Templates`, caching utilities, and `JsonResponse`
+- `tests/conftest.py` - Pytest fixtures for test isolation
+- `tests/` - Async unit, integration, and benchmark suites; place new cases alongside the feature under test
+- `pyproject.toml` - Captures build metadata, Ruff settings, pytest defaults, and dependency groups; `uv.lock` pins versions for reproducible installs
+- Generated artefacts such as `dist/`, `build/`, and coverage outputs stay out of authored changes
 
 ## Build, Test, and Development Commands
 

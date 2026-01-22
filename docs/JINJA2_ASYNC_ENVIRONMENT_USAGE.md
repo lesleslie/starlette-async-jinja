@@ -108,6 +108,49 @@ jinja2-async-environment generates templates as **async generators** that must b
 - ❌ **Templates with inheritance fail** with `TypeError: 'async for' requires an object with __aiter__ method, got coroutine`
 - ❌ **All Starlette responses using inherited templates fail**
 
+## Visual Code Flow Comparison
+
+The following diagram shows the difference between the broken and fixed patterns:
+
+```mermaid
+flowchart TB
+    subgraph Broken_Pattern["❌ BROKEN: template.render_async()"]
+        direction TB
+        B1[Template Object] --> B2[Call: await template.render_async]
+        B2 --> B3{Has Inheritance?}
+        B3 -->|No| B4[✅ Works - Returns string]
+        B3 -->|Yes| B5[❌ TypeError<br/>'async for' requires __aiter__<br/>Got coroutine instead]
+    end
+
+    subgraph Fixed_Pattern["✅ FIXED: root_render_func with async for"]
+        direction TB
+        F1[Template Object] --> F2[Create context: template.new_context]
+        F2 --> F3[Get generator: template.root_render_func]
+        F3 --> F4[Iterate: async for chunk in generator]
+        F4 --> F5{Has Inheritance?}
+        F5 -->|No| F6[✅ Works - Collects chunks]
+        F5 -->|Yes| F7[✅ Works - Handles parent templates]
+        F6 --> F8[Concatenate: env.concat]
+        F7 --> F8
+        F8 --> F9[Return rendered string]
+    end
+
+    style Broken_Pattern fill:#ffebee
+    style Fixed_Pattern fill:#e8f5e9
+    style B5 fill:#ffcdd2
+    style F7 fill:#c8e6c9
+```
+
+**Key Differences:**
+
+| Aspect | Broken Pattern | Fixed Pattern |
+|--------|---------------|---------------|
+| **Method** | `await template.render_async()` | `template.root_render_func()` + `async for` |
+| **Returns** | Coroutine (fails with inheritance) | Async generator (works with inheritance) |
+| **Iteration** | Internal (hidden) | Explicit `async for` loop |
+| **Inheritance** | ❌ Fails | ✅ Works |
+| **Pattern Used By** | `renderer()`, `TemplateResponse()` | `render_fragment()` (already correct) |
+
 ## Recommended Fixes
 
 ### Fix #1: Update `renderer()` Method ✅ REQUIRED

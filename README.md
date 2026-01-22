@@ -23,6 +23,50 @@ An asynchronous Jinja2 template integration for Starlette and FastAPI, built on 
 pip install starlette-async-jinja
 ```
 
+## Template Rendering Pipeline
+
+The following diagram shows how a request flows through the async template rendering system:
+
+```mermaid
+flowchart TD
+    A[HTTP Request] --> B[Starlette/FastAPI Route Handler]
+    B --> C[TemplateResponse Called]
+    C --> D[Parse Arguments<br/>request, name, context]
+    D --> E[Prepare Template Context<br/>Apply context processors]
+    E --> F{Context Cache?}
+    F -->|Hit| G[Use Cached Context]
+    F -->|Miss| H[Execute Processors<br/>Cache result]
+    G --> I[Get Template Async<br/>AsyncFileSystemLoader]
+    H --> I
+    I --> J[Create Template Context]
+    J --> K[Get Root Render Function]
+    K --> L[Async Generate Chunks<br/>root_render_func]
+    L --> M[Concatenate Chunks<br/>env.concat]
+    M --> N[Return HTML Content]
+    N --> O[Create TemplateResponse Object]
+    O --> P[Return HTTP Response]
+
+    style A fill:#e1f5ff
+    style P fill:#c8e6c9
+    style F fill:#fff9c4
+    style L fill:#f3e5f5
+```
+
+**Key Flow Steps:**
+
+1. **Request Processing**: Route handler receives request and calls template rendering
+1. **Context Preparation**: Context processors add global variables (with caching)
+1. **Template Loading**: Template loaded asynchronously from filesystem
+1. **Rendering**: Template rendered using async generator pattern for inheritance support
+1. **Response**: HTML content wrapped in Starlette TemplateResponse object
+
+**Performance Optimizations Applied:**
+
+- 🟡 **Context Processor Cache**: Reuses processor results by path/method
+- 🟣 **Fragment Block Cache**: Caches compiled block functions
+- 🔵 **Context Object Pooling**: Reuses context dictionaries
+- 🟢 **Async I/O**: All filesystem operations are non-blocking
+
 ## Requirements
 
 - Python 3.13+
@@ -354,12 +398,81 @@ async def render_macro_component():
 
 ## Issues and Limitations
 
-- Only [asynchronous template loaders](https://github.com/lesleslie/jinja2-async-environment/blob/main/jinja2_async_environment/loaders.py) are fully supported
+- Only [asynchronous template loaders](https://github.com/lesleslie/jinja2-async-environment/tree/main/jinja2_async_environment/loaders) are fully supported
 - The Jinja bytecodecache requires an asynchronous Redis backend
 
 ## API Reference
 
-### AsyncJinja2Templates
+### AsyncJinja2Templates Class Architecture
+
+```mermaid
+classDiagram
+    class AsyncJinja2Templates {
+        +AsyncPath directory
+        +list~Callable~ context_processors
+        +int context_cache_size
+        +float context_cache_ttl
+        +int fragment_cache_size
+        +float fragment_cache_ttl
+        +int context_pool_size
+        +int fragment_stringio_threshold
+        +AsyncEnvironment env
+        +dict~str, Callable~ _context_cache
+        +dict~str, Callable~ _fragment_cache
+        +list~dict~ _context_pool
+        +__init__(directory, context_processors, **options)$
+        +TemplateResponse(request, name, context, status_code, headers, media_type, background)$ TemplateResponse
+        +render_template(request, name, context, status_code, headers, media_type, background)$ TemplateResponse
+        +render_fragment(template_name, block_name, **kwargs)$ str
+        +render_block(template_name, markup, **data)$ Markup or str
+        +get_template_async(name)$ Template
+        -_parse_template_args(*args, **kwargs)$ tuple
+        -_prepare_template_context(context, request)$ dict
+        -_get_context_from_cache(key)$ dict or None
+        -_store_context_in_cache(key, context)$ None
+        -_get_or_compile_block(template, block_name)$ Callable
+    }
+
+    class JsonResponse {
+        +dict content
+        +int status_code
+        +dict headers
+        +media_type
+        +JsonResponse(content, status_code, headers)$
+        +render(request)$ Response
+    }
+
+    class BlockNotFoundError {
+        +str message
+        +str template_name
+        +str block_name
+    }
+
+    AsyncJinja2Templates --> JsonResponse: creates
+    AsyncJinja2Templates --> BlockNotFoundError: raises
+
+    note for AsyncJinja2Templates "Main class for async Jinja2 template rendering.\nSupports context processors, fragment caching,\nand performance optimizations."
+    note for JsonResponse "Fast JSON response using msgspec\nfor optimized serialization."
+    note for BlockNotFoundError "Exception when attempting\nto render non-existent block."
+```
+
+**Class Relationships:**
+
+- **AsyncJinja2Templates** → Creates **JsonResponse** instances for JSON data
+- **AsyncJinja2Templates** → Raises **BlockNotFoundError** when fragment blocks don't exist
+
+**Key Methods by Category:**
+
+| Category | Methods | Purpose |
+|----------|---------|---------|
+| **Template Rendering** | `TemplateResponse()`, `render_template()` | Render full templates to HTTP responses |
+| **Fragment Rendering** | `render_fragment()`, `render_block()` | Render template blocks/partials |
+| **Template Management** | `get_template_async()` | Load templates asynchronously |
+| **Internal** | `_parse_template_args()`, `_prepare_template_context()` | Prepare data for rendering |
+| **Caching** | `_get_context_from_cache()`, `_store_context_in_cache()` | Manage context processor cache |
+| **Block Compilation** | `_get_or_compile_block()` | Cache compiled block functions |
+
+### AsyncJinja2Templates Constructor
 
 ```python
 templates = AsyncJinja2Templates(
@@ -411,6 +524,109 @@ content = await templates.render_fragment(
     "card_block",
     title="Product Name",
     description="Product description...",
+)
+```
+
+## Performance Optimization Architecture
+
+The library implements a multi-layered optimization system for maximum performance:
+
+```mermaid
+flowchart TB
+    subgraph Request["📥 Request Processing"]
+        A[HTTP Request Received]
+    end
+
+    subgraph Layer1["🟡 Layer 1: Context Processor Cache"]
+        direction LR
+        B1[Generate Cache Key<br/>path + method]
+        B2{Cache Hit?}
+        B3[✓ Use Cached Context]
+        B4[✗ Execute Processors<br/>Store in Cache]
+        B1 --> B2
+        B2 -->|Yes| B3
+        B2 -->|No| B4
+    end
+
+    subgraph Layer2["🟣 Layer 2: Fragment Block Cache"]
+        direction LR
+        C1[Extract Block Function]
+        C2{Block Cached?}
+        C3[✓ Use Cached Function]
+        C4[✗ Compile & Cache Block]
+        C1 --> C2
+        C2 -->|Yes| C3
+        C2 -->|No| C4
+    end
+
+    subgraph Layer3["🔵 Layer 3: Context Object Pool"]
+        direction LR
+        D1[Need Context Dict?]
+        D2{Pool Available?}
+        D3[✓ Reuse from Pool]
+        D4[✗ Create New Context]
+        D1 --> D2
+        D2 -->|Yes| D3
+        D2 -->|No| D4
+    end
+
+    subgraph Layer4["🟢 Layer 4: Adaptive String Building"]
+        direction LR
+        E1[Estimate Output Size]
+        E2{Size > Threshold?}
+        E3[✓ Use StringIO<br/>Better for large output]
+        E4[✗ Use List Concat<br/>Better for small output]
+        E1 --> E2
+        E2 -->|Yes| E3
+        E2 -->|No| E4
+    end
+
+    subgraph Response["📤 Response Generation"]
+        F[Return Optimized HTML]
+    end
+
+    A --> Layer1
+    Layer1 --> Layer2
+    Layer2 --> Layer3
+    Layer3 --> Layer4
+    Layer4 --> F
+
+    style Layer1 fill:#fff9c4
+    style Layer2 fill:#f3e5f5
+    style Layer3 fill:#e1f5fe
+    style Layer4 fill:#e8f5e9
+    style A fill:#eceff1
+    style F fill:#c8e6c9
+```
+
+**Optimization Layer Details:**
+
+| Layer | Cache Type | Default Config | Benefit |
+|-------|-----------|----------------|---------|
+| **🟡 Context Processor Cache** | LRU with TTL | 128 entries, 300s TTL | Avoids redundant processor execution |
+| **🟣 Fragment Block Cache** | LRU with TTL | 64 entries, 600s TTL | Skips block function extraction |
+| **🔵 Context Object Pool** | Object pool | 10 contexts | Reduces memory allocations |
+| **🟢 Adaptive String Building** | Size-based | 1024 byte threshold | Optimizes string concatenation |
+
+**Cache Management:**
+
+- **Automatic Eviction**: Oldest entries removed first when cache is full
+- **TTL-based Invalidation**: Stale entries expire automatically
+- **Configurable Sizes**: Tune cache sizes based on application needs
+- **Thread-Safe**: All caches are safe for concurrent access
+
+**Configuration Example:**
+
+```python
+templates = AsyncJinja2Templates(
+    directory=AsyncPath("templates"),
+    # Increase cache sizes for high-traffic apps
+    context_cache_size=256,      # More context variations
+    context_cache_ttl=600.0,     # Longer cache lifetime
+    fragment_cache_size=128,     # More fragment types
+    fragment_cache_ttl=1200.0,   # Cache fragments longer
+    context_pool_size=20,        # More concurrent renders
+    fragment_stringio_threshold=2048,  # Larger threshold
 )
 ```
 
