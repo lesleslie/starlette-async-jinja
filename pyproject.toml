@@ -34,7 +34,7 @@ dependencies = [
 ]
 
 [project.license]
-text = "BSD-3-Clause"
+text = "BSD-3-CLAUSE"
 
 [project.urls]
 Documentation = "https://github.com/lesleslie/starlette-async-jinja"
