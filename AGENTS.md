@@ -73,6 +73,7 @@ graph TD
 - `uv run pytest -m unit` / `integration` / `benchmark` targets marker-specific subsets during focused work.
 - `uv run ruff check .` and `uv run ruff format .` enforce linting and formatting (line length 88, Google-style docstrings).
 - `uv run pyright` validates typing; `uv run bandit -c pyproject.toml` covers security scanning before release.
+- Use Crackerjack as the repo-wide quality and CI/CD gate before merging substantive changes.
 
 ## Coding Style & Naming Conventions
 

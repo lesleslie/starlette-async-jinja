@@ -1,10 +1,23 @@
 # starlette-async-jinja
 
 [![Code style: crackerjack](https://img.shields.io/badge/code%20style-crackerjack-000042)](https://github.com/lesleslie/crackerjack)
+[![Runtime: oneiric](https://img.shields.io/badge/runtime-oneiric-6e5494)](https://github.com/lesleslie/oneiric)
+[![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
 [![Python: 3.13+](https://img.shields.io/badge/python-3.13%2B-green)](https://www.python.org/downloads/)
-![Coverage](https://img.shields.io/badge/coverage-99.6%25-brightgreen)
 
 An asynchronous Jinja2 template integration for Starlette and FastAPI, built on top of the `jinja2-async-environment` package.
+
+## Quick Links
+
+- [Features](#features)
+- [Template Rendering Pipeline](#template-rendering-pipeline)
+- [Requirements](#requirements)
+- [Basic Usage](#basic-usage)
+- [Testing](#testing)
+
+## Quality & CI
+
+Crackerjack is the standard quality-control and CI/CD gate for this repo. Keep local validation aligned with the same Ruff, typing, security, and test workflow used in CI.
 
 ## Features
 
@@ -646,7 +659,7 @@ import redis.asyncio as redis
 redis_client = redis.Redis(host="localhost", port=6379, db=0)
 
 # Set up bytecode caching
-bytecode_cache = AsyncRedisBytecodeCache(redis_client, prefix="jinja2_")
+bytecode_cache = AsyncRedisBytecodeCache(client=redis_client, prefix="jinja2_")
 
 # Create templates with caching
 templates = AsyncJinja2Templates(

@@ -6,7 +6,7 @@ requires = [
 
 [project]
 name = "starlette-async-jinja"
-version = "1.13.5"
+version = "1.14.0"
 description = "An asynchronous Jinja2 template integration for Starlette and FastAPI"
 readme = "README.md"
 authors = [
@@ -26,11 +26,11 @@ classifiers = [
     "Typing :: Typed",
 ]
 dependencies = [
-    "anyio>=4.11.0",
+    "anyio>=4.13.0",
     "jinja2>=3.1.6",
-    "jinja2-async-environment>=0.18.6",
-    "msgspec>=0.20.0",
-    "starlette>=0.50.0",
+    "jinja2-async-environment>=0.19.0",
+    "msgspec>=0.21.1",
+    "starlette>=1.2.1",
 ]
 
 [project.license]
@@ -43,10 +43,10 @@ Repository = "https://github.com/lesleslie/starlette-async-jinja"
 
 [dependency-groups]
 dev = [
-    "crackerjack>=0.44.42",
+    "crackerjack>=0.64.0",
     "httpx>=0.28.1",
-    "session-mgmt-mcp>=0.9.7",
-    "uv-bump>=0.3.1",
+    "session-mgmt-mcp>=0.9.9",
+    "uv-bump>=0.5.0",
 ]
 
 
@@ -128,6 +128,7 @@ markers = [
     "unit: marks test as a unit test",
     "benchmark: mark test as a benchmark (disables parallel execution)",
     "integration: marks test as an integration test",
+    "slow: marks test as slow (timing-sensitive; may flake on slow CI runners)",
 ]
 timeout = 300
 timeout_method = "thread"

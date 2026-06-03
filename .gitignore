@@ -63,3 +63,19 @@ __pycache__/
 crackerjack-ai-debug-*.log
 crackerjack-debug-*.log
 htmlcov/
+
+# ============================================================================
+# Session / linter / crackerjack scratch artifacts
+# ============================================================================
+# Oneiric (crackerjack-adjacent) runtime cache
+.oneiric_cache/
+# Backup files produced by linters, agents, or manual `cp file file.backup`
+.backup*
+*.bak
+*.backup*
+# Per-run backup directories (e.g. `docs/.backups/20260603-003420/`)
+docs/.backups/
+coverage.json
+
+# Hook report directories (gitleaks writes here, lychee may too)
+.cache/
