@@ -1,5 +1,6 @@
 """Performance and benchmarking tests for starlette-async-jinja."""
 
+import asyncio
 import typing as t
 from unittest.mock import AsyncMock, MagicMock, patch
 
@@ -10,8 +11,7 @@ from starlette_async_jinja.responses import AsyncJinja2Templates
 
 
 @pytest.mark.benchmark
-@pytest.mark.asyncio
-async def test_benchmark_template_rendering_large_context(benchmark) -> None:
+def test_benchmark_template_rendering_large_context(benchmark) -> None:
     """Benchmark template rendering with large contexts."""
     templates = AsyncJinja2Templates(directory=AsyncPath("templates"))
 
@@ -30,14 +30,16 @@ async def test_benchmark_template_rendering_large_context(benchmark) -> None:
                 MagicMock(), "test.html", large_context
             )
 
+    def render_template_sync() -> t.Any:
+        return asyncio.run(render_template())
+
     # Run benchmark
-    result = await benchmark(render_template)
+    result = benchmark(render_template_sync)
     assert result is not None
 
 
 @pytest.mark.benchmark
-@pytest.mark.asyncio
-async def test_benchmark_fragment_rendering_nested_blocks(benchmark) -> None:
+def test_benchmark_fragment_rendering_nested_blocks(benchmark) -> None:
     """Benchmark fragment rendering with nested blocks."""
     templates = AsyncJinja2Templates(directory=AsyncPath("templates"))
 
@@ -67,14 +69,16 @@ async def test_benchmark_fragment_rendering_nested_blocks(benchmark) -> None:
             ):
                 return await templates.render_fragment("test.html", "outer")
 
+    def render_fragment_sync() -> t.Any:
+        return asyncio.run(render_fragment())
+
     # Run benchmark
-    result = await benchmark(render_fragment)
+    result = benchmark(render_fragment_sync)
     assert result is not None
 
 
 @pytest.mark.benchmark
-@pytest.mark.asyncio
-async def test_benchmark_context_processor_performance(benchmark) -> None:
+def test_benchmark_context_processor_performance(benchmark) -> None:
     """Benchmark context processor performance with complex processors."""
 
     # Create a complex context processor
@@ -104,8 +108,11 @@ async def test_benchmark_context_processor_performance(benchmark) -> None:
         ):
             return await templates.TemplateResponse(mock_request, "test.html", {})
 
+    def process_context_sync() -> t.Any:
+        return asyncio.run(process_context())
+
     # Run benchmark
-    result = await benchmark(process_context)
+    result = benchmark(process_context_sync)
     assert result is not None
 
 
@@ -137,8 +144,7 @@ def test_benchmark_memory_usage_context_pooling(benchmark) -> None:
 
 
 @pytest.mark.benchmark
-@pytest.mark.asyncio
-async def test_benchmark_cache_performance_under_load(benchmark) -> None:
+def test_benchmark_cache_performance_under_load(benchmark) -> None:
     """Benchmark cache performance under high load."""
     templates = AsyncJinja2Templates(
         directory=AsyncPath("templates"),
@@ -168,8 +174,11 @@ async def test_benchmark_cache_performance_under_load(benchmark) -> None:
 
         return len(templates._block_cache)
 
+    def high_load_test_sync() -> int:
+        return asyncio.run(high_load_test())
+
     # Run benchmark
-    result = await benchmark(high_load_test)
+    result = benchmark(high_load_test_sync)
     assert result >= 0
 
 
@@ -292,8 +301,7 @@ async def test_concurrent_template_rendering() -> None:
 
 
 @pytest.mark.benchmark
-@pytest.mark.asyncio
-async def test_benchmark_cache_hit_vs_miss(benchmark) -> None:
+def test_benchmark_cache_hit_vs_miss(benchmark) -> None:
     """Benchmark cache hit vs miss performance."""
     templates = AsyncJinja2Templates(
         directory=AsyncPath("templates"),
@@ -318,6 +326,9 @@ async def test_benchmark_cache_hit_vs_miss(benchmark) -> None:
 
                 return (result1, result2)
 
+    def cache_test_sync() -> t.Any:
+        return asyncio.run(cache_test())
+
     # Run benchmark
-    result = await benchmark(cache_test)
+    result = benchmark(cache_test_sync)
     assert result is not None

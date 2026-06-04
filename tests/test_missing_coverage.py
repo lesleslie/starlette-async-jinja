@@ -170,3 +170,31 @@ async def test_render_fragment_block_not_found_validation() -> None:
     assert "Block 'nonexistent_block' not found in template 'test.html'" in str(
         exc_info.value
     )
+
+
+@pytest.mark.asyncio
+async def test_get_cached_block_func_block_not_found() -> None:
+    """Test _get_cached_block_func raises BlockNotFoundError when block missing.
+
+    Exercises line 179: the raise statement when block_name is not present in
+    template.blocks and the cache does not already contain the key.
+    """
+    templates = AsyncJinja2Templates(directory=AsyncPath("templates"))
+
+    # Mock template that does NOT contain the requested block.
+    mock_template = MagicMock(spec=Template)
+    mock_template.blocks = {"other_block": MagicMock()}
+
+    with patch.object(
+        templates,
+        "get_template_async",
+        AsyncMock(return_value=mock_template),
+    ):
+        with pytest.raises(BlockNotFoundError) as exc_info:
+            await templates._get_cached_block_func("test.html", "missing_block")
+
+    assert "Block 'missing_block' not found in template 'test.html'" in str(
+        exc_info.value
+    )
+    # Cache must remain empty because the block was not found.
+    assert "test.html:missing_block" not in templates._block_cache
