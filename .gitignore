@@ -79,3 +79,11 @@ coverage.json
 
 # Hook report directories (gitleaks writes here, lychee may too)
 .cache/
+
+# Backup Files (added by gitignore audit)
+# ============================================================================
+*.backup
+/.backups/
+/.backup/
+.backups/
+.backup/
