@@ -21,7 +21,7 @@ classifiers = [
     "Operating System :: OS Independent",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
     "Typing :: Typed",
 ]
@@ -51,7 +51,7 @@ dev = [
 
 
 [tool.ruff]
-target-version = "py313"
+target-version = "py314"
 line-length = 88
 fix = true
 unsafe-fixes = true
@@ -193,13 +193,13 @@ reportInvalidTypeForm = false
 reportUnknownLambdaType = false
 reportUnknownParameterType = "warning"
 reportPrivateUsage = false
-pythonVersion = "3.13"
+pythonVersion = "3.14"
 reportUnnecessaryTypeIgnoreComment = "warning"
 reportUnnecessaryComparison = "warning"
 reportConstantRedefinition = "warning"
 
 [tool.mypy]
-python_version = "3.13"
+python_version = "3.14"
 strict = true
 ignore_missing_imports = true
 show_error_codes = true
@@ -271,7 +271,7 @@ exclude-deps = [
 [tool.refurb]
 enable_all = true
 quiet = false
-python_version = "3.13"
+python_version = "3.14"
 ignore = [
     "FURB184",
     "FURB120",
