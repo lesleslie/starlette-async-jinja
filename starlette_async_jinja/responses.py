@@ -1,4 +1,5 @@
 import io
+import logging
 import time
 import typing as t
 from functools import partial
@@ -16,6 +17,8 @@ from starlette.types import Receive, Scope, Send
 
 ContextProcessor: t.TypeAlias = t.Callable[[t.Any], dict[str, t.Any]]
 RenderFunction: t.TypeAlias = t.Callable[..., t.Awaitable[t.Any]]
+
+logger = logging.getLogger(__name__)
 
 
 class JsonResponse(JSONResponse):
@@ -108,8 +111,8 @@ class AsyncJinja2Templates:
         env_options.setdefault("autoescape", True)
 
         env = AsyncEnvironment(**env_options)
-        env.globals["render_block"] = self.generate_render_partial(self.renderer)
-        env.globals["url_for"] = url_for
+        env.globals["render_block"] = self.generate_render_partial(self.renderer)  # ty: ignore[invalid-assignment]
+        env.globals["url_for"] = url_for  # ty: ignore[invalid-assignment]
         return env
 
     def _get_context_cache_key(self, request: t.Any) -> str:
@@ -214,6 +217,9 @@ class AsyncJinja2Templates:
                 return Markup(await renderer(template_name, **data))
             return await renderer(template_name, **data)
         except Exception as e:
+            logger.debug(
+                "Error rendering block in template %r", template_name, exc_info=True
+            )
             raise RuntimeError(
                 f"Error rendering block in template '{template_name}': {e}"
             )
@@ -228,6 +234,7 @@ class AsyncJinja2Templates:
             template = await self.get_template_async(template_name)
             return await template.render_async(**data)
         except Exception as e:
+            logger.debug("Error rendering template %r", template_name, exc_info=True)
             raise RuntimeError(f"Error rendering template '{template_name}': {e}")
 
     async def _get_block_function_and_template(
@@ -283,7 +290,7 @@ class AsyncJinja2Templates:
         else:
             chunk_generator = block_render_func(template_ctx)
             chunks = [chunk async for chunk in chunk_generator]
-            return t.cast(str, self.env.concat(chunks))
+            return t.cast(str, self.env.concat(chunks))  # ty: ignore[redundant-cast]
 
     async def render_fragment(
         self,
@@ -315,6 +322,12 @@ class AsyncJinja2Templates:
                 )
 
             except Exception:
+                logger.debug(
+                    "Error rendering fragment %r in template %r",
+                    block_name,
+                    template_name,
+                    exc_info=True,
+                )
                 return t.cast(str, self.env.handle_exception())
             finally:
                 self._return_to_pool(ctx)
@@ -322,15 +335,22 @@ class AsyncJinja2Templates:
         except BlockNotFoundError:
             raise
         except Exception as e:
+            logger.debug(
+                "Error rendering fragment %r in template %r",
+                block_name,
+                template_name,
+                exc_info=True,
+            )
             raise RuntimeError(
                 f"Error rendering fragment '{block_name}' in template '{template_name}': {e}"
             )
 
     async def get_template_async(self, name: str) -> Template:
         try:
-            template = t.cast(Template, await self.env.get_template_async(name))
+            template = t.cast(Template, await self.env.get_template_async(name))  # ty: ignore[redundant-cast]
             return template
         except Exception:
+            logger.debug("Error loading template %r", name, exc_info=True)
             raise RuntimeError(f"Error loading template '{name}'")
 
     def _parse_template_args(
@@ -402,6 +422,7 @@ class AsyncJinja2Templates:
                 background=background,
             )
         except Exception as e:
+            logger.debug("Error creating template response for %r", name, exc_info=True)
             raise RuntimeError(f"Error creating template response for '{name}': {e}")
 
     render_template = TemplateResponse

@@ -1,7 +1,7 @@
 import datetime
 import typing as t
 from dataclasses import dataclass
-from enum import Enum
+from enum import StrEnum
 
 import pytest
 from starlette.applications import Starlette
@@ -10,7 +10,7 @@ from starlette.testclient import TestClient
 from starlette_async_jinja.responses import JsonResponse
 
 
-class UserRole(str, Enum):
+class UserRole(StrEnum):
     ADMIN = "admin"
     USER = "user"
     GUEST = "guest"

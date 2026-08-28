@@ -8,8 +8,9 @@ These tests verify that:
 5. Multiple levels of inheritance work (grandparent -> parent -> child)
 """
 
-import pytest
 from pathlib import Path
+
+import pytest
 from jinja2_async_environment import AsyncEnvironment, AsyncFileSystemLoader
 
 

@@ -63,11 +63,10 @@ def test_benchmark_fragment_rendering_nested_blocks(benchmark) -> None:
     async def render_fragment():
         with patch.object(
             templates, "get_template_async", AsyncMock(return_value=mock_template)
+        ), patch.object(
+            templates.env, "concat", return_value="<div>Content</div>"
         ):
-            with patch.object(
-                templates.env, "concat", return_value="<div>Content</div>"
-            ):
-                return await templates.render_fragment("test.html", "outer")
+            return await templates.render_fragment("test.html", "outer")
 
     def render_fragment_sync() -> t.Any:
         return asyncio.run(render_fragment())
@@ -166,11 +165,10 @@ def test_benchmark_cache_performance_under_load(benchmark) -> None:
     async def high_load_test():
         with patch.object(
             templates, "get_template_async", AsyncMock(return_value=mock_template)
-        ):
-            with patch.object(templates.env, "concat", return_value="test content"):
-                # Simulate high cache usage
-                for i in range(100):
-                    await templates.render_fragment("test.html", f"block_{i}")
+        ), patch.object(templates.env, "concat", return_value="test content"):
+            # Simulate high cache usage
+            for i in range(100):
+                await templates.render_fragment("test.html", f"block_{i}")
 
         return len(templates._block_cache)
 
@@ -204,15 +202,14 @@ async def test_benchmark_stringio_vs_concat_performance() -> None:
 
         with patch.object(
             templates, "get_template_async", AsyncMock(return_value=mock_template)
-        ):
-            with patch.object(
-                templates.env, "concat", return_value="Small content"
-            ) as mock_concat:
-                result = await templates.render_fragment(
-                    "test.html", "test_block", small_data="tiny"
-                )
-                mock_concat.assert_called_once()
-                return result
+        ), patch.object(
+            templates.env, "concat", return_value="Small content"
+        ) as mock_concat:
+            result = await templates.render_fragment(
+                "test.html", "test_block", small_data="tiny"
+            )
+            mock_concat.assert_called_once()
+            return result
 
     # Test with large content (should use StringIO)
     async def large_content_test():
@@ -316,15 +313,14 @@ def test_benchmark_cache_hit_vs_miss(benchmark) -> None:
     async def cache_test():
         with patch.object(
             templates, "get_template_async", AsyncMock(return_value=mock_template)
-        ):
-            with patch.object(templates.env, "concat", return_value="test content"):
-                # First call - cache miss
-                result1 = await templates.render_fragment("test.html", "test_block")
+        ), patch.object(templates.env, "concat", return_value="test content"):
+            # First call - cache miss
+            result1 = await templates.render_fragment("test.html", "test_block")
 
-                # Second call - cache hit
-                result2 = await templates.render_fragment("test.html", "test_block")
+            # Second call - cache hit
+            result2 = await templates.render_fragment("test.html", "test_block")
 
-                return (result1, result2)
+            return (result1, result2)
 
     def cache_test_sync() -> t.Any:
         return asyncio.run(cache_test())

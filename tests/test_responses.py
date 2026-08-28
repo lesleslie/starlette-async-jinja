@@ -99,7 +99,7 @@ async def test_async_jinja2_templates_init(template_dir: AsyncPath) -> None:
     assert templates.env.loader is not None
     assert templates.env.autoescape is True
     assert hasattr(templates.env, "enable_async")
-    assert getattr(templates.env, "enable_async") is True
+    assert templates.env.enable_async is True
 
 
 @pytest.mark.asyncio
@@ -113,7 +113,7 @@ async def test_async_jinja2_templates_init_with_options(
     assert templates.env.autoescape is False
     assert templates.env.trim_blocks is True
     assert hasattr(templates.env, "enable_async")
-    assert getattr(templates.env, "enable_async") is True
+    assert templates.env.enable_async is True
 
 
 @pytest.mark.asyncio
@@ -124,7 +124,7 @@ async def test_async_jinja2_templates_create_env(template_dir: AsyncPath) -> Non
     assert "url_for" in env.globals
     assert env.autoescape is True
     assert hasattr(env, "enable_async")
-    assert getattr(env, "enable_async") is True
+    assert env.enable_async is True
 
 
 @pytest.mark.asyncio
@@ -168,13 +168,11 @@ async def test_async_jinja2_templates_render_fragment(
 ) -> None:
     with patch.object(
         templates, "get_template_async", AsyncMock(return_value=mock_template)
+    ), patch.object(templates.env, "concat", return_value="Test Block"), patch.object(
+        mock_template.blocks["my_block"], "__call__", return_value=[]
     ):
-        with patch.object(templates.env, "concat", return_value="Test Block"):
-            with patch.object(
-                mock_template.blocks["my_block"], "__call__", return_value=[]
-            ):
-                result = await templates.render_fragment("test.html", "my_block")
-                assert result == "Test Block"
+        result = await templates.render_fragment("test.html", "my_block")
+        assert result == "Test Block"
 
 
 @pytest.mark.asyncio
@@ -183,15 +181,13 @@ async def test_async_jinja2_templates_render_fragment_with_context(
 ) -> None:
     with patch.object(
         templates, "get_template_async", AsyncMock(return_value=mock_template)
+    ), patch.object(templates.env, "concat", return_value="Hello World"), patch.object(
+        mock_template.blocks["my_block"], "__call__", return_value=[]
     ):
-        with patch.object(templates.env, "concat", return_value="Hello World"):
-            with patch.object(
-                mock_template.blocks["my_block"], "__call__", return_value=[]
-            ):
-                result = await templates.render_fragment(
-                    "test.html", "my_block", message="Hello World"
-                )
-                assert result == "Hello World"
+        result = await templates.render_fragment(
+            "test.html", "my_block", message="Hello World"
+        )
+        assert result == "Hello World"
 
 
 @pytest.mark.asyncio

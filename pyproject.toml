@@ -6,7 +6,7 @@ requires = [
 
 [project]
 name = "starlette-async-jinja"
-version = "1.14.1"
+version = "1.15.0"
 description = "An asynchronous Jinja2 template integration for Starlette and FastAPI"
 readme = "README.md"
 authors = [
@@ -45,7 +45,6 @@ Repository = "https://github.com/lesleslie/starlette-async-jinja"
 dev = [
     "crackerjack>=0.64.0",
     "httpx>=0.28.1",
-    "session-mgmt-mcp>=0.9.9",
     "uv-bump>=0.5.0",
 ]
 

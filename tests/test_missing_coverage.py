@@ -189,9 +189,8 @@ async def test_get_cached_block_func_block_not_found() -> None:
         templates,
         "get_template_async",
         AsyncMock(return_value=mock_template),
-    ):
-        with pytest.raises(BlockNotFoundError) as exc_info:
-            await templates._get_cached_block_func("test.html", "missing_block")
+    ), pytest.raises(BlockNotFoundError) as exc_info:
+        await templates._get_cached_block_func("test.html", "missing_block")
 
     assert "Block 'missing_block' not found in template 'test.html'" in str(
         exc_info.value
